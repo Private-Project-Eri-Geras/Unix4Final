@@ -1,5 +1,16 @@
 #!/bin/bash
 
+    case $1 in
+    0)
+        source "menus/opcion1.sh"
+        ;;
+    1)
+        source "menus/opcion2.sh"
+        ;;
+    2)
+        source "menus/opcion3.sh"
+        ;;
+    esac
 # Define the options
 options=(
     "Option 1"
