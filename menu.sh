@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# funcion que llama al subShell
+subShell() {
     case $1 in
     0)
         source "menus/opcion1.sh"
@@ -11,6 +13,8 @@
         source "menus/opcion3.sh"
         ;;
     esac
+    selected=0
+}
 # Define the options
 options=(
     "Option 1"
@@ -66,10 +70,7 @@ while true; do
             echo "Saliendo..."
             break
         fi
-        echo "Opcion seleccionada: ${options[$selected]}"
-        echo "Presione enter para continuar"
-        read -sn 1
-        selected=0
+        subShell $selected
         ;;
     esac
 done
