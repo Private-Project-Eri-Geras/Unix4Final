@@ -12,8 +12,8 @@ options=(
 # Agrega opciones según los permisos de sudo
 if [[ "$usuario_actual" != "root" ]]; then
     options+=(
-        3 " ̶B̶a̶j̶a̶ ̶p̶o̶r̶ ̶a̶r̶c̶h̶i̶v̶o̶ ̶d̶e̶ ̶t̶e̶x̶t̶o̶"
-        4 " ̶B̶a̶j̶a̶ ̶m̶a̶n̶u̶a̶l̶"
+        3 "\Z1\ZuBaja por archivo de texto\Zn"
+        4 "\Z1\ZuBaja manual\Zn"
     )
 else
     options+=(
@@ -31,7 +31,7 @@ clear
 # Imprime el menú usando dialog
 while true; do
     # Muestra el menú y cambia el valor de la variable $option
-    option=$(dialog --clear --title "ADMINISTRACION DE USUARIOS" \
+    option=$(dialog --colors --clear --title "ADMINISTRACION DE USUARIOS" \
         --cancel-label "Cancel" --ok-label "Select" \
         --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \
         --output-fd 1)
