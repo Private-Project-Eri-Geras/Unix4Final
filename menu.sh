@@ -1,20 +1,22 @@
 #!/bin/bash
 
-# funcion que llama al subShell
+# Función que llama al subShell
 subShell() {
     case $1 in
     0)
-        source "menus/opcion1.sh"
+        source "subScripts/altaMasivaUsuarios.sh"
         ;;
     1)
-        source "menus/opcion2.sh"
+        source "subScripts/opcion2.sh"
         ;;
     2)
-        source "menus/opcion3.sh"
+        source "subScripts/opcion3.sh"
         ;;
     esac
     selected=0
+    clear
 }
+
 # Define the options
 options=(
     "Dar de alta masiva a usuarios por archivo"
@@ -26,54 +28,69 @@ options=(
 # Initialize the selected option
 selected=0
 
+# Save the escape sequences for colors in variables
+color_blue=$(tput setaf 4)
+color_green=$(tput setaf 2)
+color_reset=$(tput sgr0)
+
+# Set cursor scrolling speed to max (0)
+tput csr 0
+
+clear
 # Print the menu
 while true; do
-    # Clear the screen
-    clear
+
+    # Move the cursor to the start of the menu
+    # clear
+    tput cup 0 0
+
+    # Print the menu header
+    echo "${color_blue}╔═══════════════════════════════════════════╗${color_reset}"
+    echo "${color_blue}║               MENU PRINCIPAL              ║${color_reset}"
+    echo "${color_blue}╚═══════════════════════════════════════════╝${color_reset}"
+    echo ""
 
     # Print the options
     for ((i = 0; i < ${#options[@]}; i++)); do
         msg="   ${options[$i]}"
         if [[ $i -eq $selected ]]; then
-            echo -e "\e[32m$msg\e[0m"
+            echo "${color_green}$msg${color_reset}"
         else
             echo "$msg"
         fi
     done
 
-    # Obtener el número total de opciones
-    total_options=${#options[@]}
-    # Restar 1 para obtener el índice máximo válido
-    max_index=$(($total_options - 1))
-
-    # Obtener la entrada del usuario
+    # Obtain the user input
     read -sn 1 key
 
-    # Manejar la entrada del usuario
+    # Handle the user input
     case $key in
-    "j") # flecha arriba
+    "j") # arrow up
         if [[ $selected -gt 0 ]]; then
             selected=$((selected - 1))
         else
-            selected=$max_index
+            selected=$((${#options[@]} - 1))
         fi
         ;;
-    "k") # flecha abajo
-        if [[ $selected -lt $max_index ]]; then
+    "k") # arrow down
+        if [[ $selected -lt $((${#options[@]} - 1)) ]]; then
             selected=$((selected + 1))
         else
             selected=0
         fi
         ;;
     "") # enter
-        if [[ $selected -eq $max_index ]]; then
-            echo "Saliendo..."
+        if [[ $selected -eq $((${#options[@]} - 1)) ]]; then
+            echo "Exiting..."
             break
         fi
         subShell $selected
         ;;
     esac
 done
+
+# Reset cursor scrolling speed to default
+tput csr
 
 # Exit the script
 exit
