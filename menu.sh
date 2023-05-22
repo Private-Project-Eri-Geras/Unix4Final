@@ -17,7 +17,7 @@ subShell() {
 }
 # Define the options
 options=(
-    "Option 1"
+    "Dar de alta masiva a usuarios por archivo"
     "Option 2"
     "Option 3"
     "Exit"
