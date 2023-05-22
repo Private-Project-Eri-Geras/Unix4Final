@@ -1,4 +1,3 @@
-nombre,apellido,correo,contraseña
 usuario1,apellido1,usuario1@example.com,contraseña1
 usuario2,apellido2,usuario2@example.com,contraseña2
 usuario3,apellido3,usuario3@example.com,contraseña3
@@ -9,4 +8,3 @@ usuario7,apellido7,usuario7@example.com,contraseña7
 usuario8,apellido8,usuario8@example.com,contraseña8
 usuario9,apellido9,usuario9@example.com,contraseña9
 usuario10,apellido10,usuario10@example.com,contraseña10
-

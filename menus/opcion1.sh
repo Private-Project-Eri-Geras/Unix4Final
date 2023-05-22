@@ -9,15 +9,17 @@ if [ ! -f "$archivo_usuarios" ]; then
     exit 1
 fi
 
+clear
+
 # Leer el archivo y procesar los datos
-while IFS=',' read -r nombre apellido correo
-do
+while IFS=',' read -r nombre apellido correo; do
     # Lógica para crear el usuario
     # Puedes utilizar comandos como useradd, adduser, etc.
     # Por ejemplo:
     # useradd -m -s /bin/bash -c "Nombre Completo" nombre_usuario
-    echo "Creando usuario: $nombre $apellido ($correo)"
-done < "$archivo_usuarios"
+    # si es la ultima linea salirse
+    echo -e "Creando usuario \e[32m$nombre $apellido\e[0m con correo \e[32m$correo\e[0m"
+done <"$archivo_usuarios"
 
 echo "Alta masiva de usuarios completada."
 echo ""
