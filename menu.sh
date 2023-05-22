@@ -81,7 +81,7 @@ while true; do
         ;;
     "") # enter
         if [[ $selected -eq $((${#options[@]} - 1)) ]]; then
-            echo "Exiting..."
+            echo "Saliendo..."
             break
         fi
         subShell $selected
@@ -89,8 +89,8 @@ while true; do
     esac
 done
 
-# Reset cursor scrolling speed to default
-tput csr
+# Reset cursor scrolling speed to default (redirect output to /dev/null)
+tput csr >/dev/null
 
 # Exit the script
 exit
