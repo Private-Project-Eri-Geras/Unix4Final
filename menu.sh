@@ -41,8 +41,7 @@ clear
 while true; do
 
     # Move the cursor to the start of the menu
-    # clear
-    tput cup 0 0
+    tput cup 0 0 #gotoxy 0 0
 
     # Print the menu header
     echo "${color_blue}╔═══════════════════════════════════════════╗${color_reset}"
