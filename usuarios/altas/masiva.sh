@@ -4,6 +4,9 @@ addUsers() {
     # archivo de usuario
     archivo_usuarios=$1
 
+    #obtenemos la fecha
+    current_date=$(date +"%Y_%m_%d_%H_%M")
+
     # Obtener el nombre de usuario
     usuario_actual="$USER"
 
@@ -11,14 +14,14 @@ addUsers() {
     mkdir -p logs
 
     # Asignar la ruta del archivo de registro
-    log_file="logs/altaMasiva_$(date +%H)_$(date +%M).log"
+    log_file="logs/altaMasiva_${current_date}.log"
     counter=1
 
     # Verificar que el archivo de registro no exista
     # si existe, agregar un contador al nombre del archivo
     # ejemplo altaMasiva_12_30(1).log
     while [ -f "$log_file" ]; do
-        log_file="logs/altaMasiva_$(date +%H)_$(date +%M)_($counter).log"
+        log_file="logs/altaMasiva_${current_date}_($counter).log"
         ((counter++))
     done
 
