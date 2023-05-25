@@ -1,29 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Obtener el nombre de usuario actual
-usuario_actual="$USER"
+# Función para mostrar la ventana de ayuda
+mostrar_ayuda() {
+    dialog --clear --title "AYUDA" --msgbox "Aquí va tu contenido de ayuda" 0 0
+}
+
+# Verificar si el script se ejecuta con sudo
+if [ -z "$SUDO_USER" ]; then
+    dialog --colors --title  "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
+    clear
+    # exit 1
+fi
 
 # Define las opciones del menú
 options=(
     1 "Alta por archivo de texto"
     2 "Alta manual"
+    3 "Baja por archivo de texto"
+    4 "Baja manual"
 )
-
-# Agrega opciones según los permisos de sudo
-if [[ "$usuario_actual" != "root" ]]; then
-    options+=(
-        3 "\Z1\ZuBaja por archivo de texto\Zn"
-        4 "\Z1\ZuBaja manual\Zn"
-    )
-else
-    options+=(
-        3 "Baja por archivo de texto"
-        4 "Baja manual"
-    )
-fi
-
-# Inicializa la opción seleccionada
-option=0
 
 # Limpia la pantalla
 clear
@@ -31,37 +26,48 @@ clear
 # Imprime el menú usando dialog
 while true; do
     # Muestra el menú y cambia el valor de la variable $option
-    option=$(dialog --colors --clear --title "ADMINISTRACION DE USUARIOS" \
-        --cancel-label "Cancel" --ok-label "Select" \
+    # --ok-label = 0
+    # --cancel-label = 1
+    # --help-button --help-label = 2
+    # --extra-button --extra-label = 3
+    # 
+    option=$(dialog --cursor-off-label --colors --clear --title "ADMINISTRACION DE USUARIOS" \
+        --cancel-label "Cancelar" --ok-label "Seleccionar" \
+        --help-button --help-label "Ayuda" \
         --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \
         --output-fd 1)
 
-    # Retorna al menú principal si el usuario presiona cancelar
-    if [[ $? -ne 0 ]]; then
+    dialog_exit_code=$?
+    # Verificar si el usuario seleccionó el botón de ayuda
+    if [[ "$dialog_exit_code" -eq 2 ]]; then
+        mostrar_ayuda
+        continue
+    fi
+
+    # Verificar si el usuario seleccionó cancelar
+    if [[ "$dialog_exit_code" -eq 1 ]]; then
         break
     fi
 
-    # Maneja la opción seleccionada
+    # Manejar la opción seleccionada
     case $option in
     1)
         (source "usuarios/altas/masiva.sh")
         ;;
     2)
-        source "subScripts/opcion2.sh"
+        echo "Opción 2"
+        echo "Presiona enter para continuar"
+        read -sn 1
         ;;
     3)
-        if [[ "$usuario_actual" != "root" ]]; then
-            dialog --title "FALTAN PERMISOS" --msgbox "No tienes permisos para realizar esta acción." 6 30 --clear
-        else
-            echo "Opción 3"
-        fi
+        echo "Opción 3"
+        echo "Presiona enter para continuar"
+        read -sn 1
         ;;
     4)
-        if [[ "$usuario_actual" != "root" ]]; then
-            dialog --title "FALTAN PERMISOS" --msgbox "No tienes permisos para realizar esta acción." 6 30 --clear
-        else
-            echo "Opción 4"
-        fi
+        echo "Opción 4"
+        echo "Presiona enter para continuar"
+        read -sn 1
         ;;
     esac
 
