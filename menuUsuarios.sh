@@ -19,6 +19,8 @@ options=(
     2 "Alta manual"
     3 "Baja por archivo de texto"
     4 "Baja manual"
+    5 "Cambio de contraseña por archivo de texto"
+    6 "Cambio de contraseña manual"
 )
 
 # Limpia la pantalla
@@ -56,19 +58,34 @@ while true; do
         (source "usuarios/altas/masiva.sh")
         ;;
     2)
-        echo "Opción 2"
+        # TODO: alta manual
+        echo "alta manual"
         echo "Presiona enter para continuar"
         read -sn 1
         ;;
     3)
-        echo "Opción 3"
+        (source "usuarios/bajas/masiva.sh")
+        ;;
+    4)
+        # TODO: baja manual
+        echo "baja manual"
         echo "Presiona enter para continuar"
         read -sn 1
         ;;
-    4)
-        echo "Opción 4"
+    5)
+        # TODO: cambio de contraseña por archivo de texto
+        echo "cambio de contraseña por archivo de texto"
         echo "Presiona enter para continuar"
         read -sn 1
+        ;;
+    6)
+        # TODO: cambio de contraseña manual
+        echo "cambio de contraseña manual"
+        echo "Presiona enter para continuar"
+        read -sn 1
+        ;;
+    *)
+        dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
         ;;
     esac
 
