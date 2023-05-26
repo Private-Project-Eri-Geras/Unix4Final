@@ -15,14 +15,14 @@ removeUsers() {
     mkdir -p logs
 
     # Asignar la ruta del archivo de registro
-    log_file="logs/altaMasiva_${current_date}.log"
+    log_file="logs/bajaMasiva_${current_date}.log"
     counter=1
 
     # Verificar que el archivo de registro no exista
     # si existe, agregar un contador al nombre del archivo
     # ejemplo altaMasiva_12_30(1).log
     while [ -f "$log_file" ]; do
-        log_file="logs/altaMasiva_${current_date}_($counter).log"
+        log_file="logs/bajaMasiva_${current_date}_($counter).log"
         ((counter++))
     done
 
@@ -33,7 +33,7 @@ removeUsers() {
     lineas_procesadas=0
 
     # Hacer saber al usuario que se están creando los usuarios
-    dialog --title "ALTA MASIVA DE USUARIOS" --infobox "Creando usuarios, por favor espere..." 10 40
+    dialog --title "BAJA MASIVA DE USUARIOS" --infobox "Eliminando usuarios, por favor espere..." 10 40
 
     # Leer el archivo y procesar los datos
     # dato neceario nombre de usuario, el otro campo se puuede ignorar
@@ -53,6 +53,7 @@ removeUsers() {
             # Incrementar el contador de líneas
             continue
         fi
+        mensaje="$lineas_procesadas .-"
         # Verificar que el usuario exista
         if id -u "$name" >/dev/null 2>&1; then
             # Si el usuario existe, se eliminara, pero primero
@@ -60,22 +61,34 @@ removeUsers() {
             # respuestas validas:
             # Y y S s Si si Yes yes 1 delete eliminar borrar
             # no es case sensitive
-            delHome="${delHome,,}"# convertir a minusculas
+            delHome="${delHome,,}" # convertir a minusculas
             if [[ $delHome =~ ^(y|s|si|yes|1|delete|eliminar|borrar)$ ]]; then
                 # Obtener la ruta del directorio home y eliminarlo
-                home_dir=$(eval echo "~$name")
+                home_dir=$(cut -d: -f6 < <(getent passwd "$name"))
+                if [ -d "$home_dir" ]; then
+                    rm -rf "$home_dir"
+                    mensaje="$mensaje Se elimino el directorio home... "
+                else
+                    mensaje="$mensaje Warning <El directorio home no existe>"
+                fi
             fi
+            # Eliminar el usuario
+            userdel "$name"
+            mensaje="$mensaje Se elimino el usuario"
+        else
+            mensaje="$mensaje El usuario $name de la linea $lineas_procesadas no existe"
         fi
 
+        # Agregar el mensaje al archivo de registro
+        echo "$mensaje" >>"$log_file"
         # ================================================
     done <"$archivo_usuarios" # Fin del ciclo while
     # ================================================
 }
 
 while true; do
-    archivo_usuarios=$(dialog --title --cursor-off-label "Selecciona un archivo" \
-        --stdout \
-        --fselect /home/ 14 70)
+    archivo_usuarios=$(dialog --title "Selecciona un archivo" \
+        --stdout --cursor-off-label --fselect /home/ 14 70)
     archivo_usuario_Output=$?
     # Si el usuario presiona "Cancel" se sale del script
     if [ $archivo_usuario_Output -eq 1 ]; then
