@@ -28,14 +28,11 @@ addUsers() {
     # Crear el archivo de registro
     touch "$log_file"
 
-    # Escribir el nombre de usuario en la primera línea del archivo de registro
-    echo "Usuario: $usuario_actual" >>"$log_file"
-
     # Inicializar el contador de líneas procesadas
     lineas_procesadas=0
 
     # Hacer saber al usuario que se están creando los usuarios
-    dialog --title "ALTA MASIVA DE USUARIOS" --infobox "Creando usuarios, por favor espere..." 10 40
+    dialog --clear --title "ALTA MASIVA DE USUARIOS" --infobox "Creando usuarios, por favor espere..." 0 0
 
     # Leer el archivo y procesar los datos
     # el unico dato que se necesita es el nombre de usuario
@@ -62,21 +59,21 @@ addUsers() {
             echo "$mensaje_error" >>"$log_file"
             continue
         fi
-        mensaje="$lineas_procesadas .- $name"
-        useradd "$name"
-        # si no se pudo crear mandar mensaje de error
-        counter=0
-        if [ $? -ne 0 ]; then
-            mensaje_error="ERROR: El usuario $name de la línea $lineas_procesadas no se pudo crear."
+        # Validar que el nombre solo tenga caracteres validos
+        # solo letras mayusculas y minusculas, numeros y todos los caracteres especialese permitidos en Linux:
+        # @ # _ ^ * % / . + : ; =
+        if [[ ! $name =~ ^[a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]+$ ]]; then
+            mensaje_error="ERROR: El nombre de usuario $name de la línea $lineas_procesadas contiene caracteres no válidos."
             echo "$mensaje_error" >>"$log_file"
             continue
         fi
-        # Usuario creado correctamente
+        mensaje="$lineas_procesadas .- $name"
 
+        command="useradd "
         # Verificar si se especificó una contraseña
         if [ -n "$password" ]; then
             # Establecer la contraseña
-            echo "$name:$password" | chpasswd
+            command+=" -p $(openssl passwd -crypt "$password")"
             mensaje+=" Contraseña: $password"
         fi
 
@@ -91,7 +88,7 @@ addUsers() {
                     echo "$mensaje_error" >>"$log_file"
                 else
                     # Establecer el UID
-                    usermod -u "$uid" "$name"
+                    command+=" -u $uid"
                     mensaje+=" UID: $uid"
                 fi
             else
@@ -108,12 +105,12 @@ addUsers() {
                 # Verificar si el grupo existe
                 if grep -q "^$gid:" /etc/group; then
                     # Establecer el GID
-                    usermod -g "$gid" "$name"
+                    command+=" -g $gid"
                 else
                     # Crear el grupo
                     groupadd "$gid"
                     # Establecer el GID
-                    usermod -g "$gid" "$name"
+                    command+=" -g $gid"
                 fi
                 mensaje+=" GID: $gid"
             else
@@ -128,7 +125,7 @@ addUsers() {
             # Verificar si el shell existe en el sistema
             if grep -q "^$shell$" /etc/shells; then
                 # Establecer el shell
-                usermod -s "$shell" "$name"
+                command+=" -s $shell"
                 mensaje+=" Shell: $shell"
             else
                 # Mostrar un mensaje de error
@@ -140,6 +137,7 @@ addUsers() {
         # Verificar si se especificaron grupos
         # el formato de los grupos esta separado por espacios
         if [ -n "$groups" ]; then
+            grupoCommand=" -G"
             # Leer el valor de groups y almacenarlo en un array
             IFS=' ' read -r -a grupos <<<"$groups"
             # Validar que los grupos existan
@@ -153,8 +151,10 @@ addUsers() {
                     mensaje+=" Grupo creado: $grupo"
                 fi
                 # Agregar el usuario al grupo
-                usermod -a -G "$grupo" "$name"
+                grupoCommand+=" $grupo"
             done
+            # Agregar los grupos al comando
+            command+="$grupoCommand"
         fi
 
         # Verificar si se especificó la creación del directorio home
@@ -172,12 +172,7 @@ addUsers() {
                     createDefaulHome
                     ;;
                 *)
-                    # Crear el directorio home
-                    mkdir -p "$home"
-                    # Establecer los permisos
-                    chmod 700 "$home"
-                    # Establecer el propietario
-                    chown "$name:$name" "$home"
+                    command+=" -m -d $home"
                     mensaje+=" Directorio home: $home"
                     ;;
                 esac
@@ -194,8 +189,30 @@ addUsers() {
             validation=$(checkDate "$expDate")
             if [ "$validation" = "1" ]; then
                 # Establecer la fecha de expiración
-                chage -E "$expDate" "$name"
+                command+=" -e $expDate"
                 mensaje+=" Fecha de expiración: $expDate"
+                # Verificar si se especificó una fecha de warning
+                # YYYY-MM-DD
+                if [[ -n "$expWarning" && ! "$expWarning" =~ ^,+$ ]]; then
+                    validation=0
+                    validation=$(checkDate "$expWarning")
+                    if [ "$validation" = "1" ]; then
+                        # Verificar que la fecha de warning sea menor a la fecha de expiración
+                        if [ "$expWarning" -gt "$expDate" ]; then
+                            # Mostrar un mensaje de error
+                            mensaje_error="ERROR: La fecha de warning especificada $expWarning del usuario $name en la línea $lineas_procesadas es mayor a la fecha de expiración $expDate."
+                            echo "$mensaje_error" >>"$log_file"
+                        else
+                            # Establecer la fecha de warning
+                            command+=" -W $expWarning"
+                            mensaje+=" Fecha de warning: $expWarning"
+                        fi
+                    else
+                        # Mostrar un mensaje de error
+                        mensaje_error="ERROR: La fecha de warning especificada $expWarning del usuario $name en la línea $lineas_procesadas no es válida."
+                        echo "$mensaje_error" >>"$log_file"
+                    fi
+                fi
             else
                 # Mostrar un mensaje de error
                 mensaje_error="ERROR: La fecha de expiración especificada $expDate del usuario $name en la línea $lineas_procesadas no es válida."
@@ -203,21 +220,10 @@ addUsers() {
             fi
         fi
 
-        # Verificar si se especificó una fecha de warning
-        # YYYY-MM-DD
-        if [[ -n "$expWarning" && ! "$expWarning" =~ ^,+$ ]]; then
-            validation=0
-            validation=$(checkDate "$expWarning")
-            if [ "$validation" = "1" ]; then
-                # Establecer la fecha de warning
-                chage -W "$expWarning" "$name"
-                mensaje+=" Fecha de warning: $expWarning"
-            else
-                # Mostrar un mensaje de error
-                mensaje_error="ERROR: La fecha de warning especificada $expWarning del usuario $name en la línea $lineas_procesadas no es válida."
-                echo "$mensaje_error" >>"$log_file"
-            fi
-        fi
+        # Agregar usuario
+        command+=" $name"
+        # Invocar el comando utilizando eval
+        eval "$command"
 
         mensaje+=" Fecha de creación: $(date '+%Y-%m-%d %H:%M:%S')"
         echo "$mensaje" >>"$log_file"
@@ -225,16 +231,12 @@ addUsers() {
     done <"$archivo_usuarios" # Fin del ciclo while
     # ================================================
 
-    dialog --colors --title "ALTA TERMINADA" --msgbox "Puedes ver el registro en el archivo \Z1$log_file\Zn" 0 0
+    dialog --colors --title "ALTA TERMINADA" --msgbox "Puedes ver el registro en el archivo \Z1$log_file\Zn" 0 0 --clear
 }
 
 createDefaulHome() {
-    # Crear el directorio home a partir de $"HOME"
-    mkdir -p "/home/$name"
-    # Establecer los permisos
-    chmod 700 "/home/$name"
-    # Establecer el propietario
-    chown "$name:$name" "/home/$name"
+    command+=" -m -d /home/$name"
+
     mensaje+=" Directorio home: /home/$name"
 }
 
@@ -262,9 +264,8 @@ checkDate() {
     fi # Fin de la validación del formato
 }
 while true; do
-    archivo_usuarios=$(dialog --title --cursor-off-label "Selecciona un archivo" \
-        --stdout \
-        --fselect /home/ 14 70)
+    archivo_usuarios=$(dialog --title "Selecciona un archivo" \
+        --stdout --cursor-off-label --fselect /home/ 14 70)
     archivo_usuario_Output=$?
     # Si el usuario presiona "Cancel" se sale del script
     if [ $archivo_usuario_Output -eq 1 ]; then
