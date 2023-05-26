@@ -31,14 +31,12 @@ addUsers() {
     # Escribir el nombre de usuario en la primera línea del archivo de registro
     echo "Usuario: $usuario_actual" >>"$log_file"
 
-
-
     # Inicializar el contador de líneas procesadas
     lineas_procesadas=0
-    
+
     # Hacer saber al usuario que se están creando los usuarios
-    dialog --no-clear --title "ALTA MASIVA DE USUARIOS" --infobox "Creando usuarios, por favor espere..." 10 40
-    
+    dialog --title "ALTA MASIVA DE USUARIOS" --infobox "Creando usuarios, por favor espere..." 10 40
+
     # Leer el archivo y procesar los datos
     # el unico dato que se necesita es el nombre de usuario
     # el resto de los datos se pueden ignorar o son opcionales o estar vacios
@@ -66,20 +64,13 @@ addUsers() {
         fi
         mensaje="$lineas_procesadas .- $name"
         useradd "$name"
-        # Esperar a que el usuario se haya creado correctamente
-        # si no se creo, volverlo intentar un maximo de 3 veces
         # si no se pudo crear mandar mensaje de error
         counter=0
-        while [ $? -ne 0 ]; do
-            useradd "$name"
-            ((counter++))
-            sleep 1
-            if [ $counter -gt 3 ]; then
-                mensaje_error="ERROR: El usuario $name de la línea $lineas_procesadas no se pudo crear."
-                echo "$mensaje_error" >>"$log_file"
-                break
-            fi
-        done        
+        if [ $? -ne 0 ]; then
+            mensaje_error="ERROR: El usuario $name de la línea $lineas_procesadas no se pudo crear."
+            echo "$mensaje_error" >>"$log_file"
+            continue
+        fi
         # Usuario creado correctamente
 
         # Verificar si se especificó una contraseña
@@ -150,19 +141,19 @@ addUsers() {
         # el formato de los grupos esta separado por espacios
         if [ -n "$groups" ]; then
             # Leer el valor de groups y almacenarlo en un array
-            IFS=' ' read -r -a grupos <<< "$groups"
+            IFS=' ' read -r -a grupos <<<"$groups"
             # Validar que los grupos existan
             for grupo in "${grupos[@]}"; do
                 # Verificar si el grupo existe
-                if grep -q "^$grupo:" /etc/group; then
-                    # Agregar el usuario al grupo
-                    usermod -a -G "$grupo" "$name"
+                if getent group "$grupo" >/dev/null; then
                     mensaje+=" Grupo: $grupo"
                 else
-                    # Mostrar un mensaje de error
-                    mensaje_error="ERROR: El grupo especificado $grupo del usuario $name en la línea $lineas_procesadas no existe."
-                    echo "$mensaje_error" >>"$log_file"
+                    # Crear el grupo
+                    groupadd "$grupo"
+                    mensaje+=" Grupo creado: $grupo"
                 fi
+                # Agregar el usuario al grupo
+                usermod -a -G "$grupo" "$name"
             done
         fi
 
@@ -172,23 +163,27 @@ addUsers() {
         # valores falsos: no, n, false, f, 0, no, no crear, "" (vacío)
         createHome="${createHome,,}" # Convertir a minúsculas
         if [ "$createHome" = "yes" ] || [ "$createHome" = "y" ] || [ "$createHome" = "true" ] || [ "$createHome" = "t" ] || [ "$createHome" = "1" ] || [ "$createHome" = "s" ] || [ "$createHome" = "si" ] || [ "$createHome" = "crear" ]; then
-            # Si se especifico un directorio home, crearlo
+            # Si se especificó un directorio home, crearlo
             if [ -n "$home" ]; then
-                # Crear el directorio home
-                mkdir -p "$home"
-                # Establecer los permisos
-                chmod 700 "$home"
-                # Establecer el propietario
-                chown "$name:$name" "$home"
-                mensaje+=" Directorio home: $home"
+                # Verificar si la ruta home es una ruta sensible
+                case "$home" in
+                /etc/* | /root/* | /bin/* | /sbin/* | /lib/* | /lib64/* | /usr/bin/* | /usr/sbin/* | /usr/lib/* | /usr/lib64/* | /var/*)
+                    mensaje+=" Ruta home no válida creando default"
+                    createDefaulHome
+                    ;;
+                *)
+                    # Crear el directorio home
+                    mkdir -p "$home"
+                    # Establecer los permisos
+                    chmod 700 "$home"
+                    # Establecer el propietario
+                    chown "$name:$name" "$home"
+                    mensaje+=" Directorio home: $home"
+                    ;;
+                esac
             else
-                # Crear el directorio home apartir de $"HOME"
-                mkdir -p "$HOME/$name"
-                # Establecer los permisos
-                chmod 700 "$HOME/$name"
-                # Establecer el propietario
-                chown "$name:$name" "$HOME/$name"
-                mensaje+=" Directorio home: $HOME/$name"
+                mensaje+=" Creando home default"
+                createDefaulHome
             fi
         fi
 
@@ -226,18 +221,28 @@ addUsers() {
 
         mensaje+=" Fecha de creación: $(date '+%Y-%m-%d %H:%M:%S')"
         echo "$mensaje" >>"$log_file"
-    # ================================================
+        # ================================================
     done <"$archivo_usuarios" # Fin del ciclo while
     # ================================================
 
-    dialog --no-clear --colors --title "ALTA TERMINADA" --msgbox "Puedes ver el registro en el archivo \Z1$log_file\Zn" 0 0
+    dialog --colors --title "ALTA TERMINADA" --msgbox "Puedes ver el registro en el archivo \Z1$log_file\Zn" 0 0
+}
+
+createDefaulHome() {
+    # Crear el directorio home a partir de $"HOME"
+    mkdir -p "/home/$name"
+    # Establecer los permisos
+    chmod 700 "/home/$name"
+    # Establecer el propietario
+    chown "$name:$name" "/home/$name"
+    mensaje+=" Directorio home: /home/$name"
 }
 
 # Función para validar el formato de la fecha
 # Formato YYYY-MM-DD
 # retorna 1 si la fecha es válida
 # retorna 0 si la fecha no es válida
-checkDate(){
+checkDate() {
     local date="$1"
     #Formato YYYY-MM-DD
     if [[ "$date" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
@@ -257,16 +262,16 @@ checkDate(){
     fi # Fin de la validación del formato
 }
 while true; do
-    archivo_usuarios=$(dialog --no-clear --title "Selecciona un archivo" \
+    archivo_usuarios=$(dialog --title --cursor-off-label "Selecciona un archivo" \
         --stdout \
-        --fselect "$HOME"/ 14 70)
+        --fselect /home/ 14 70)
     archivo_usuario_Output=$?
     # Si el usuario presiona "Cancel" se sale del script
     if [ $archivo_usuario_Output -eq 1 ]; then
         break
     fi
     if [ -f "$archivo_usuarios" ]; then
-        dialog --no-clear --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $archivo_usuarios?" 0 0 
+        dialog --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $archivo_usuarios?" 0 0
         dialog_Output=$?
         if [ $dialog_Output -eq 0 ]; then
             # Si el usuario presiona "Yes" se ejecuta la función addUsers
