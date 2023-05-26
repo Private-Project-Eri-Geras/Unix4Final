@@ -32,7 +32,7 @@ addUsers() {
     lineas_procesadas=0
 
     # Hacer saber al usuario que se están creando los usuarios
-    dialog --clear --title "ALTA MASIVA DE USUARIOS" --infobox "Creando usuarios, por favor espere..." 0 0
+    dialog --title "ALTA MASIVA DE USUARIOS" --infobox "Creando usuarios, por favor espere..." 10 40
 
     # Leer el archivo y procesar los datos
     # el unico dato que se necesita es el nombre de usuario
@@ -41,6 +41,7 @@ addUsers() {
     # nombre_usuario,contraseña,uid ,gid,shell ,grupos,crear_home,directorio_home,fecha_expiracion   ,advertencia_expiracion
     # String         String     int  int String String bool       bool            String YYYY-MM-DD   String YYYY-MM-DD
     while IFS=',' read -r name password uid gid shell groups createHome home expDate expWarning; do
+        # C
         ((lineas_procesadas++))
         if [[ $name =~ ^# ]]; then
             # Si la línea comienza con #, se ignora
@@ -231,7 +232,7 @@ addUsers() {
     done <"$archivo_usuarios" # Fin del ciclo while
     # ================================================
 
-    dialog --colors --title "ALTA TERMINADA" --msgbox "Puedes ver el registro en el archivo \Z1$log_file\Zn" 0 0 --clear
+    dialog --clear --colors --title "ALTA TERMINADA" --msgbox "Puedes ver el registro en el archivo \Z1$log_file\Zn" 0 0
 }
 
 createDefaulHome() {
@@ -263,6 +264,7 @@ checkDate() {
         echo 0
     fi # Fin de la validación del formato
 }
+
 while true; do
     archivo_usuarios=$(dialog --title "Selecciona un archivo" \
         --stdout --cursor-off-label --fselect /home/ 14 70)
