@@ -1,12 +1,13 @@
 #!/bin/bash
 # Ruta del archivo que guarda los inicios y terminos de sesión
-new=/tmp/wwho1$$.txt
-old=/tmp/wwho2$$.txt
-diferencia=/tmp/diff$$.txt
+new=/tmp/newWho.txt
+old=/tmp/oldWho.txt
+diferencia=/tmp/diff.txt
 archivo=/tmp/usuarios.txt
 # Función para mostrar un cuadro de diálogo con el contenido del archivo
 mostrar_cuadro_dialogo() {
-    dialog --title "Usuarios" --textbox "$1" 0 0 
+    
+    dialog --title "Usuarios" --clear --textbox "$1" 30 30 --default-button "ok"
         
 }
 
@@ -28,7 +29,7 @@ do
   if [ -n "$usuarios_entran" ]; then
       echo "$usuarios_entran" >> /tmp/usuarios.txt
      press= mostrar_cuadro_dialogo "/tmp/usuarios.txt"
-     if [ "$dialog_output" = "Aceptar" ]; then
+     if [ "$dialog_output" = "ok" ]; then
         #Sale de la lista desplegable de usuarios
           break
       fi
