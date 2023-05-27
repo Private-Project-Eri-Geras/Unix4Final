@@ -14,7 +14,8 @@ selected=0
 clear
 
 #Print the menu using dialog
-    while true; dialog
+    while true; 
+    do
         #Mostrar le menu y cambiar el valor de la variable "$selected"
         selected=$(dialog --clear --title "Menu Sessions"\
         --cancel-label "Cancel" --ok-label "Select" \
@@ -25,6 +26,7 @@ clear
         if [[ $? -ne 0 ]]; then
             break
         fi
+    done
 
 #Exit the script
 clear
