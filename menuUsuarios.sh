@@ -68,9 +68,7 @@ while true; do
         ;;
     4)
         # TODO: baja manual
-        echo "baja manual"
-        echo "Presiona enter para continuar"
-        read -sn 1
+        (source "usuarios/bajas/manual.sh")
         ;;
     5)
         # TODO: cambio de contraseña por archivo de texto
