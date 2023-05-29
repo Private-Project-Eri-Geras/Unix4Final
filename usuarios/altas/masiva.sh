@@ -40,7 +40,7 @@ addUsers() {
     # formato del archivo:
     # nombre_usuario,contraseña,uid ,gid,shell ,grupos,crear_home,directorio_home,fecha_expiracion   ,advertencia_expiracion
     # String         String     int  int String String bool       bool            String YYYY-MM-DD   String YYYY-MM-DD
-    while IFS=',' read -r name password uid gid shell groups createHome home expDate expWarning; do
+    while IFS=',' read -r name password uid gid shell groups home expDate expWarning; do
         # C
         ((lineas_procesadas++))
         if [[ $name =~ ^# ]]; then
@@ -63,19 +63,36 @@ addUsers() {
         # Validar que el nombre solo tenga caracteres validos
         # solo letras mayusculas y minusculas, numeros y todos los caracteres especialese permitidos en Linux:
         # @ # _ ^ * % / . + : ; =
-        if [[ ! $name =~ ^[a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]+$ ]]; then
-            mensaje_error="ERROR: El nombre de usuario $name de la línea $lineas_procesadas contiene caracteres no válidos."
+        if [[ ! $name =~ ^[a-zA-Z0-9_-]+$ ]]; then
+            caracteres_invalidos=$(echo "$name" | grep -o '[^a-zA-Z0-9_-]')
+            mensaje_error="ERROR: El usuario en la linea $lineas_procesadas contiene caracteres inválidos: $caracteres_invalidos"
             echo "$mensaje_error" >>"$log_file"
             continue
         fi
+        # El nombre tiene que empezar con una letra
+        if [[ ! $name =~ ^[a-zA-Z] ]]; then
+            mensaje_error="ERROR: El nombre de usuario $name de la línea $lineas_procesadas debe empezar con una letra."
+            echo "$mensaje_error" >>"$log_file"
+            continue
+        fi
+
         mensaje="$lineas_procesadas .- $name"
 
         command="useradd "
         # Verificar si se especificó una contraseña
         if [ -n "$password" ]; then
-            # Establecer la contraseña
-            command+=" -p $(openssl passwd -crypt "$password")"
-            mensaje+=" Contraseña: $password"
+            # Validar que la contraseña solo tenga caracteres validos
+            # solo letras mayusculas y minusculas, numeros y todos los caracteres especialese permitidos en Linux:
+            # @ # _ ^ * % / . + : ; =
+            if [[ ! $password =~ ^[a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]+$ ]]; then
+                caracteres_invalidos=$(echo "$password" | grep -o '[^a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]')
+                mensaje_error="ERROR: Caracteres inválidos encontrados en la contraseña: $caracteres_invalidos"
+                echo "$mensaje_error" >>"$log_file"
+            else
+                # Establecer la contraseña
+                command+=" -p $(openssl passwd -crypt "$password")"
+                mensaje+=" Contraseña: $password"
+            fi
         fi
 
         # Verificar si se especificó un UID
@@ -158,29 +175,22 @@ addUsers() {
             command+="$grupoCommand"
         fi
 
-        # Verificar si se especificó la creación del directorio home
-        # createHome no tiene que ser case sensitive
-        # valores verdaderos: yes, y, true, t, 1, s, si, crear
-        # valores falsos: no, n, false, f, 0, no, no crear, "" (vacío)
-        createHome="${createHome,,}" # Convertir a minúsculas
-        if [ "$createHome" = "yes" ] || [ "$createHome" = "y" ] || [ "$createHome" = "true" ] || [ "$createHome" = "t" ] || [ "$createHome" = "1" ] || [ "$createHome" = "s" ] || [ "$createHome" = "si" ] || [ "$createHome" = "crear" ]; then
-            # Si se especificó un directorio home, crearlo
-            if [ -n "$home" ]; then
-                # Verificar si la ruta home es una ruta sensible
-                case "$home" in
-                /etc/* | /root/* | /bin/* | /sbin/* | /lib/* | /lib64/* | /usr/bin/* | /usr/sbin/* | /usr/lib/* | /usr/lib64/* | /var/*)
-                    mensaje+=" Ruta home no válida creando default"
-                    createDefaulHome
-                    ;;
-                *)
-                    command+=" -m -d $home"
-                    mensaje+=" Directorio home: $home"
-                    ;;
-                esac
-            else
-                mensaje+=" Creando home default"
+        # Si se especificó un directorio home, crearlo
+        if [ -n "$home" ]; then
+            # Verificar si la ruta home es una ruta sensible
+            case "$home" in
+            /etc/* | /root/* | /bin/* | /sbin/* | /lib/* | /lib64/* | /usr/bin/* | /usr/sbin/* | /usr/lib/* | /usr/lib64/* | /var/*)
+                mensaje+=" Ruta home no válida creando default"
                 createDefaulHome
-            fi
+                ;;
+            *)
+                command+=" -m -d $home"
+                mensaje+=" Directorio home: $home"
+                ;;
+            esac
+        else
+            mensaje+=" Creando home default"
+            createDefaulHome
         fi
 
         # Verificar si se especificó fecha de expiración
