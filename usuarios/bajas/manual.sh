@@ -32,8 +32,10 @@ update_dialog() {
     # Calcular el número de líneas que caben en el contenido del diálogo
     dialog_content_lines=$((dialog_height - dialog_header_lines - dialog_footer_lines))
 
-    head -n $dialog_content_lines /tmp/users_content >/tmp/temp_temp
-    cat /tmp/temp_temp >/tmp/users_content
+    # Actualizar el contenido del archivo temporal
+    echo -e "$content\nDL $dialog_content_lines SL $starting_line ML $max_lines" >/tmp/dialog_content
+    tail -n +$((starting_line + 1)) /tmp/users_content >/tmp/temp_temp
+    head -n $dialog_content_lines /tmp/temp_temp >/tmp/users_content
     # Actualizar el diálogo
     dialog --no-clear --keep-window --title "Ingrese el nombre de usuario:" --begin "$dialog_y" "$dialog_x" --tailboxbg /tmp/dialog_content "$dialog_height" "$dialog_width" \
         --and-widget \
@@ -57,10 +59,10 @@ add_content() {
             read -sn 1 input
             if [[ "$input" == "A" ]]; then
                 # Arriba
-                if [[ $starting_line -gt 0 ]]; then
+                if [[ $starting_line -ge 1 ]]; then
                     starting_line=$((starting_line - 1))
                 fi
-                tail -n +$((starting_line + 1)) /tmp/temp_passwd >/tmp/users_content
+                cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
                 update_dialog
             elif [[ "$input" == "B" ]]; then
                 # Abajo
@@ -68,22 +70,32 @@ add_content() {
 
                     starting_line=$((starting_line + 1))
                 fi
-                tail -n +$((starting_line + 1)) /tmp/temp_passwd >/tmp/users_content
+                cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
                 update_dialog
             fi
             continue
-        fi
-
-        # Si se pulsa espacio se va a autocompletar content
+            # Si se pulsa espacio se va a autocompletar content
         # con la primera coincidencia de nombre de usuario en
         # /etc/passwd/
-        if [[ "$input" == " " ]]; then
-            # Buscar la primera coincidencia que comience exactamente con el contenido de content
-            max_match="$(grep -m 1 -E "^$content" /etc/passwd | cut -d: -f1)"
+        elif [[ "$input" == " " ]]; then
+            # Buscar todas las coincidencias que comiencen exactamente con el contenido de content
+            matches=($(grep -E "^$content" /tmp/temp_passwd | cut -d: -f1))
 
-            # Si se encontró una coincidencia, actualizar content
-            if [[ ! -z "$max_match" ]]; then
-                content="$max_match"
+            # Si se encontraron coincidencias, actualizar content hasta el máximo prefijo común
+            if [[ ${#matches[@]} -gt 0 ]]; then
+                common_prefix="${matches[0]}"
+                for match in "${matches[@]}"; do
+                    prefix_length=$((${#common_prefix} < ${#match} ? ${#common_prefix} : ${#match}))
+                    i=0
+                    while [[ "$i" -lt "$prefix_length" ]]; do
+                        if [[ "${common_prefix:$i:1}" != "${match:$i:1}" ]]; then
+                            break
+                        fi
+                        i=$((i + 1))
+                    done
+                    common_prefix="${common_prefix:0:$i}"
+                done
+                content="$common_prefix"
             fi
         else
             # Si se presiona el carácter de retroceso, eliminar el último carácter
@@ -93,15 +105,10 @@ add_content() {
                 content+="$input"
             fi
         fi
-
-        # Actualizar el contenido del archivo temporal
-        echo "$content" >/tmp/dialog_content
-
         # Actualizar el user content con todas las coincidencias
         # que exclusivamente empiecen con lo que tenga $content
-        # en el campo uno de passwd
         grep -E "^$content" /tmp/temp_passwd >/tmp/users_content
-        max_lines=$(($(wc -l </tmp/temp_passwd) - 1))
+        max_lines=$(($(wc -l </tmp/users_content) - 1))
         starting_line=0
         # Actualizar el diálogo en segundo plano
         update_dialog
@@ -111,9 +118,8 @@ add_content() {
 # Crear archivo temporal con contenido inicial
 touch /tmp/dialog_content
 touch /tmp/users_content
-echo "" >/tmp/dialog_content
-cut -d: -f1 </etc/passwd >/tmp/users_content
-
+echo -e "$content\nDL $dialog_content_lines SL $starting_line ML $max_lines" >/tmp/dialog_content
+cat /tmp/temp_passwd >/tmp/users_content
 # Actualizar el diálogo por primera vez
 update_dialog &
 
