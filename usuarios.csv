@@ -1,7 +1,7 @@
-#name,pswd,uid,gid,shell,grupos,crear_home,directorio_home,fecha_expiracion,advertencia_expiracion
-usuario1,,,,,,,,,
-usuario2,,,,,,y,/home/usuario2/home/,,
-usuario3,,,,,,,,,
-usuario4,,,,,,,,,
-usuario5,,,,,,Y,,,
-#fin,,,,,,,,,
+#name,pswd,uid,gid,shell,grupos,directorio_home,fecha_expiracion,advertencia_expiracion
+usuario1,,,,,,,,
+usuario2,,,,,,/home/usuario2/home/,,
+usuario3,,,,,,,,
+usuario4,,,,,,,,
+usuario5,,,,,,,,
+#fin,,,,,,,,
