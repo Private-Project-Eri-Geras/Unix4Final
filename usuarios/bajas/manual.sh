@@ -7,7 +7,7 @@ touch /tmp/temp_passwd
 touch /tmp/temp_temp
 cut -d: -f1 </etc/passwd >/tmp/temp_passwd
 
-starting_line=0
+starting_line=1
 max_lines=$(($(wc -l </tmp/temp_passwd) - 1))
 
 # Función para actualizar el diálogo
@@ -33,22 +33,23 @@ update_dialog() {
 
     # Actualizar el contenido del archivo temporal
     echo -e "$content\n" >/tmp/dialog_content
-    tempMessage="<Enter> slect"
+    tempMessage="<Seleccionar> <Cancelar> <Ayuda>\n"
+
     # Imprimir símbolos ↑ (-) y ↓ (+) si corresponde
-    if [[ $starting_line -gt 0 ]]; then
+    if [[ $starting_line -gt 1 ]]; then
         tempMessage+=" <↑>(-)"
     else
         tempMessage+="       "
     fi
 
-    if [[ $((($max_lines - $starting_line) + 2)) -gt $dialog_content_lines ]]; then
+    if [[ $((($max_lines - $starting_line) + 3)) -gt $dialog_content_lines ]]; then
         tempMessage+=" <↓>(+)"
     fi
     echo -e "\n$tempMessage" >>/tmp/dialog_content
-    tail -n +$((starting_line + 1)) /tmp/users_content >/tmp/temp_temp
+    tail -n +$starting_line /tmp/users_content >/tmp/temp_temp
     head -n $dialog_content_lines /tmp/temp_temp >/tmp/users_content
     # Actualizar el diálogo
-    dialog --no-clear --keep-window --title "Ingrese el nombre de usuario:" --begin "$dialog_y" "$dialog_x" --tailboxbg /tmp/dialog_content "$dialog_height" "$dialog_width" \
+    dialog --no-clear --no-hot-list --keep-window --title "Ingrese el nombre de usuario:" --begin "$dialog_y" "$dialog_x" --tailboxbg /tmp/dialog_content "$dialog_height" "$dialog_width" \
         --and-widget \
         --no-clear --keep-window --title "USUARIOS" --begin "$dialog_y" $(((cols / 2) + 1)) --tailboxbg /tmp/users_content "$dialog_height" "$dialog_width"
 }
@@ -78,14 +79,14 @@ add_content() {
             read -sn 1 input
             if [[ "$input" == "A" ]]; then
                 # Arriba
-                if [[ $starting_line -ge 1 ]]; then
+                if [[ $starting_line -gt 1 ]]; then
                     starting_line=$((starting_line - 1))
                 fi
                 cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
                 update_dialog
             elif [[ "$input" == "B" ]]; then
                 # Abajo
-                if [[ $((($max_lines - $starting_line) + 1)) -ge $dialog_content_lines ]]; then
+                if [[ $((($max_lines - $starting_line) + 2)) -ge $dialog_content_lines ]]; then
                     starting_line=$((starting_line + 1))
                 fi
                 cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
@@ -127,7 +128,7 @@ add_content() {
         # que exclusivamente empiecen con lo que tenga $content
         grep -E "^$content" /tmp/temp_passwd >/tmp/users_content
         max_lines=$(($(wc -l </tmp/users_content) - 1))
-        starting_line=0
+        starting_line=1
         # Actualizar el diálogo en segundo plano
         update_dialog
     done
