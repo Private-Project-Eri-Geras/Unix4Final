@@ -169,10 +169,23 @@ checkResize() {
         local newCols=$(tput cols)
         local newRows=$(tput lines)
         if [[ $rows -ne $newRows ]]; then
+            # Obtener content de dialog_content segunda linea
+            dialog_content_lines=$(($(wc -l </tmp/dialog_content) - 3))
+            # Obtener content de users_content segunda linea
+            content=$(head -n 2 /tmp/dialog_content | tail -n 1)
             cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+            max_lines=$(($(wc -l </tmp/users_content) - 1))
+            starting_line=1
             update_dialog
-        elif [[ $cols -ne $newCols ]]; then
+        fi
+        if [[ $cols -ne $newCols ]]; then
+            # Obtener content de dialog_content segunda linea
+            dialog_content_lines=$(($(wc -l </tmp/dialog_content) - 3))
+            # Obtener content de users_content segunda linea
+            content=$(head -n 2 /tmp/dialog_content | tail -n 1)
             cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+            max_lines=$(($(wc -l </tmp/users_content) - 1))
+            starting_line=1
             update_dialog
         fi
     done
@@ -181,7 +194,6 @@ checkResize() {
 # Crear archivo temporal con contenido inicial
 touch /tmp/dialog_content
 touch /tmp/users_content
-echo -e "$content\nDL $dialog_content_lines SL $starting_line ML $max_lines" >/tmp/dialog_content
 cat /tmp/temp_passwd >/tmp/users_content
 
 # Mandar a llamar el segundo plano el hilo que rescalara todo
@@ -189,6 +201,9 @@ checkResize &
 
 # Llamar a la función para agregar contenido al archivo temporal
 add_content
+
+# Matar el hilo que rescalara todo
+kill $!
 
 # Eliminar el archivo temporal al finalizar
 rm /tmp/dialog_content
