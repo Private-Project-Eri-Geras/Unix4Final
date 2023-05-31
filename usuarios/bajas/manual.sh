@@ -7,60 +7,73 @@ touch /tmp/temp_passwd
 touch /tmp/temp_temp
 cut -d: -f1 </etc/passwd >/tmp/temp_passwd
 
+# Inicio de impresion del archivo en el panel de la derecha
 starting_line=1
+# lineas maximas que tiene passwd
 max_lines=$(($(wc -l </tmp/temp_passwd) - 1))
+
+# Selector de menu
+# menu
+tempMessage_Menu=("Seleccional" "Cancelar" "Ayuda")
+# opcion seleccionada
+tempMessage_iterator=0
 
 # Función para actualizar el diálogo
 update_dialog() {
-    tput cup 0 0
-
     # Obtener el tamaño de la terminal
     rows=$(tput lines)
     cols=$(tput cols)
 
     # Calcular la posición y el tamaño de la ventana del diálogo
-    dialog_height=$((rows - 2))
-    dialog_width=$(((cols - 2) / 2))
+    dialog_height=$((rows - 3))
+    dialog_width=$(((cols - 4) / 2))
     dialog_x=$(((cols / 2) - dialog_width)) # Centrar horizontalmente en la parte izquierda
     dialog_y=$(((rows - dialog_height) / 2))
+    # Calcular la posición y el tamaño de la ventana del dialogo izquierdo
+    input_height=6
+    input_width=$(((cols - 2) / 2))
+    input_x=$(((cols / 2) - input_width)) # Centrar horizontalmente en la parte izquierda
+    input_y=$(((rows - input_height) / 2))
 
     # Calcular el número de líneas que caben en el diálogo
-    dialog_header_lines=1 # Número de líneas de encabezado del diálogo
-    dialog_footer_lines=1 # Número de líneas de pie del diálogo
+    dialog_header_lines=2 # Número de líneas de encabezado del diálogo
+    dialog_footer_lines=3 # Número de líneas de pie del diálogo
 
     # Calcular el número de líneas que caben en el contenido del diálogo
     dialog_content_lines=$((dialog_height - dialog_header_lines - dialog_footer_lines))
+    tempMessage=""
+    for ((i = 0; i < 3; i++)); do
+        if [[ $i -eq $tempMessage_iterator ]]; then
+            tempMessage+="\Zb<\Z4${tempMessage_Menu[$i]}\Z0>\Zn "
+        else
+            tempMessage+="<\Zb${tempMessage_Menu[$i]}\Zn>  "
+        fi
+    done
 
     # Actualizar el contenido del archivo temporal
-    echo -e "$content\n" >/tmp/dialog_content
-    tempMessage="<Seleccionar> <Cancelar> <Ayuda>\n"
+    echo -e "\ZbIngresa el nombre de usuario:\ZB\n$content\n" >/tmp/dialog_content
+    echo "$tempMessage" >>/tmp/dialog_content
 
+    #Formato de impresion de usuarios
+    tail -n +$starting_line /tmp/users_content >/tmp/temp_temp
     # Imprimir símbolos ↑ (-) y ↓ (+) si corresponde
     if [[ $starting_line -gt 1 ]]; then
-        tempMessage+=" <↑>(-)"
+        echo " \Zb\Z1<↑>(-)\Zn" >/tmp/users_content
     else
-        tempMessage+="       "
+        echo "     " >/tmp/users_content
     fi
-
-    if [[ $((($max_lines - $starting_line) + 3)) -gt $dialog_content_lines ]]; then
-        tempMessage+=" <↓>(+)"
+    head -n $dialog_content_lines /tmp/temp_temp >>/tmp/users_content
+    if [[ $((($max_lines - $starting_line) + 2)) -gt $dialog_content_lines ]]; then
+        echo " \Zb\Z2<↓>(+)\Zn" >>/tmp/users_content
     fi
-    echo -e "\n$tempMessage" >>/tmp/dialog_content
-    tail -n +$starting_line /tmp/users_content >/tmp/temp_temp
-    head -n $dialog_content_lines /tmp/temp_temp >/tmp/users_content
     # Actualizar el diálogo
-    dialog --no-clear --no-hot-list --keep-window --title "Ingrese el nombre de usuario:" --begin "$dialog_y" "$dialog_x" --tailboxbg /tmp/dialog_content "$dialog_height" "$dialog_width" \
+    dialog --no-clear --no-hot-list --colors --title "USUARIO A ELIMINAR" --begin "$input_y" "$input_x" --infobox "$(cat /tmp/dialog_content)" "$input_height" "$input_width" \
         --and-widget \
-        --no-clear --keep-window --title "USUARIOS" --begin "$dialog_y" $(((cols / 2) + 1)) --tailboxbg /tmp/users_content "$dialog_height" "$dialog_width"
+        --no-hot-list --keep-window --colors --title "USUARIOS" --begin "$dialog_y" $(((cols / 2) + 1)) --infobox "$(cat /tmp/users_content)" "$dialog_height" "$dialog_width"
+    tput smcup
+    tput clear
+    tput rmcup
 }
-
-# Crear archivo temporal con contenido inicial
-touch /tmp/dialog_content
-touch /tmp/users_content
-echo -e "$content\nDL $dialog_content_lines SL $starting_line ML $max_lines" >/tmp/dialog_content
-cat /tmp/temp_passwd >/tmp/users_content
-# Actualizar el diálogo por primera vez
-update_dialog &
 
 # Función para agregar contenido al archivo temporal
 add_content() {
@@ -86,11 +99,27 @@ add_content() {
                 update_dialog
             elif [[ "$input" == "B" ]]; then
                 # Abajo
-                if [[ $((($max_lines - $starting_line) + 2)) -ge $dialog_content_lines ]]; then
+                if [[ $((($max_lines - $starting_line) + 1)) -ge $dialog_content_lines ]]; then
                     starting_line=$((starting_line + 1))
                 fi
                 cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
                 update_dialog
+            elif [[ "$input" == "C" ]]; then
+                # Derecha
+                if [[ $tempMessage_iterator -lt 2 ]]; then
+                    tempMessage_iterator=$((tempMessage_iterator + 1))
+                fi
+                cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+                update_dialog
+                continue
+            elif [[ "$input" == "D" ]]; then
+                # Izquierda
+                if [[ $tempMessage_iterator -gt 0 ]]; then
+                    tempMessage_iterator=$((tempMessage_iterator - 1))
+                fi
+                cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+                update_dialog
+                continue
             fi
             continue
         # Si se pulsa espacio se va a autocompletar content
@@ -134,6 +163,30 @@ add_content() {
     done
 }
 
+checkResize() {
+    while true; do
+        sleep 0.2
+        local newCols=$(tput cols)
+        local newRows=$(tput lines)
+        if [[ $rows -ne $newRows ]]; then
+            cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+            update_dialog
+        elif [[ $cols -ne $newCols ]]; then
+            cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+            update_dialog
+        fi
+    done
+}
+
+# Crear archivo temporal con contenido inicial
+touch /tmp/dialog_content
+touch /tmp/users_content
+echo -e "$content\nDL $dialog_content_lines SL $starting_line ML $max_lines" >/tmp/dialog_content
+cat /tmp/temp_passwd >/tmp/users_content
+
+# Mandar a llamar el segundo plano el hilo que rescalara todo
+checkResize &
+
 # Llamar a la función para agregar contenido al archivo temporal
 add_content
 
@@ -142,28 +195,3 @@ rm /tmp/dialog_content
 rm /tmp/users_content
 rm /tmp/temp_passwd
 rm /tmp/temp_temp
-
-# #!/usr/bin/env bash
-
-# touch /tmp/usuarios_en_passwd.txt
-# touch /tmp/usuario_seleccionado.txt
-# cat /etc/passwd | cut -d: -f1 >/tmp/usuarios_en_passwd.txt
-# usuarios=()
-# inti=0
-# #crear un vector de objetos int string
-# # int es el numero de linea y string es el nombre de usuario, hacer un salto de linea por cada objeto
-# # leer el archivo y por cada linea agregar un objeto al vector
-# while read -r line; do
-# i=$((i + 1))
-# usuarios+=("$i" "$line")
-# done </tmp/usuarios_en_passwd.txt
-# for i in "${usuarios[@]}"; do
-# echo "$i"
-# done
-# read -sn 1
-
-# dialog --title "Baja de usuario" --menu "Seleccione el usuario a dar de baja" 15 10 0 "${usuarios[@]}" 2>/tmp/usuario_seleccionado.txt
-# usuario=$(cat /tmp/usuario_seleccionado.txt)
-
-# rm -f /tmp/usuarios_en_passwd.txt
-# rm -f /tmp/usuario_seleccionado.txt
