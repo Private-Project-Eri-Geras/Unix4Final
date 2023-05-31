@@ -142,3 +142,28 @@ rm /tmp/dialog_content
 rm /tmp/users_content
 rm /tmp/temp_passwd
 rm /tmp/temp_temp
+
+# #!/usr/bin/env bash
+
+# touch /tmp/usuarios_en_passwd.txt
+# touch /tmp/usuario_seleccionado.txt
+# cat /etc/passwd | cut -d: -f1 >/tmp/usuarios_en_passwd.txt
+# usuarios=()
+# inti=0
+# #crear un vector de objetos int string
+# # int es el numero de linea y string es el nombre de usuario, hacer un salto de linea por cada objeto
+# # leer el archivo y por cada linea agregar un objeto al vector
+# while read -r line; do
+# i=$((i + 1))
+# usuarios+=("$i" "$line")
+# done </tmp/usuarios_en_passwd.txt
+# for i in "${usuarios[@]}"; do
+# echo "$i"
+# done
+# read -sn 1
+
+# dialog --title "Baja de usuario" --menu "Seleccione el usuario a dar de baja" 15 10 0 "${usuarios[@]}" 2>/tmp/usuario_seleccionado.txt
+# usuario=$(cat /tmp/usuario_seleccionado.txt)
+
+# rm -f /tmp/usuarios_en_passwd.txt
+# rm -f /tmp/usuario_seleccionado.txt
