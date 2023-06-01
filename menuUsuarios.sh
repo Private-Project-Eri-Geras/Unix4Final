@@ -10,7 +10,7 @@ mostrar_ayuda() {
 if [ -z "$SUDO_USER" ]; then
     dialog --colors --title "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
     clear
-    # exit 1
+    exit 1
 fi
 
 # Define las opciones del menú
@@ -67,20 +67,13 @@ while true; do
         (source "usuarios/bajas/masiva.sh")
         ;;
     4)
-        # TODO: baja manual
         (source "usuarios/bajas/manual.sh")
         ;;
     5)
-        # TODO: cambio de contraseña por archivo de texto
-        echo "cambio de contraseña por archivo de texto"
-        echo "Presiona enter para continuar"
-        read -sn 1
+        (source "usuarios/contraseñas/masiva.sh")
         ;;
     6)
-        # TODO: cambio de contraseña manual
-        echo "cambio de contraseña manual"
-        echo "Presiona enter para continuar"
-        read -sn 1
+        (source "usuarios/contraseñas/manual.sh")
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
