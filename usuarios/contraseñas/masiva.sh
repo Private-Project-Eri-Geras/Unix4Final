@@ -33,7 +33,7 @@ changePasswd() {
     lineas_procesadas=0
 
     # Hacer saber al usuario que se están creando los usuarios
-    dialog --title "BAJA MASIVA DE USUARIOS" --infobox "Eliminando usuarios, por favor espere..." 10 40
+    dialog --title "CAMBIO DE CONTRASEÑAS MASIVA DE USUARIOS" --infobox "Eliminando usuarios, por favor espere..." 10 40
 
     # Leer el archivo y procesar los datos
     # dato neceario nombre de usuario, el otro campo se puuede ignorar
@@ -68,9 +68,11 @@ changePasswd() {
                     echo "$mensaje_error" >>"$log_file"
                 else
                     # Cambiar la contraseña
-                    echo "$password:$password" | passwd "$name"
+                    echo "$password:$password" | passwd "$name" -q >/dev/null 2>&1
                     mensaje="$mensaje La contraseña del usuario $name ha sido cambiada"
                 fi
+            else
+                mensaje="$mensaje La contraseña del usuario $name no ha sido cambiada"
             fi
         else
             mensaje="$mensaje El usuario $name de la linea $lineas_procesadas no existe"
