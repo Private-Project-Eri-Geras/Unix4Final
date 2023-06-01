@@ -18,6 +18,21 @@ tempMessage_Menu=("Seleccional" "Cancelar" "Ayuda")
 # opcion seleccionada
 tempMessage_iterator=0
 
+delUser() {
+    local user_name=$1
+
+    # Verificar que el usuario exista
+    if [[ $user_name == "" ]]; then
+        dialog --title "ERROR" --msgbox "No se ha seleccionado un usuario" 10 40
+        return
+    # Verificar que el usuario sea valido
+    # que exista en el sistema
+    elif ! id -u "$user_name" >/dev/null 2>&1; then
+        dialog --title "ERROR" --msgbox "El usuario no existe" 10 40
+        return
+    fi
+}
+
 # Función para actualizar el diálogo
 update_dialog() {
     # Obtener el tamaño de la terminal
@@ -82,7 +97,14 @@ add_content() {
 
         # Si se presiona la tecla "Enter", salir del bucle
         if [[ "$input" == "" ]]; then
-            return
+            if [[ $tempMessage_iterator -eq 0 ]]; then
+                delUser "$content"
+            elif [[ $tempMessage_iterator -eq 1 ]]; then
+                return
+            elif [[ $tempMessage_iterator -eq 2 ]]; then
+                # TODO: Ayuda
+                dialog --title "AYUDA" --msgbox "Ayuda" 10 40
+            fi
         fi
 
         # Tecla especial
