@@ -31,9 +31,16 @@ delUser() {
         dialog --title "ERROR" --msgbox "El usuario no existe" 10 40
         return
     fi
-    newPasswd=""
-    # pedir la nueva contraseña del usuario
-    newPasswd=$(dialog --title "Nueva contraseña" --insecure --passwordbox "Ingrese la nueva contraseña del usuario" 10 40 2>&1 >/dev/tty)
+    touch /tmp/temp_passwdForm
+    dialog --title "Dialog - Form" --form "\nDialog Sample Label and Values" 0 50 2 \
+        "Contraseña:" 1 1 "" 1 25 25 30 \
+        "Repite la contraseña:" 2 1 "" 2 25 25 30 \
+        2>/tmp/temp_passwdForm
+    # Linea 1 del archivo
+    newPasswd=$(head -n 1 /tmp/temp_passwdForm)
+    # Linea 2 del archivo
+    confirmPasswd=$(tail -n 1 /tmp/temp_passwdForm)
+    rm /tmp/temp_passwdForm
     # Validar que la contraseña solo tenga caracteres validos
     # solo letras mayusculas y minusculas, numeros y todos los caracteres especialese permitidos en Linux:
     # @ # _ ^ * % / . + : ; =
@@ -42,10 +49,6 @@ delUser() {
         dialog --title "ERROR" --msgbox "Caracteres inválidos encontrados en la contraseña: $caracteres_invalidos" 10 40
         return
     fi
-    confirmPasswd=""
-    # volver a pedir la nueva contraseña del usuario
-    confirmPasswd=$(dialog --clear --title "Confirmar contraseña" --insecure --passwordbox "Ingrese la nueva contraseña del usuario" 10 40 2>&1 >/dev/tty)
-    # Validar que la contraseña solo tenga caracteres validos
     if [[ ! $confirmPasswd =~ ^[a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]+$ ]]; then
         caracteres_invalidos=$(echo "$confirmPasswd" | grep -o '[^a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]')
         dialog --title "ERROR" --msgbox "Caracteres inválidos encontrados en la contraseña: $caracteres_invalidos" 10 40
