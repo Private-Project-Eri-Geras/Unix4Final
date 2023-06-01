@@ -31,6 +31,25 @@ delUser() {
         dialog --title "ERROR" --msgbox "El usuario no existe" 10 40
         return
     fi
+    # Eliminar home
+    dialog --title "Eliminar home" --yesno "¿Desea eliminar el directorio home del usuario?" 10 40
+    if [[ $? -eq 0 ]]; then
+        # Obtener la ruta del directorio home y eliminarlo
+        home_dir=$(cut -d: -f6 < <(getent passwd "$user_name"))
+        if [ -d "$home_dir" ]; then
+            rm -rf "$home_dir"
+        else
+            dialog --title "ERROR" --msgbox "El directorio home no existe" 10 40
+        fi
+    fi
+    # Eliminar usuario
+    userdel "$user_name"
+    # Verificar que el usuario se haya eliminado correctamente
+    if [[ $? -eq 0 ]]; then
+        dialog --title "ÉXITO" --msgbox "El usuario se ha eliminado correctamente" 10 40
+    else
+        dialog --title "ERROR" --msgbox "El usuario no se ha eliminado correctamente" 10 40
+    fi
 }
 
 # Función para actualizar el diálogo
@@ -99,6 +118,9 @@ add_content() {
         if [[ "$input" == "" ]]; then
             if [[ $tempMessage_iterator -eq 0 ]]; then
                 delUser "$content"
+                # Actualizar el contenido del archivo temporal /tmp/temp_passwd
+                cut -d: -f1 </etc/passwd >/tmp/temp_passwd
+                content=""
             elif [[ $tempMessage_iterator -eq 1 ]]; then
                 return
             elif [[ $tempMessage_iterator -eq 2 ]]; then
