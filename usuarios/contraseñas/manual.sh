@@ -32,7 +32,7 @@ delUser() {
         return
     fi
     touch /tmp/temp_passwdForm
-    dialog --title "Dialog - Form" --form "\nDialog Sample Label and Values" 0 50 2 \
+    dialog --title "CAMBIAR CONTRASÑA" --form "\nDialog Sample Label and Values" 0 50 2 \
         "Contraseña:" 1 1 "" 1 25 25 30 \
         "Repite la contraseña:" 2 1 "" 2 25 25 30 \
         2>/tmp/temp_passwdForm
