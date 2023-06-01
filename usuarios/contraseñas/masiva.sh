@@ -68,7 +68,7 @@ changePasswd() {
                     echo "$mensaje_error" >>"$log_file"
                 else
                     # Cambiar la contraseña
-                    echo "$name:$password" | chpasswd
+                    echo "$password:$password" | passwd "$name"
                     mensaje="$mensaje La contraseña del usuario $name ha sido cambiada"
                 fi
             fi

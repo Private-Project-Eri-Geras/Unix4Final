@@ -27,6 +27,43 @@ delUser() {
         return
     # Verificar que el usuario sea valido
     # que exista en el sistema
+    elif ! id -u "$user_name" >/dev/null 2>&1; then
+        dialog --title "ERROR" --msgbox "El usuario no existe" 10 40
+        return
+    fi
+    newPasswd=""
+    # pedir la nueva contraseña del usuario
+    newPasswd=$(dialog --title "Nueva contraseña" --insecure --passwordbox "Ingrese la nueva contraseña del usuario" 10 40 2>&1 >/dev/tty)
+    # Validar que la contraseña solo tenga caracteres validos
+    # solo letras mayusculas y minusculas, numeros y todos los caracteres especialese permitidos en Linux:
+    # @ # _ ^ * % / . + : ; =
+    if [[ ! $newPasswd =~ ^[a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]+$ ]]; then
+        caracteres_invalidos=$(echo "$newPasswd" | grep -o '[^a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]')
+        dialog --title "ERROR" --msgbox "Caracteres inválidos encontrados en la contraseña: $caracteres_invalidos" 10 40
+        return
+    fi
+    confirmPasswd=""
+    # volver a pedir la nueva contraseña del usuario
+    confirmPasswd=$(dialog --clear --title "Confirmar contraseña" --insecure --passwordbox "Ingrese la nueva contraseña del usuario" 10 40 2>&1 >/dev/tty)
+    # Validar que la contraseña solo tenga caracteres validos
+    if [[ ! $confirmPasswd =~ ^[a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]+$ ]]; then
+        caracteres_invalidos=$(echo "$confirmPasswd" | grep -o '[^a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]')
+        dialog --title "ERROR" --msgbox "Caracteres inválidos encontrados en la contraseña: $caracteres_invalidos" 10 40
+        return
+    fi
+
+    # verificar que las contraseñas sean iguales
+    if [[ $newPasswd -eq $confirmPasswd ]]; then
+        # cambiar la contraseña del usuario
+        echo -e "$newPasswd\n$newPasswd" | passwd "$user_name" -q >/dev/null 2>&1
+        # verificar que la contraseña se haya cambiado correctamente
+        if [[ $? -eq 0 ]]; then
+            dialog --title "ÉXITO" --msgbox "La contraseña se ha cambiado correctamente" 10 40
+        else
+            dialog --title "ERROR" --msgbox "La contraseña no se ha cambiado correctamente" 10 40
+        fi
+    else
+        dialog --title "ERROR" --msgbox "Las contraseñas no coinciden" 10 40
     fi
 }
 
@@ -79,7 +116,7 @@ update_dialog() {
         echo " \Zb\Z2<↓>(+)\Zn" >>/tmp/users_content
     fi
     # Actualizar el diálogo
-    dialog --no-clear --no-hot-list --colors --title "USUARIO A ELIMINAR" --begin "$input_y" "$input_x" --infobox "$(cat /tmp/dialog_content)" "$input_height" "$input_width" \
+    dialog --no-clear --no-hot-list --colors --title "CAMBIAR CONTRASEÑA" --begin "$input_y" "$input_x" --infobox "$(cat /tmp/dialog_content)" "$input_height" "$input_width" \
         --and-widget \
         --no-hot-list --keep-window --colors --title "USUARIOS" --begin "$dialog_y" $(((cols / 2) + 1)) --infobox "$(cat /tmp/users_content)" "$dialog_height" "$dialog_width"
     tput smcup
@@ -96,6 +133,7 @@ add_content() {
         if [[ "$input" == "" ]]; then
             if [[ $tempMessage_iterator -eq 0 ]]; then
                 delUser "$content"
+                content=""
             elif [[ $tempMessage_iterator -eq 1 ]]; then
                 return
             elif [[ $tempMessage_iterator -eq 2 ]]; then
