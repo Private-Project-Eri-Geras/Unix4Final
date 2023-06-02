@@ -1,4 +1,33 @@
 #!/usr/bin/env bash
+createDefaulHome() {
+    command+=" -m -d /home/$name"
+
+    mensaje+=" Directorio home: /home/$name"
+}
+
+# Función para validar el formato de la fecha
+# Formato YYYY-MM-DD
+# retorna 1 si la fecha es válida
+# retorna 0 si la fecha no es válida
+checkDate() {
+    local date="$1"
+    #Formato YYYY-MM-DD
+    if [[ "$date" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+        # Validar que la fecha sea válida
+        if date -d "$date" >/dev/null 2>&1; then
+            # Validar que la fecha sea mayor a la fecha actual
+            if date -d "$date" +%s >/dev/null 2>&1; then
+                echo 1
+            else
+                echo 0
+            fi # Fin de fecha mayor a la actual
+        else
+            echo 0
+        fi # Fin de la validación de la fecha
+    else
+        echo 0
+    fi # Fin de la validación del formato
+}
 
 addUsers() {
     # archivo de usuario
@@ -90,7 +119,8 @@ addUsers() {
                 echo "$mensaje_error" >>"$log_file"
             else
                 # Establecer la contraseña
-                command+=" -p $(openssl passwd -crypt "$password")"
+                encrypted_password=$(openssl passwd -1 -salt "salt_value" "$password")
+                command+=" -p '$encrypted_password'"
                 mensaje+=" Contraseña: $password"
             fi
         fi
@@ -169,8 +199,11 @@ addUsers() {
                     mensaje+=" Grupo creado: $grupo"
                 fi
                 # Agregar el usuario al grupo
-                grupoCommand+=" $grupo"
+                grupoCommand+=" $grupo,"
             done
+
+            # Eliminar la coma al final de grupoCommand si existe
+            grupoCommand=${grupoCommand%,}
             # Agregar los grupos al comando
             command+="$grupoCommand"
         fi
@@ -243,36 +276,6 @@ addUsers() {
     # ================================================
 
     dialog --clear --colors --title "ALTA TERMINADA" --msgbox "Puedes ver el registro en el archivo \Z1$log_file\Zn" 0 0
-}
-
-createDefaulHome() {
-    command+=" -m -d /home/$name"
-
-    mensaje+=" Directorio home: /home/$name"
-}
-
-# Función para validar el formato de la fecha
-# Formato YYYY-MM-DD
-# retorna 1 si la fecha es válida
-# retorna 0 si la fecha no es válida
-checkDate() {
-    local date="$1"
-    #Formato YYYY-MM-DD
-    if [[ "$date" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-        # Validar que la fecha sea válida
-        if date -d "$date" >/dev/null 2>&1; then
-            # Validar que la fecha sea mayor a la fecha actual
-            if date -d "$date" +%s >/dev/null 2>&1; then
-                echo 1
-            else
-                echo 0
-            fi # Fin de fecha mayor a la actual
-        else
-            echo 0
-        fi # Fin de la validación de la fecha
-    else
-        echo 0
-    fi # Fin de la validación del formato
 }
 
 while true; do

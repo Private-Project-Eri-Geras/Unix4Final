@@ -58,10 +58,7 @@ while true; do
         (source "usuarios/altas/masiva.sh")
         ;;
     2)
-        # TODO: alta manual
-        echo "alta manual"
-        echo "Presiona enter para continuar"
-        read -sn 1
+        (source "usuarios/altas/manual.sh")
         ;;
     3)
         (source "usuarios/bajas/masiva.sh")
