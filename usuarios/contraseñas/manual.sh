@@ -18,7 +18,7 @@ tempMessage_Menu=("Seleccional" "Cancelar" "Ayuda")
 # opcion seleccionada
 tempMessage_iterator=0
 
-delUser() {
+chPasswd() {
     local user_name=$1
 
     # Verificar que el usuario exista
@@ -135,7 +135,7 @@ add_content() {
         # Si se presiona la tecla "Enter", salir del bucle
         if [[ "$input" == "" ]]; then
             if [[ $tempMessage_iterator -eq 0 ]]; then
-                delUser "$content"
+                chPasswd "$content"
                 content=""
             elif [[ $tempMessage_iterator -eq 1 ]]; then
                 return
