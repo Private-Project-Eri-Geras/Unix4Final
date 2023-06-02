@@ -36,6 +36,10 @@ chPasswd() {
         "Contraseña:" 1 1 "" 1 25 25 30 \
         "Repite la contraseña:" 2 1 "" 2 25 25 30 \
         2>/tmp/temp_passwdForm
+    form_exit_code=$?
+    if [[ $form_exit_code -eq 1 ]]; then
+        return
+    fi
     # Linea 1 del archivo
     newPasswd=$(head -n 1 /tmp/temp_passwdForm)
     # Linea 2 del archivo
