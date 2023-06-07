@@ -32,7 +32,7 @@ while true; do
         (source "usuarios/menuUsuarios.sh")
         ;;
     2)
-        (source "mantenimiento/manualreboot.sh")
+        (source "mantenimiento/menumantenimiento.sh")
         ;;
     3)s
         source "mantenimiento/opcion3.sh"

@@ -17,7 +17,7 @@ if [ -z "$SUDO_USER" ]; then
 fi
 
 
-dialog --colors --clear --title "Arrancar en modo manual" \
+dialog --colors --clear --title "Arrancar en modo manteniminto" \
     --yes-label "Reinciar" --no-label "Cancelar" \
     --yesno "\Zb\Z0Deseas reiniciar el sistema?" 0 0 --output-fd 1
 
@@ -39,7 +39,9 @@ if [[ $Opselect -eq 0 ]]; then
                 dialog --colors --title "REINICIO CANCELADO" --msgbox "El reinicio ha sido cancelado" 0 0
                 return 1
         else
-        init 1
+        systemctl start rescue.target
+        #systemctl start rescue
+        #telinit 1
         fi
 fi
 

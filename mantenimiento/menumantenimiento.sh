@@ -2,11 +2,11 @@
 
 # Define the options
 options=(
-    1 "Reinicio en modo Manual"
-    2 "Tareas de mantenimiento"
-    3 "Option 3"
-    4 ""
-    5 ""
+    1 "Habilitar/inhabilitar chequeos de volumen al arranque"
+    2 "Arranque en modo mantenimiento"
+    3 "Arranque en modo manual"
+    4 "Chuequeo de volumenes"
+    5 "Creacion, formato y montaje de volumenes"
 )
 
 # Initialize the selected option
@@ -18,8 +18,8 @@ clear
 # Print the menu using dialog
 while true; do
     # Mostrar el menu y cambiar el valor de la variable $selected
-    selected=$(dialog --clear --title "MENU PRINCIPAL" \
-        --cancel-label "Exit" --ok-label "Select" \
+    selected=$(dialog --clear --title "MENU MANTENIMIENTO" \
+        --cancel-label "Retunr" --ok-label "Select" \
         --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \
         --output-fd 1)
 
@@ -31,13 +31,19 @@ while true; do
     # Handle the selected option
     case $selected in
     1)
-        (source "usuarios/menuUsuarios.sh")
+        (source "usuarios/volumenarranque.sh")
         ;;
     2)
+        (source "mantenimiento/mantreboot.sh")
+        ;;
+    3)
         (source "mantenimiento/manualreboot.sh")
         ;;
-    3)s
-        source "mantenimiento/opcion3.sh"
+    4)
+        (source "mantenimiento/checkvol.sh")
+        ;;
+    5)
+        (source "mantenimiento/CFMVolum.sh")
         ;;
     esac
 
@@ -47,4 +53,5 @@ done
 
 # Exit the script
 clear
-exit
+
+return
