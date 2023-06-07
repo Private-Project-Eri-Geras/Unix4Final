@@ -30,7 +30,7 @@ while true; do
     # --cancel-label = 1
     # --help-button --help-label = 2
     # --extra-button --extra-label = 3
-    option=$(dialog --cursor-off-label --colors --clear --title "ADMINISTRACION DE USUARIOS" \
+    option=$(dialog --cursor-off-label --colors --clear --title "PROGRAMACION DE TAREAS" \
         --cancel-label "Cancelar" --ok-label "Seleccionar" \
         --help-button --help-label "Ayuda" \
         --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \
