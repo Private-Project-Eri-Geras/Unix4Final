@@ -47,7 +47,7 @@ if [[ $Opselect -eq 0 ]]; then
             # Verificar la distribución específica
             if [[ $ID == "ubuntu" || $ID == "debian" ]]; then
                 # Distribuciones basadas en Debian (Ubuntu, Debian)
-                systemctl start isolate rescue.target
+                systemctl isolate rescue.target
             elif [[ $ID == "fedora" || $ID == "centos" ]]; then
                 # Distribuciones basadas en Fedora (Fedora, CentOS)
                 systemctl start rescue
