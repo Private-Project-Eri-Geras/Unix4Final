@@ -16,8 +16,7 @@ Opselect=$?
 
 if [[ $Opselect -eq 0 ]]; then
         #rebootnow
-        echo "hace reboot"
-        read -sn 1 -t 2
+        rebootnow --single
 fi
 
 return
