@@ -3,7 +3,7 @@
 # Define the options
 options=(
     1 "Administrar usuarios"
-    2 "Option 2"
+    2 "Tareas de mantenimiento"
     3 "Option 3"
 )
 
@@ -32,10 +32,10 @@ while true; do
         (source "usuarios/menuUsuarios.sh")
         ;;
     2)
-        source "subScripts/opcion2.sh"
+        (source "mantenimiento/manualreboot.sh")
         ;;
-    3)
-        source "subScripts/opcion3.sh"
+    3)s
+        source "mantenimiento/opcion3.sh"
         ;;
     esac
 
