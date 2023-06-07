@@ -7,23 +7,19 @@ if [ -z "$SUDO_USER" ]; then
     retrn 1
 fi
 
-options=(
-    1 "Reiniciar en modo manual"
-)
 
-option=0
+dialog --colors --clear --title "Arrancar en modo manual" \
+    --yes-label "Reinciar" --no-label "Cancelar" \
+    --yesno "Deseas reiniciar el sistema?" 0 0 --output-fd 1
 
-option=$(dialog --colors --clear --title "Arrancar en modo manual" \
-        --cancel-label "Cancelar" --ok-label "Reiniciar" \
-        --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \
-        --output-fd 1)
-#20
-case $option in
-    1)#rebootnow
+Opselect=$?
+
+if [[ $Opselect -eq 0 ]]; then
+        #rebootnow
         echo "hace reboot"
-        read -sn 1 -t 2
-        ;;
-esac
+        read -sn 110 -t 2
+fi
 
+return
 
 clear
