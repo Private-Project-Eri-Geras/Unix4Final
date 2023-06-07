@@ -4,45 +4,54 @@ new=/tmp/newWho.txt
 old=/tmp/oldWho.txt
 diferencia=/tmp/diff.txt
 archivo=/tmp/usuarios.txt
-# Función para mostrar un cuadro de diálogo con el contenido del archivo
+
+##### FUNCIONES ####
+
+# Función para mostrar un cuadro de diálogo con las últimas 10 líneas del archivo
 mostrar_cuadro_dialogo() {
-    
-    dialog --title "Usuarios" --clear --textbox "$1" 30 30 --default-button "ok"
-        
+    # tail -n 10 "$1" | dialog --clear --title "Usuarios" --tailbox --no-kill 0 0
+     dialog --title "Usuarios" --textbox "$1" 0 0 
+
+     dialogExit=$?
 }
 
-# Guardando la lista de usuarios conectados
-who > $old
+##### CÓDIGO #####
 
-#Creando el cuadro de dialogo 
-touch $archivo
-mostrar_cuadro_dialogo $archivo
+# Guardando la lista de usuarios conectados
+who > "$old"
+
+# Creando el cuadro de diálogo
+# Eliminar el archivo temporal
+rm -f "$archivo"
+touch "$archivo"
+mostrar_cuadro_dialogo "$archivo" &
 
 # Detección de inicios y terminos de sesión
 while true
 do
-  who > $new
-  diff $old $new > $diferencia
+  who > "$new"
+  diff "$old" "$new" > "$diferencia"
 
   # Obtener los usuarios que entran y mostrarlos en el cuadro de diálogo
-  usuarios_entran=$(awk '/>/ { print "in:   " $0 ; }' $diferencia)
+  usuarios_entran=$(awk '/>/ { print "in:   " $0 ; }' "$diferencia")
   if [ -n "$usuarios_entran" ]; then
-      echo "$usuarios_entran" >> /tmp/usuarios.txt
-     press= mostrar_cuadro_dialogo "/tmp/usuarios.txt"
-     if [ "$dialog_output" = "ok" ]; then
-        #Sale de la lista desplegable de usuarios
-          break
-      fi
+    echo "$usuarios_entran" >> /tmp/usuarios.txt
+    mostrar_cuadro_dialogo "/tmp/usuarios.txt"
   fi
 
   # Obtener los usuarios que salen y mostrarlos en el cuadro de diálogo
-  usuarios_salen=$(awk '/</ { print "out:  " $0 ; }' $diferencia)
+  usuarios_salen=$(awk '/</ { print "out:  " $0 ; }' "$diferencia")
   if [ -n "$usuarios_salen" ]; then
       echo "$usuarios_salen" >> /tmp/usuarios.txt
       mostrar_cuadro_dialogo "/tmp/usuarios.txt"
   fi
 
-  mv $new $old
-  sleep 1
+  mv "$new" "$old"
+
 done
 
+# ------------------usar "break" al usarse en el menu
+#Exit the script
+echo "ADIOS!"
+clear
+exit
