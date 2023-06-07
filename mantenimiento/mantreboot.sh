@@ -32,7 +32,7 @@ if [[ $Opselect -eq 0 ]]; then
         endTimer &
         #Hacer un read -t 60 para cancelar el reinicio
         #si se pulsa cualquier tecla se cancela el reinicio
-        read -sn 1 -t 60
+        read -sn 1 -t 0.1
         if [[ "$?" -eq 0 ]]; then
                 #Matar el hilo de la cuenta atras
                 kill $!
@@ -47,7 +47,7 @@ if [[ $Opselect -eq 0 ]]; then
             # Verificar la distribución específica
             if [[ $ID == "ubuntu" || $ID == "debian" ]]; then
                 # Distribuciones basadas en Debian (Ubuntu, Debian)
-                systemctl start rescue.target
+                systemctl start isolate rescue.target
             elif [[ $ID == "fedora" || $ID == "centos" ]]; then
                 # Distribuciones basadas en Fedora (Fedora, CentOS)
                 systemctl start rescue
