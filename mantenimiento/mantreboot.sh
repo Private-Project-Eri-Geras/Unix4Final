@@ -32,7 +32,7 @@ if [[ $Opselect -eq 0 ]]; then
         endTimer &
         #Hacer un read -t 60 para cancelar el reinicio
         #si se pulsa cualquier tecla se cancela el reinicio
-        read -sn 1 -t 0.1
+        read -sn 1 -t 60
         if [[ "$?" -eq 0 ]]; then
                 #Matar el hilo de la cuenta atras
                 kill $!
