@@ -39,9 +39,26 @@ if [[ $Opselect -eq 0 ]]; then
                 dialog --colors --title "REINICIO CANCELADO" --msgbox "El reinicio ha sido cancelado" 0 0
                 return 1
         else
-        systemctl start rescue.target
-        #systemctl start rescue
-        #telinit 1
+        #intentar ejecutar cualquiera de los siguientes 3 comandos
+        if [ -f /etc/os-release ]; then
+            # Leer el archivo /etc/os-release
+            source /etc/os-release
+
+            # Verificar la distribución específica
+            if [[ $ID == "ubuntu" || $ID == "debian" ]]; then
+                # Distribuciones basadas en Debian (Ubuntu, Debian)
+                systemctl start rescue.target
+            elif [[ $ID == "fedora" || $ID == "centos" ]]; then
+                # Distribuciones basadas en Fedora (Fedora, CentOS)
+                systemctl start rescue
+            else
+                # Otras distribuciones
+                telinit 1
+            fi
+            else
+            # Otra lógica de detección o manejo de errores si no se puede determinar la distribución
+            echo "No se pudo determinar la distribución de Linux."
+            fi
         fi
 fi
 
