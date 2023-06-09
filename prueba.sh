@@ -1,5 +1,5 @@
-#!/bin/bash
-
-password=$(dialog --insecure --passwordbox "Ingrese su contraseña:" 10 30 2>&1 >/dev/tty)
-
-echo "La contraseña ingresada es: $password"
+#/bin/bash 
+function DialogGen() {
+    dialog --radiolist 'radiolist' 15 10 10 'Grapes' 5 'off' 'apple' 2 'off' 'dessert' 3 'off' 'coffee' 4 'on' 
+}
+DialogGen 
