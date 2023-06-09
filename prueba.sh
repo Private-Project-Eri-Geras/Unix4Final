@@ -1,12 +1,25 @@
 #!/bin/bash
 
-# Obtener la lista de usuarios conectados
-who | awk '{print $1,$4,$5}' | while read user login time
-do
-    # Calcular el tiempo en sesión
-    seconds=$(($(date +%s) - $(date -d "$login $time" +%s)))
-    formatted_time=$(date -u -d @${seconds} +"%H:%M:%S")
+usuario="usuario1" #nombre del usuario a cerrar sesión
+tiempo_limite=15  # 30 minutos
 
-    # Imprimir el usuario y el tiempo en sesión
-    echo "Usuario: $user - Tiempo en sesión: $formatted_time"
+# Verificar si el usuario ha iniciado sesión
+while true; do
+    if who | grep -wq "$usuario"; then
+        echo "El usuario inicio sesión"
+        break
+    fi
+    echo "..."
+    sleep 1
 done
+
+# Resto del código para cerrar la sesión después del tiempo límite
+pid=$(pgrep -u "$usuario")
+sleep "$tiempo_limite"
+
+if ps -p "$pid" > /dev/null; then
+    pkill -u "$usuario"
+    echo "Se cerró la sesión del usuario $usuario."
+else
+    echo "El usuario $usuario ya ha cerrado la sesión."
+fi
