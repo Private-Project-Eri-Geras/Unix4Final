@@ -3,8 +3,8 @@
 #Define the options
 opt=(
     1 "Inicio/Termino de sesión"
-    2 "Respaldos carpetas"
-    3 "Tiempo de sesión"
+    2 "Tiempo de sesión" 
+    3 "Respaldos carpetas"
     4 "Sincronizar carpeta"
 )
 #Initialize the selected option
@@ -34,6 +34,7 @@ clear
             (source "subScripts/sessionsInOut.sh")
             ;;
         2)
+            (source "subScripts/tiempoSesionM.sh")
             ;;
         3)
             ;;
