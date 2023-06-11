@@ -45,13 +45,16 @@ while true; do
     # Manejar la opción seleccionada
     case $option in
     1)
-        (source "nuevoRespaldo.sh")
+        (source "/respaldoProgramado/nuevo/ubicacion.sh")
         ;;
     2)
-        (source "borrarRespaldo.sh")
+        (source "/respaldoProgramado/nuevo/ubicacion.sh")
         ;;
     3)
-        (source "editarRespaldo.sh")
+        (source "/respaldoProgramado/nuevo/ubicacion.sh")
+        ;;
+    4)
+        (source "/respaldoProgramado/nuevo/ubicacion.sh")
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
