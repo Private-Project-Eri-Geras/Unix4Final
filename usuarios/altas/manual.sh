@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 checkDate() {
     local date="$1"

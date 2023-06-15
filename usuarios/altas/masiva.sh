@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 createDefaulHome() {
     command+=" -m -d /home/$name"
 

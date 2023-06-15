@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 changePasswd() {
     archivo_usuarios=$1
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 introText="Ingrese el nombre de usuario:"
 content=""
