@@ -1,5 +1,22 @@
 #!/bin/bash
 
+mostrar_ayuda() {
+    echo 'Primero tienes que seleccionar un usuario
+        de la lista de usuarios.
+        Para seleccionarlo, puedes escribirlo.
+        Si no lo conoces, puedes buscarlo apoyandote
+        de las teclas cursor.
+    Atajos de teclado:
+        - 'Espacio' autocompletado (coinicidencia mas cercana)
+        - 'Enter' seleccionar
+        - 'Tab' moverse por los botones
+    ' >/tmp/ayuda.txt
+    dialog --backtitle "CAMBIO CONTRASEÑAS MANUAL" --title "AYUDA" \
+        --exit-label "Ok" \
+        --textbox /tmp/ayuda.txt 0 0 --scrollbar
+    rm /tmp/ayuda.txt
+}
+
 introText="Ingrese el nombre de usuario:"
 content=""
 

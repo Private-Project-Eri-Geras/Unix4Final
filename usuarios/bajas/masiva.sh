@@ -13,7 +13,7 @@ mostrar_ayuda() {
         - Si no se desea eliminar el directorio home
              escribir cualquier otra cosa o dejar vacío.
     ' >/tmp/ayuda.txt
-    dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
+    dialog --backtitle "BAJA MASIVA" --title "AYUDA" \
         --exit-label "Ok" \
         --textbox /tmp/ayuda.txt 0 0 --scrollbar
     rm /tmp/ayuda.txt

@@ -27,7 +27,7 @@ mostrar_ayuda() {
         YYYY-MM-DD mayor a ExpireDate, también
         valida.
         Si se deja por defecto, no se asignará." >/tmp/ayuda.txt
-    dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
+    dialog --backtitle "ALTA MANUAL" --title "AYUDA" \
         --exit-label "Ok" \
         --textbox /tmp/ayuda.txt 0 0 --scrollbar
     rm /tmp/ayuda.txt

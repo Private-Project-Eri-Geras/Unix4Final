@@ -9,7 +9,7 @@ mostrar_ayuda() {
     - Password: Contraseña a asignar al usuario.
          La contraseña tiene que cumplir con los requisitos
             básicos de Linux.' >/tmp/ayuda.txt
-    dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
+    dialog --backtitle "CAMBIO CONTRASEÑAS MASIVA" --title "AYUDA" \
         --exit-label "Ok" \
         --textbox /tmp/ayuda.txt 0 0 --scrollbar
     rm /tmp/ayuda.txt
