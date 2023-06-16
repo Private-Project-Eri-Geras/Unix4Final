@@ -10,24 +10,24 @@ mostrar_ayuda() {
         - 'Espacio' autocompletado (coinicidencia mas cercana)
         - 'Enter' seleccionar
         - 'Tab' moverse por los botones
-    ' >/tmp/ayuda.txt
+    ' >/var/glam/tmp/ayuda.txt
     dialog --backtitle "BAJA MANUAL" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /tmp/ayuda.txt 0 0 --scrollbar
-    rm /tmp/ayuda.txt
+        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    rm /var/glam/tmp/ayuda.txt
 }
 
 introText="Ingrese el nombre de usuario:"
 content=""
 
-touch /tmp/temp_passwd
-touch /tmp/temp_temp
-cut -d: -f1 </etc/passwd >/tmp/temp_passwd
+touch /var/glam/tmp/temp_passwd
+touch /var/glam/tmp/temp_temp
+cut -d: -f1 </etc/passwd >/var/glam/tmp/temp_passwd
 
 # Inicio de impresion del archivo en el panel de la derecha
 starting_line=1
 # lineas maximas que tiene passwd
-max_lines=$(($(wc -l </tmp/temp_passwd) - 1))
+max_lines=$(($(wc -l </var/glam/tmp/temp_passwd) - 1))
 
 # Selector de menu
 # menu
@@ -102,25 +102,25 @@ update_dialog() {
     done
 
     # Actualizar el contenido del archivo temporal
-    echo -e "\ZbIngresa el nombre de usuario:\ZB\n${content}┆\n" >/tmp/dialog_content
-    echo "$tempMessage" >>/tmp/dialog_content
+    echo -e "\ZbIngresa el nombre de usuario:\ZB\n${content}┆\n" >/var/glam/tmp/dialog_content
+    echo "$tempMessage" >>/var/glam/tmp/dialog_content
 
     #Formato de impresion de usuarios
-    tail -n +$starting_line /tmp/users_content >/tmp/temp_temp
+    tail -n +$starting_line /var/glam/tmp/users_content >/var/glam/tmp/temp_temp
     # Imprimir símbolos ↑ (-) y ↓ (+) si corresponde
     if [[ $starting_line -gt 1 ]]; then
-        echo " \Zb\Z1<↑>(-)\Zn" >/tmp/users_content
+        echo " \Zb\Z1<↑>(-)\Zn" >/var/glam/tmp/users_content
     else
-        echo "     " >/tmp/users_content
+        echo "     " >/var/glam/tmp/users_content
     fi
-    head -n $dialog_content_lines /tmp/temp_temp >>/tmp/users_content
+    head -n $dialog_content_lines /var/glam/tmp/temp_temp >>/var/glam/tmp/users_content
     if [[ $((($max_lines - $starting_line) + 2)) -gt $dialog_content_lines ]]; then
-        echo " \Zb\Z2<↓>(+)\Zn" >>/tmp/users_content
+        echo " \Zb\Z2<↓>(+)\Zn" >>/var/glam/tmp/users_content
     fi
     # Actualizar el diálogo
-    dialog --no-clear --no-hot-list --colors --title "USUARIO A ELIMINAR" --begin "$input_y" "$input_x" --infobox "$(cat /tmp/dialog_content)" "$input_height" "$input_width" \
+    dialog --no-clear --no-hot-list --colors --title "USUARIO A ELIMINAR" --begin "$input_y" "$input_x" --infobox "$(cat /var/glam/tmp/dialog_content)" "$input_height" "$input_width" \
         --and-widget \
-        --no-hot-list --keep-window --colors --title "USUARIOS" --begin "$dialog_y" $(((cols / 2) + 1)) --infobox "$(cat /tmp/users_content)" "$dialog_height" "$dialog_width"
+        --no-hot-list --keep-window --colors --title "USUARIOS" --begin "$dialog_y" $(((cols / 2) + 1)) --infobox "$(cat /var/glam/tmp/users_content)" "$dialog_height" "$dialog_width"
     tput smcup
     tput clear
     tput rmcup
@@ -135,8 +135,8 @@ add_content() {
         if [[ "$input" == "" ]]; then
             if [[ $tempMessage_iterator -eq 0 ]]; then
                 delUser "$content"
-                # Actualizar el contenido del archivo temporal /tmp/temp_passwd
-                cut -d: -f1 </etc/passwd >/tmp/temp_passwd
+                # Actualizar el contenido del archivo temporal /var/glam/tmp/temp_passwd
+                cut -d: -f1 </etc/passwd >/var/glam/tmp/temp_passwd
                 content=""
             elif [[ $tempMessage_iterator -eq 1 ]]; then
                 return
@@ -163,21 +163,21 @@ add_content() {
                 if [[ $starting_line -gt 1 ]]; then
                     starting_line=$((starting_line - 1))
                 fi
-                cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+                cat /var/glam/tmp/temp_passwd | grep -E "^$content" >/var/glam/tmp/users_content
                 update_dialog
             elif [[ "$input" == "B" ]]; then
                 # Abajo
                 if [[ $((($max_lines - $starting_line) + 1)) -ge $dialog_content_lines ]]; then
                     starting_line=$((starting_line + 1))
                 fi
-                cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+                cat /var/glam/tmp/temp_passwd | grep -E "^$content" >/var/glam/tmp/users_content
                 update_dialog
             elif [[ "$input" == "C" ]]; then
                 # Derecha
                 if [[ $tempMessage_iterator -lt 2 ]]; then
                     tempMessage_iterator=$((tempMessage_iterator + 1))
                 fi
-                cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+                cat /var/glam/tmp/temp_passwd | grep -E "^$content" >/var/glam/tmp/users_content
                 update_dialog
                 continue
             elif [[ "$input" == "D" ]]; then
@@ -185,7 +185,7 @@ add_content() {
                 if [[ $tempMessage_iterator -gt 0 ]]; then
                     tempMessage_iterator=$((tempMessage_iterator - 1))
                 fi
-                cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
+                cat /var/glam/tmp/temp_passwd | grep -E "^$content" >/var/glam/tmp/users_content
                 update_dialog
                 continue
             fi
@@ -195,7 +195,7 @@ add_content() {
         # /etc/passwd/
         elif [[ "$input" == " " ]]; then
             # Buscar todas las coincidencias que comiencen exactamente con el contenido de content
-            matches=($(grep -E "^$content" /tmp/temp_passwd | cut -d: -f1))
+            matches=($(grep -E "^$content" /var/glam/tmp/temp_passwd | cut -d: -f1))
 
             # Si se encontraron coincidencias, actualizar content hasta el máximo prefijo común
             if [[ ${#matches[@]} -gt 0 ]]; then
@@ -227,8 +227,8 @@ add_content() {
         fi
         # Actualizar el user content con todas las coincidencias
         # que exclusivamente empiecen con lo que tenga $content
-        grep -E "^$content" /tmp/temp_passwd >/tmp/users_content
-        max_lines=$(($(wc -l </tmp/users_content) - 1))
+        grep -E "^$content" /var/glam/tmp/temp_passwd >/var/glam/tmp/users_content
+        max_lines=$(($(wc -l </var/glam/tmp/users_content) - 1))
         starting_line=1
         # Actualizar el diálogo en segundo plano
         update_dialog
@@ -242,21 +242,21 @@ checkResize() {
         local newRows=$(tput lines)
         if [[ $rows -ne $newRows ]]; then
             # Obtener content de dialog_content segunda linea
-            dialog_content_lines=$(($(wc -l </tmp/dialog_content) - 3))
+            dialog_content_lines=$(($(wc -l </var/glam/tmp/dialog_content) - 3))
             # Obtener content de users_content segunda linea
-            content=$(head -n 2 /tmp/dialog_content | tail -n 1)
-            cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
-            max_lines=$(($(wc -l </tmp/users_content) - 1))
+            content=$(head -n 2 /var/glam/tmp/dialog_content | tail -n 1)
+            cat /var/glam/tmp/temp_passwd | grep -E "^$content" >/var/glam/tmp/users_content
+            max_lines=$(($(wc -l </var/glam/tmp/users_content) - 1))
             starting_line=1
             update_dialog
         fi
         if [[ $cols -ne $newCols ]]; then
             # Obtener content de dialog_content segunda linea
-            dialog_content_lines=$(($(wc -l </tmp/dialog_content) - 3))
+            dialog_content_lines=$(($(wc -l </var/glam/tmp/dialog_content) - 3))
             # Obtener content de users_content segunda linea
-            content=$(head -n 2 /tmp/dialog_content | tail -n 1)
-            cat /tmp/temp_passwd | grep -E "^$content" >/tmp/users_content
-            max_lines=$(($(wc -l </tmp/users_content) - 1))
+            content=$(head -n 2 /var/glam/tmp/dialog_content | tail -n 1)
+            cat /var/glam/tmp/temp_passwd | grep -E "^$content" >/var/glam/tmp/users_content
+            max_lines=$(($(wc -l </var/glam/tmp/users_content) - 1))
             starting_line=1
             update_dialog
         fi
@@ -264,10 +264,10 @@ checkResize() {
 }
 
 # Crear archivo temporal con contenido inicial
-touch /tmp/dialog_content
-echo "" >/tmp/dialog_content
-touch /tmp/users_content
-cat /tmp/temp_passwd >/tmp/users_content
+touch /var/glam/tmp/dialog_content
+echo "" >/var/glam/tmp/dialog_content
+touch /var/glam/tmp/users_content
+cat /var/glam/tmp/temp_passwd >/var/glam/tmp/users_content
 
 # Mandar a llamar el segundo plano el hilo que rescalara todo
 checkResize &
@@ -279,7 +279,7 @@ add_content
 kill $!
 
 # Eliminar el archivo temporal al finalizar
-rm /tmp/dialog_content
-rm /tmp/users_content
-rm /tmp/temp_passwd
-rm /tmp/temp_temp
+rm /var/glam/tmp/dialog_content
+rm /var/glam/tmp/users_content
+rm /var/glam/tmp/temp_passwd
+rm /var/glam/tmp/temp_temp

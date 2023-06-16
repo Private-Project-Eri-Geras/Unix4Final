@@ -12,11 +12,11 @@ mostrar_ayuda() {
              escribir "Y y S s Si si Yes yes 1".
         - Si no se desea eliminar el directorio home
              escribir cualquier otra cosa o dejar vacío.
-    ' >/tmp/ayuda.txt
+    ' >/var/glam/tmp/ayuda.txt
     dialog --backtitle "BAJA MASIVA" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /tmp/ayuda.txt 0 0 --scrollbar
-    rm /tmp/ayuda.txt
+        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    rm /var/glam/tmp/ayuda.txt
 }
 
 removeUsers() {

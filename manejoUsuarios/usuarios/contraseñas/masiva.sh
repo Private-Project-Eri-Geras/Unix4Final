@@ -8,11 +8,11 @@ mostrar_ayuda() {
     - Username: Nombre de usuario a cambiar la contraseña.
     - Password: Contraseña a asignar al usuario.
          La contraseña tiene que cumplir con los requisitos
-            básicos de Linux.' >/tmp/ayuda.txt
+            básicos de Linux.' >/var/glam/tmp/ayuda.txt
     dialog --backtitle "CAMBIO CONTRASEÑAS MASIVA" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /tmp/ayuda.txt 0 0 --scrollbar
-    rm /tmp/ayuda.txt
+        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    rm /var/glam/tmp/ayuda.txt
 }
 
 changePasswd() {

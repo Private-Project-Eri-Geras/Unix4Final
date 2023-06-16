@@ -26,11 +26,11 @@ mostrar_ayuda() {
     -WarningDate debe ser una fecha en formato
         YYYY-MM-DD mayor a ExpireDate, también
         valida.
-        Si se deja por defecto, no se asignará." >/tmp/ayuda.txt
+        Si se deja por defecto, no se asignará." >/var/glam/tmp/ayuda.txt
     dialog --backtitle "ALTA MANUAL" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /tmp/ayuda.txt 0 0 --scrollbar
-    rm /tmp/ayuda.txt
+        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    rm /var/glam/tmp/ayuda.txt
 }
 
 checkDate() {
@@ -53,7 +53,7 @@ checkDate() {
     fi # Fin de la validación del formato
 }
 
-touch /tmp/usuario.txt
+touch /var/glam/tmp/usuario.txt
 while true; do
     # Formato:
     # name password uid gid shell groups home expDate expWarning
@@ -70,7 +70,7 @@ while true; do
         "Directorio home" 7 1 "" 7 23 15 0 \
         "Fecha de expiración" 8 1 "YYYY-MM-DD" 8 23 15 0 \
         "Días de advertencia" 9 1 "YYYY-MM-DD" 9 23 15 0 \
-        2>/tmp/usuario.txt
+        2>/var/glam/tmp/usuario.txt
     form_status=$?
     #El usuario presionó "Cancelar"
     if [[ $form_status -eq 1 ]]; then
@@ -84,23 +84,23 @@ while true; do
     # El unico dato obligatorio es el nombre de usuario
     # Los demas son opcionales
     # nombre de usuario = linea 1
-    name=$(head -1 /tmp/usuario.txt)
+    name=$(head -1 /var/glam/tmp/usuario.txt)
     # contraseña = linea 2
-    password=$(head -2 /tmp/usuario.txt | tail -1)
+    password=$(head -2 /var/glam/tmp/usuario.txt | tail -1)
     # id de usuario = linea 3
-    uid=$(head -3 /tmp/usuario.txt | tail -1)
+    uid=$(head -3 /var/glam/tmp/usuario.txt | tail -1)
     # id de grupo = linea 4
-    gid=$(head -4 /tmp/usuario.txt | tail -1)
+    gid=$(head -4 /var/glam/tmp/usuario.txt | tail -1)
     # shell = linea 5
-    shell=$(head -5 /tmp/usuario.txt | tail -1)
+    shell=$(head -5 /var/glam/tmp/usuario.txt | tail -1)
     # grupos = linea 6
-    groups=$(head -6 /tmp/usuario.txt | tail -1)
+    groups=$(head -6 /var/glam/tmp/usuario.txt | tail -1)
     # directorio home = linea 7
-    home=$(head -7 /tmp/usuario.txt | tail -1)
+    home=$(head -7 /var/glam/tmp/usuario.txt | tail -1)
     # fecha de expiracion = linea 8
-    expDate=$(head -8 /tmp/usuario.txt | tail -1)
+    expDate=$(head -8 /var/glam/tmp/usuario.txt | tail -1)
     # dias de advertencia = linea 9
-    expWarning=$(head -9 /tmp/usuario.txt | tail -1)
+    expWarning=$(head -9 /var/glam/tmp/usuario.txt | tail -1)
 
     # Verificar que el usuario no exista
     if id -u "$name" >/dev/null 2>&1; then
@@ -273,4 +273,4 @@ while true; do
     eval "$command"
 done
 
-rm /tmp/usuario.txt
+rm /var/glam/tmp/usuario.txt

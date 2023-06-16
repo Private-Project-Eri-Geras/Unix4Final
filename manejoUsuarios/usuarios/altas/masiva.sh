@@ -25,11 +25,11 @@ mostrar_ayuda() {
         YYYY-MM-DD y valida.
     -WarningDate debe ser una fecha en formato
         YYYY-MM-DD mayor a ExpireDate, también
-        valida." >/tmp/ayuda.txt
+        valida." >/var/glam/tmp/ayuda.txt
     dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /tmp/ayuda.txt 0 0 --scrollbar
-    rm /tmp/ayuda.txt
+        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    rm /var/glam/tmp/ayuda.txt
 }
 
 createDefaulHome() {
