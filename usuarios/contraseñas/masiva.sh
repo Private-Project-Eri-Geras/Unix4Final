@@ -13,6 +13,7 @@ mostrar_ayuda() {
         --exit-label "Ok" \
         --textbox /tmp/ayuda.txt 0 0 --scrollbar
     rm /tmp/ayuda.txt
+
 }
 
 changePasswd() {
