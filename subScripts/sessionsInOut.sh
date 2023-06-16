@@ -9,14 +9,11 @@ archivo=usuarios.txt
 
 # Función para mostrar un cuadro de diálogo con las últimas 10 líneas del archivo
 mostrar_cuadro_dialogo() {
-  dialog --title "Usuarios" --infobox "$( tail $archivo )" 0 0
+  dialog --title "Usuarios" --backtitle "q para salir" --infobox "$( tail $archivo )" 0 0
   dialogExit=$?
 }
 
 ##### CÓDIGO #####
-
-# Posicionar el cursor y mostrar el mensaje fuera del cuadro de diálogo
-#echo -e "\033[1;31;44m Presione 'q' para salir     \033[0m"
 
 # Guardando la lista de usuarios conectados
 who > "$old"
@@ -58,7 +55,6 @@ do
 
 done
 
-# ------------------usar "break" al usarse en el menu
 #Exit the script
 clear
 exit
