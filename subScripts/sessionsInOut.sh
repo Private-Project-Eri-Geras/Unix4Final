@@ -3,13 +3,13 @@
 new=/tmp/newWho.txt
 old=/tmp/oldWho.txt
 diferencia=/tmp/diff.txt
-archivo=/tmp/usuarios.txt
+archivo=usuarios.txt
 
 ##### FUNCIONES ####
 
 # Función para mostrar un cuadro de diálogo con las últimas 10 líneas del archivo
 mostrar_cuadro_dialogo() {
-  dialog --title "Usuarios" --infobox "$(cat "$1")" 0 0
+  dialog --title "Usuarios" --infobox "$( tail $archivo )" 0 0
   dialogExit=$?
 }
 
@@ -23,7 +23,6 @@ who > "$old"
 
 # Creando el cuadro de diálogo
 # Eliminar el archivo temporal
-rm -f "$archivo"
 touch "$archivo"
 mostrar_cuadro_dialogo "$archivo" &
 
@@ -36,15 +35,15 @@ do
   # Obtener los usuarios que entran y mostrarlos en el cuadro de diálogo
   usuarios_entran=$(awk '/>/ { print "in:   " $0 ; }' "$diferencia")
   if [ -n "$usuarios_entran" ]; then
-    echo "$usuarios_entran" >> /tmp/usuarios.txt
-    mostrar_cuadro_dialogo "/tmp/usuarios.txt"
+    echo "$usuarios_entran" >> $archivo
+    mostrar_cuadro_dialogo
   fi
 
   # Obtener los usuarios que salen y mostrarlos en el cuadro de diálogo
   usuarios_salen=$(awk '/</ { print "out:  " $0 ; }' "$diferencia")
   if [ -n "$usuarios_salen" ]; then
-      echo "$usuarios_salen" >> /tmp/usuarios.txt
-      mostrar_cuadro_dialogo "/tmp/usuarios.txt"
+      echo "$usuarios_salen" >> $archivo
+      mostrar_cuadro_dialogo 
   fi
 
   mv "$new" "$old"
@@ -58,9 +57,8 @@ do
     fi
 
 done
-return
+
 # ------------------usar "break" al usarse en el menu
 #Exit the script
-#echo "ADIOS!"
-#clear
-#exit
+clear
+exit
