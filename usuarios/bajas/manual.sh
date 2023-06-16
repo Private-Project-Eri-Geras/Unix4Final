@@ -257,6 +257,7 @@ checkResize() {
 
 # Crear archivo temporal con contenido inicial
 touch /tmp/dialog_content
+echo "" >/tmp/dialog_content
 touch /tmp/users_content
 cat /tmp/temp_passwd >/tmp/users_content
 
