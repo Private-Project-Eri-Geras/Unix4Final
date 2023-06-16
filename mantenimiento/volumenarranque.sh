@@ -23,28 +23,26 @@ while true; do
     if [[ $? -ne 0 ]]; then
         break
     fi
+    
+    
+    #se hace un respaldo********************************************************
 
+    
     # Handle the selected option
     case $selected in
     1)
-        # Desactivar el chequeo de volúmenes al arranque para todos los dispositivos
-        while read -r uuid; do
-            if [[ -n "$uuid" ]]; then
-                # Utiliza sed para comentar la línea correspondiente al UUID en el archivo fstab
-                sed -i "s/UUID=$uuid.*/#UUID=$uuid \/\t\text4\tdefaults\t1 1/" /etc/fstab
-            fi
-        done <<< "$uuids"
-        echo "Chequeo de volúmenes al arranque desactivado."
+        # Desmontar todos los dispositivos
+        sudo umount -a
+
+        # Volver a montar todos los dispositivos con el chequeo de volúmenes desactivado
+        sudo mount -a
         ;;
     2)
-        # Habilitar el chequeo de volúmenes al arranque para todos los dispositivos (opción por defecto)
-        while read -r uuid; do
-            if [[ -n "$uuid" ]]; then
-                # Utiliza sed para reemplazar la línea correspondiente al UUID en el archivo fstab
-                sed -i "s/#UUID=$uuid.*/UUID=$uuid \/\t\text4\tdefaults\t1 1/" /etc/fstab
-            fi
-        done <<< "$uuids"
-        echo "Chequeo de volúmenes al arranque habilitado."
+        # Desmontar todos los dispositivos
+        sudo umount -a
+
+        # Volver a montar todos los dispositivos con el chequeo de volúmenes desactivado
+        sudo mount -o remount,ro /
         ;;
 
     # Clear the screen
