@@ -28,13 +28,6 @@ mostrar_ayuda() {
     rm /tmp/ayuda.txt
 }
 
-# Verificar si el script se ejecuta con sudo
-if [ -z "$SUDO_USER" ]; then
-    dialog --colors --title "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
-    clear
-    exit 1
-fi
-
 # Define las opciones del menú
 options=(
     1 "Alta por archivo de texto"
