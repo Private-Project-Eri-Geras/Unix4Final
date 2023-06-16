@@ -3,13 +3,13 @@
 new=/tmp/newWho.txt
 old=/tmp/oldWho.txt
 diferencia=/tmp/diff.txt
-archivo=usuarios.txt
+archivo="registerInOut/usuarios$(date +'%d%m%y').txt"
 
 ##### FUNCIONES ####
 
 # Función para mostrar un cuadro de diálogo con las últimas 10 líneas del archivo
 mostrar_cuadro_dialogo() {
-  dialog --title "Usuarios" --backtitle "q para salir" --infobox "$( tail $archivo )" 0 0
+  dialog --title "Usuarios" --backtitle "q para salir" --infobox "$( tail -5 $archivo )" 0 0
   dialogExit=$?
 }
 
@@ -20,12 +20,14 @@ who > "$old"
 
 # Creando el cuadro de diálogo
 # Eliminar el archivo temporal
-touch "$archivo"
-mostrar_cuadro_dialogo "$archivo" &
+
+mostrar_cuadro_dialogo
 
 # Detección de inicios y terminos de sesión
 while true
 do
+  archivo="registerInOut/usuarios$(date +'%d%m%y').txt"
+  #touch $archivo
   who > "$new"
   diff "$old" "$new" > "$diferencia"
 
@@ -51,6 +53,10 @@ do
     # Verificar si se presionó la tecla "q" para salir del cuadro de diálogo
     if [[ $key == "q" ]]; then
         break
+    fi
+
+    if [[ $key == "\e"]];then
+
     fi
 
 done
