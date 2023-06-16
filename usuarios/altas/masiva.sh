@@ -72,11 +72,11 @@ addUsers() {
     # Obtener el nombre de usuario
     usuario_actual="$USER"
 
-    # Crear el directorio de logs si no existe
-    mkdir -p logs
-
     # Asignar la ruta del archivo de registro
-    log_file="logs/altaMasiva_${current_date}.log"
+    log_file="/GLAM/logs/altas/altaMasiva_${current_date}.log"
+    # Crear el directorio de logs si no existe
+    mkdir -p /GLAM/logs
+    mkdir -p /GLAM/logs/altas
     counter=1
 
     # Verificar que el archivo de registro no exista

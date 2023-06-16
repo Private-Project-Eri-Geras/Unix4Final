@@ -27,11 +27,11 @@ changePasswd() {
     # Obtener el nombre de usuario
     usuario_actual="$USER"
 
-    # Crear el directorio de logs si no existe
-    mkdir -p logs
-
     # Asignar la ruta del archivo de registro
-    log_file="logs/contraseniaMasiva_${current_date}.log"
+    log_file="/GLAM/logs/contrasena/contraseniaMasiva_${current_date}.log"
+    # Crear el directorio de logs si no existe
+    mkdir -p /GLAM/logs
+    mkdir -p /GLAM/logs/contrasena
     counter=1
 
     # Verificar que el archivo de registro no exista
