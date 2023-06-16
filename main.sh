@@ -29,7 +29,7 @@ lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
 numeroInicio=$(grep -n "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
 numeroFin=$(grep -n "# FIN PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
 
-if ((lineaInicio == 0 || lineaFin == 0)); then
+if ((lineaInicio == 0 && lineaFin == 0)); then
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab no existe, se creará una nueva" 0 0
     clear
     echo "# INICIO PROGRAMACION DE TAREAS" >> /etc/crontab
@@ -53,9 +53,6 @@ elif ((numeroInicio > numeroFin)); then
     rm /etc/crontab
     mv tmp/crontab /etc/crontab
 fi
-
-# Limpia la pantalla
-clear
 
 # Imprime el menú usando dialog
 while true; do
