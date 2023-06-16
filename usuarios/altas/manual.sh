@@ -1,5 +1,37 @@
 #!/bin/bash
+mostrar_ayuda() {
+    echo "Aquí se describe el formato del archivo .csv 
+    para dar de alta usuarios de forma masiva:
 
+    Username,Password,UID,GID,Shell,Grupos,DirectorioHome,ExpireDate,WarningDate
+    Las líneas que empiezan con # serán ignoradas.
+
+    -El único campo obligatorio es el nombre
+        todos los demás pueden estar vacíos.
+    -La contraseña debe cumplir con los
+        requisitos típicos de Linux.
+    -El UID y GID deben ser números enteros.
+    -El shell debe ser una ruta válida a un
+        shell.
+    -Los grupos tiene que estar separados por
+        espacios.
+    -El directorio home debe ser una ruta
+        válida.
+        Si no se creara uno por defecto.
+        Si se deja vacío, se creará uno por
+            defecto.
+    -ExpireDate debe ser una fecha en formato
+        YYYY-MM-DD y valida.
+        Si se deja por defecto, no expirará.
+    -WarningDate debe ser una fecha en formato
+        YYYY-MM-DD mayor a ExpireDate, también
+        valida.
+        Si se deja por defecto, no se asignará." >/tmp/ayuda.txt
+    dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
+        --exit-label "Ok" \
+        --textbox /tmp/ayuda.txt 0 0 --scrollbar
+    rm /tmp/ayuda.txt
+}
 checkDate() {
     local date="$1"
     #Formato YYYY-MM-DD

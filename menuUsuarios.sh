@@ -22,7 +22,9 @@ mostrar_ayuda() {
     -Cambio de contraseña manual
         Se debe ingresar el nombre del usuario
         para poder cambiar la contraseña, de forma manual." >/tmp/ayuda.txt
-    dialog --backtitle "MANEJO DE USUARIOS" --title "AYUDA" --textbox /tmp/ayuda.txt 0 0 --scrollbar
+    dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
+        --exit-label "Ok" \
+        --textbox /tmp/ayuda.txt 0 0 --scrollbar
     rm /tmp/ayuda.txt
 }
 
