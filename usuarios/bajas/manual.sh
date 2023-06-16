@@ -173,14 +173,6 @@ add_content() {
                 update_dialog
                 continue
             fi
-            # Shift + tabulador
-            if [[ "$input" == $'\e[Z' ]]; then
-                if [[ $tempMessage_iterator -eq 0 ]]; then
-                    tempMessage_iterator=2
-                else
-                    tempMessage_iterator=$((tempMessage_iterator - 1))
-                fi
-            fi
             continue
         # Si se pulsa espacio se va a autocompletar content
         # con la primera coincidencia de nombre de usuario en
