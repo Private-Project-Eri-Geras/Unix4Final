@@ -161,8 +161,7 @@ add_content() {
             elif [[ $tempMessage_iterator -eq 1 ]]; then
                 return
             elif [[ $tempMessage_iterator -eq 2 ]]; then
-                # TODO: Ayuda
-                dialog --title "AYUDA" --msgbox "Ayuda" 10 40
+                mostrar_ayuda
             fi
         fi
         # Si se pulso la tecla tabulador
