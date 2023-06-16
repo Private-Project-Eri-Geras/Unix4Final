@@ -1,4 +1,19 @@
 #!/bin/bash
+mostrar_ayuda() {
+    echo 'Aquí se describe el formato del archivo .csv 
+    para cambiar la contraseñá a usuarios de forma masiva:
+    Username,Password
+    Las líneas que empiezan con # serán ignoradas.
+
+    - Username: Nombre de usuario a cambiar la contraseña.
+    - Password: Contraseña a asignar al usuario.
+         La contraseña tiene que cumplir con los requisitos
+            básicos de Linux.' >/tmp/ayuda.txt
+    dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
+        --exit-label "Ok" \
+        --textbox /tmp/ayuda.txt 0 0 --scrollbar
+    rm /tmp/ayuda.txt
+}
 
 changePasswd() {
     archivo_usuarios=$1

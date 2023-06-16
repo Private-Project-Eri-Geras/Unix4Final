@@ -148,6 +148,14 @@ add_content() {
                 dialog --title "AYUDA" --msgbox "Ayuda" 10 40
             fi
         fi
+        # Si se pulso la tecla tabulador
+        if [[ "$input" == $'\t' ]]; then
+            if [[ $tempMessage_iterator -eq 2 ]]; then
+                tempMessage_iterator=0
+            else
+                tempMessage_iterator=$((tempMessage_iterator + 1))
+            fi
+        fi
 
         # Tecla especial
         # Leer las teclas de cursor (arriba y abajo)
