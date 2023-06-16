@@ -341,7 +341,6 @@ while true; do
             elif [ ! -f "$archivo_usuarios" ]; then
                 dialog --title "ERROR" --msgbox "El archivo seleccionado no existe." 0 0
             fi
-            break # Salir del ciclo while si no se selecciona un archivo
         fi
     fi
 
