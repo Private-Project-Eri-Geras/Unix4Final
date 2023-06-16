@@ -85,7 +85,7 @@ update_dialog() {
     done
 
     # Actualizar el contenido del archivo temporal
-    echo -e "\ZbIngresa el nombre de usuario:\ZB\n$content\n" >/tmp/dialog_content
+    echo -e "\ZbIngresa el nombre de usuario:\ZB\n${content}┆\n" >/tmp/dialog_content
     echo "$tempMessage" >>/tmp/dialog_content
 
     #Formato de impresion de usuarios
@@ -128,6 +128,14 @@ add_content() {
                 dialog --title "AYUDA" --msgbox "Ayuda" 10 40
             fi
         fi
+        # Si se pulso la tecla tabulador
+        if [[ "$input" == $'\t' ]]; then
+            if [[ $tempMessage_iterator -eq 2 ]]; then
+                tempMessage_iterator=0
+            else
+                tempMessage_iterator=$((tempMessage_iterator + 1))
+            fi
+        fi
 
         # Tecla especial
         # Leer las teclas de cursor (arriba y abajo)
@@ -165,6 +173,14 @@ add_content() {
                 update_dialog
                 continue
             fi
+            # Shift + tabulador
+            if [[ "$input" == $'\e[Z' ]]; then
+                if [[ $tempMessage_iterator -eq 0 ]]; then
+                    tempMessage_iterator=2
+                else
+                    tempMessage_iterator=$((tempMessage_iterator - 1))
+                fi
+            fi
             continue
         # Si se pulsa espacio se va a autocompletar content
         # con la primera coincidencia de nombre de usuario en
@@ -194,7 +210,11 @@ add_content() {
             if [[ "$input" == "$(tput kbs)" ]]; then
                 content="${content%?}"
             else
-                content+="$input"
+                # Tiene que ser cualquier caracter que sea alfanumérico
+                # o los simbolos validos en un nombre -_!@+.
+                if [[ "$input" =~ [[:alnum:]] || "$input" =~ [-_!@+.] ]]; then
+                    content+="$input"
+                fi
             fi
         fi
         # Actualizar el user content con todas las coincidencias

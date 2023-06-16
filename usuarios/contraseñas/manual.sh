@@ -214,7 +214,11 @@ add_content() {
             if [[ "$input" == "$(tput kbs)" ]]; then
                 content="${content%?}"
             else
-                content+="$input"
+                # Tiene que ser cualquier caracter que sea alfanumérico
+                # o los simbolos validos en un nombre -_!@+.
+                if [[ "$input" =~ [[:alnum:]] || "$input" =~ [-_!@+.] ]]; then
+                    content+="$input"
+                fi
             fi
         fi
         # Actualizar el user content con todas las coincidencias
