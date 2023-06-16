@@ -24,7 +24,6 @@ options=(
 clear
 
 # Verificar la estructura de crontab y crearla si no existe
-
 lineaInicio=$(grep -c "# INICIO PROGRAMACION DE TAREAS" /etc/crontab)
 lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
 numeroInicio=$(grep -n "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
