@@ -1,5 +1,37 @@
 #!/bin/bash
 
+mostrar_ayuda() {
+    echo "Aquí se describe el formato del archivo .csv 
+    para dar de alta usuarios de forma masiva:
+
+    Username,Password,UID,GID,Shell,Grupos,DirectorioHome,ExpireDate,WarningDate
+    Las líneas que empiezan con # serán ignoradas.
+
+    -El único campo obligatorio es el nombre
+        todos los demás pueden estar vacíos.
+    -La contraseña debe cumplir con los
+        requisitos típicos de Linux.
+    -El UID y GID deben ser números enteros.
+    -El shell debe ser una ruta válida a un
+        shell.
+    -Los grupos tiene que estar separados por
+        espacios.
+    -El directorio home debe ser una ruta
+        válida.
+        Si no se creara uno por defecto.
+        Si se deja vacío, se creará uno por
+            defecto.
+    -ExpireDate debe ser una fecha en formato
+        YYYY-MM-DD y valida.
+    -WarningDate debe ser una fecha en formato
+        YYYY-MM-DD mayor a ExpireDate, también
+        valida." >/tmp/ayuda.txt
+    dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
+        --exit-label "Ok" \
+        --textbox /tmp/ayuda.txt 0 0 --scrollbar
+    rm /tmp/ayuda.txt
+}
+
 createDefaulHome() {
     command+=" -m -d /home/$name"
 
@@ -281,22 +313,36 @@ addUsers() {
 
 while true; do
     archivo_usuarios=$(dialog --title "Selecciona un archivo" \
+        --help-button --help-label "Ayuda" \
         --stdout --cursor-off-label --fselect /home/ 14 70)
     archivo_usuario_Output=$?
     # Si el usuario presiona "Cancel" se sale del script
-    if [ $archivo_usuario_Output -eq 1 ]; then
+    if [ $archivo_usuario_Output -eq 2 ]; then
+        mostrar_ayuda
+    # Si el usuario presiona "Help" se muestra la ayuda
+    elif [ $archivo_usuario_Output -eq 1 ]; then
         break
-    fi
-    if [ -f "$archivo_usuarios" ]; then
-        dialog --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $archivo_usuarios?" 0 0
-        dialog_Output=$?
-        if [ $dialog_Output -eq 0 ]; then
-            # Si el usuario presiona "Yes" se ejecuta la función addUsers
-            clear
-            addUsers "$archivo_usuarios"
-            break # Salir del ciclo while después de confirmar
+    # Si el usuario presiona "Slect"
+    elif [ $archivo_usuario_Output -eq 0 ]; then
+        if [ -f "$archivo_usuarios" ]; then
+            dialog --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $archivo_usuarios?" 0 0
+            dialog_Output=$?
+            if [ $dialog_Output -eq 0 ]; then
+                # Si el usuario presiona "Yes" se ejecuta la función addUsers
+                clear
+                addUsers "$archivo_usuarios"
+                break # Salir del ciclo while después de confirmar
+            fi
+        else
+            if [ -z "$archivo_usuarios" ]; then
+                dialog --title "ERROR" --msgbox "No se seleccionó ningún archivo." 0 0
+            elif [ -d "$archivo_usuarios" ]; then
+                dialog --title "ERROR" --msgbox "El archivo seleccionado es un directorio." 0 0
+            elif [ ! -f "$archivo_usuarios" ]; then
+                dialog --title "ERROR" --msgbox "El archivo seleccionado no existe." 0 0
+            fi
+            break # Salir del ciclo while si no se selecciona un archivo
         fi
-    else
-        break # Salir del ciclo while si no se selecciona un archivo
     fi
+
 done

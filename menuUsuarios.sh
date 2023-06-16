@@ -2,8 +2,28 @@
 
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
-    dialog --title "Help" --msgbox "aqui esta la ayuda" 0 0
-    #        --msgbox "\nALTA MASIVA\nAquí se describe el formato del archivo .csv para dar de alta usuarios de forma masiva:\n\nLas líneas que empiezan con # serán ignoradas.\n\nEl único campo obligatorio es el nombre; todos los demás pueden estar vacíos.\nLa contraseña puede ser cualquier valor.\n\nEl UID debe ser numérico y debe ser 100 o mayor. Lo mismo se aplica a la GID; si no se cumple esta condición, los usuarios no serán agregados.\n\nLos campos 'crear_home' y 'directorio_home' deben trabajarse juntos:\n\n- Si se desea crear un directorio home para el usuario, debe indicarse de forma afirmativa en el campo 'crear_home', usando los valores 'Y', 'S', 's', 'yes' o 'Yes'.\n\n- Para no crear un directorio home, simplemente no se debe ingresar ningún valor o nada relacionado con la confirmación.\n\nEn caso de no crear un directorio home, el campo 'directorio_home' será ignorado.\n\nSi se desea especificar un directorio home personalizado, se debe proporcionar la ruta absoluta. El directorio home puede o no existir previamente.\n\nLa fecha de expiración y el aviso de expiración deben estar en formato YYYY-MM-DD y deben ser fechas válidas. De lo contrario, no se asignarán.\n\nEl aviso de expiración representa la cantidad de tiempo previo a la expiración en la que se enviará una advertencia al usuario.\n" 0 0 0 \
+    echo "Este menú contiene más opciones
+    entre ellas:
+    -Alta de usuarios por archivo de texto
+        Se debe tener un archivo (csv) para
+        poder dar de alta a los usuarios.
+    -Alta de usuarios manual
+        Se debe ingresar los datos del usuario
+        para poder darlo de alta, de forma manual.
+    -Baja de usuarios por archivo de texto
+        Se debe tener un archivo (csv) para
+        poder dar de baja a los usuarios.
+    -Baja de usuarios manual
+        Se debe ingresar el nombre del usuario
+        para poder darlo de baja, de forma manual.
+    -Cambio de contraseña por archivo de texto
+        Se debe tener un archivo (csv) para
+        poder cambiar la contraseña a los usuarios.
+    -Cambio de contraseña manual
+        Se debe ingresar el nombre del usuario
+        para poder cambiar la contraseña, de forma manual." >/tmp/ayuda.txt
+    dialog --backtitle "MANEJO DE USUARIOS" --title "AYUDA" --textbox /tmp/ayuda.txt 0 0 --scrollbar
+    rm /tmp/ayuda.txt
 }
 
 # Verificar si el script se ejecuta con sudo
