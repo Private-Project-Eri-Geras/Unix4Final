@@ -57,7 +57,8 @@ touch /tmp/usuario.txt
 while true; do
     # Formato:
     # name password uid gid shell groups home expDate expWarning
-    dialog --title "ALTA MANUAL" --cancel-label "Cancelar" \
+    dialog --title "ALTA MANUAL" \
+        --cancel-label "Cancelar" \
         --help-button --help-label "Ayuda" \
         --form "Ingrese los datos del usuario" 15 47 9 \
         "Nombre de usuario" 1 1 "" 1 23 15 0 \

@@ -108,6 +108,7 @@ removeUsers() {
 
 while true; do
     archivo_usuarios=$(dialog --title "Selecciona un archivo" \
+        --cancel-label "Cancelar" \
         --help-button --help-label "Ayuda" \
         --stdout --cursor-off-label --fselect /home/ 14 70)
     archivo_usuario_Output=$?
