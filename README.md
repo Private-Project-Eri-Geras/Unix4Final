@@ -20,9 +20,7 @@ archivos fuentes:
 Otros archivos:  
 ╚`/var/glam`  
   ╠`logs/`   
-  ║  ╠`altas/`  
-  ║  ╠`bajas/`  
-  ║  ╚`etc..`  
+  ║  ╚`logs..`  
   ╠`backups/`    
   ║  ╠`mount/`   
   ╚`temporales/`  
