@@ -3,13 +3,15 @@
 new=/tmp/newWho.txt
 old=/tmp/oldWho.txt
 diferencia=/tmp/diff.txt
-archivo="registerInOut/usuarios$(date +'%d%m%y').txt"
-
+nameArch="usuarios$(date +'%d%m%y').txt"
+ruta="/GLAM/logs/usrsInOut" #GNU Logical Administrator Menus
+rutaUsrs="$ruta/$nameArch"
 ##### FUNCIONES ####
-
+  mkdir -p $ruta #verifica si existe la ruta, s ino existe la crea
+  touch $rutaUsrs
 # Función para mostrar un cuadro de diálogo con las últimas 10 líneas del archivo
 mostrar_cuadro_dialogo() {
-  dialog --title "Usuarios" --backtitle "q para salir" --infobox "$( tail -5 $archivo )" 0 0
+  dialog --title "Usuarios" --backtitle "q para salir" --infobox "$( tail $rutaUsrs )" 0 0
   dialogExit=$?
 }
 
@@ -20,33 +22,31 @@ who > "$old"
 
 # Creando el cuadro de diálogo
 # Eliminar el archivo temporal
-
-mostrar_cuadro_dialogo
+touch "$rutaUsrs"
+mostrar_cuadro_dialogo "$rutaUsrs" &
 
 # Detección de inicios y terminos de sesión
 while true
 do
-  archivo="registerInOut/usuarios$(date +'%d%m%y').txt"
-  #touch $archivo
   who > "$new"
   diff "$old" "$new" > "$diferencia"
 
   # Obtener los usuarios que entran y mostrarlos en el cuadro de diálogo
   usuarios_entran=$(awk '/>/ { print "in:   " $0 ; }' "$diferencia")
   if [ -n "$usuarios_entran" ]; then
-    echo "$usuarios_entran" >> $archivo
+    echo "$usuarios_entran" >> $rutaUsrs
     mostrar_cuadro_dialogo
   fi
 
   # Obtener los usuarios que salen y mostrarlos en el cuadro de diálogo
   usuarios_salen=$(awk '/</ { print "out:  " $0 ; }' "$diferencia")
   if [ -n "$usuarios_salen" ]; then
-      echo "$usuarios_salen" >> $archivo
+      echo "$usuarios_salen" >> $rutaUsrs
       mostrar_cuadro_dialogo 
   fi
 
   mv "$new" "$old"
-  
+
   # Leer la tecla presionada por el usuario
     read -rsn1 -t 1 key
 
@@ -55,11 +55,10 @@ do
         break
     fi
 
-    if [[ $key == "\e"]];then
-
-    fi
-
 done
+rm $new
+rm $old
+rm $diferencia
 
 #Exit the script
 clear
