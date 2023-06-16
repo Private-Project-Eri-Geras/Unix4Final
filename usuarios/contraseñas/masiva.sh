@@ -103,22 +103,34 @@ changePasswd() {
 
 while true; do
     archivo_usuarios=$(dialog --title "Selecciona un archivo" \
+        --help-button --help-label "Ayuda" \
         --stdout --cursor-off-label --fselect /home/ 14 70)
     archivo_usuario_Output=$?
+    # Si el usuario presiona "Ayuda" se muestra la ayuda
+    if [ $archivo_usuario_Output -eq 2 ]; then
+        mostrar_ayuda
     # Si el usuario presiona "Cancel" se sale del script
-    if [ $archivo_usuario_Output -eq 1 ]; then
+    elif [ $archivo_usuario_Output -eq 1 ]; then
         break
-    fi
-    if [ -f "$archivo_usuarios" ]; then
-        dialog --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $archivo_usuarios?" 0 0
-        dialog_Output=$?
-        if [ $dialog_Output -eq 0 ]; then
-            # Si el usuario presiona "Yes" se ejecuta la función removeUsers
-            clear
-            changePasswd "$archivo_usuarios"
-            break # Salir del ciclo while después de confirmar
+        # Si el usuario presiona "Ok" se verifica que el archivo exista
+    elif [ $archivo_usuario_Output -eq 0 ]; then
+        if [ -f "$archivo_usuarios" ]; then
+            dialog --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $archivo_usuarios?" 0 0
+            dialog_Output=$?
+            if [ $dialog_Output -eq 0 ]; then
+                # Si el usuario presiona "Yes" se ejecuta la función removeUsers
+                clear
+                changePasswd "$archivo_usuarios"
+                break # Salir del ciclo while después de confirmar
+            fi
+        else
+            if [ -z "$archivo_usuarios" ]; then
+                dialog --title "ERROR" --msgbox "No se seleccionó ningún archivo." 0 0
+            elif [ -d "$archivo_usuarios" ]; then
+                dialog --title "ERROR" --msgbox "El archivo seleccionado es un directorio." 0 0
+            elif [ ! -f "$archivo_usuarios" ]; then
+                dialog --title "ERROR" --msgbox "El archivo seleccionado no existe." 0 0
+            fi
         fi
-    else
-        break # Salir del ciclo while si no se selecciona un archivo
     fi
 done
