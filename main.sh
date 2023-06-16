@@ -20,9 +20,6 @@ options=(
     4 "Inhabilitación de usuarios (por periodo de tiempo)"
 )
 
-# Limpia la pantalla
-clear
-
 # Verificar la estructura de crontab y crearla si no existe
 lineaInicio=$(grep -c "# INICIO PROGRAMACION DE TAREAS" /etc/crontab)
 lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
