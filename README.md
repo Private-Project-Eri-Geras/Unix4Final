@@ -22,7 +22,7 @@ Otros archivos:
   ╠`logs/`   
   ║  ╚`logs..`  
   ╠`backups/`    
-  ║  ╠`mount/`   
+  ║  ╚`mount/`   
   ╚`temporales/`  
   `por definir más`
 
