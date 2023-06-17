@@ -39,11 +39,11 @@ while true; do
         
         else
             if [ -z "$origen" ]; then
-                dialog --title "ERROR" --msgbox "No se seleccionó ningún archivo." 0 0
+                dialog --title "ERROR" --msgbox "No se seleccionó nada a respaldar." 0 0
             elif [ ! -f "$origen" ]; then
                 dialog --title "ERROR" --msgbox "El archivo seleccionado no existe." 0 0
             elif [ ! -d "$origen" ]; then
-                dialog --title "ERROR" --msgbox "El archivo seleccionado no es un directorio." 0 0
+                dialog --title "ERROR" --msgbox "La ruta seleccionada no es un directorio." 0 0
             fi
         fi
     fi
