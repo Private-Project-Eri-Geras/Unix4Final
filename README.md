@@ -9,8 +9,8 @@ archivos fuentes:
     ╠`programacionTareas/`  
     ║  ╠`scriptMenu.sh`  
     ║  ╚`subscripts/..`  
-    ╠`mantenimientoYarranque/`  
-    ║  ╠`scriptMenu.sh`  
+    ╠`mantenimiento/`  
+    ║  ╠`menumantenimiento.sh`  
     ║  ╚`subscripts/..`  
     ╚`tareasUsuarios/`  
         ╠`scriptMenu.sh`  
