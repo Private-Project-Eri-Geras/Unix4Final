@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 while true; do
     destino=$(dialog --title "Selecciona un directorio" \
@@ -22,11 +22,11 @@ while true; do
             opcion=$?
             if [ $opcion -eq 0 ]; then
                 #Se guarda la ruta en tmp/destino.txt
-                echo "$destino" > tmp/destino.txt
+                echo "$destino" >tmp/destino.txt
                 clear
                 break # Salir del ciclo while después de confirmar
             fi
-        
+
         else
             if [ -z "$destino" ]; then
                 dialog --title "ERROR" --msgbox "No se seleccionó ningún directorio." 0 0

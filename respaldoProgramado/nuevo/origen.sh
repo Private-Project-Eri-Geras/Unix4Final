@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 while true; do
     origen=$(dialog --title "Selecciona un archivo" \
@@ -22,7 +22,7 @@ while true; do
             opcion=$?
             if [ $opcion -eq 0 ]; then
                 #Se guarda la ruta en tmp/origen.txt
-                echo "$origen" > tmp/origen.txt
+                echo "$origen" >tmp/origen.txt
                 clear
                 break # Salir del ciclo while después de confirmar
             fi
@@ -32,11 +32,11 @@ while true; do
             opcion=$?
             if [ $opcion -eq 0 ]; then
                 #Se guarda la ruta en tmp/origen.txt
-                echo "$origen" > tmp/origen.txt
+                echo "$origen" >tmp/origen.txt
                 clear
                 break # Salir del ciclo while después de confirmar
             fi
-        
+
         else
             if [ -z "$origen" ]; then
                 dialog --title "ERROR" --msgbox "No se seleccionó nada a respaldar." 0 0

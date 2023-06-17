@@ -1,4 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+mkdir -p tmp
 
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
@@ -12,7 +14,13 @@ validarCampo() {
         return
     fi
 
-    #si el primer caracter no es un numero, dar error
+    # si el campo es un * retronar 1
+    if [ "$cadena" == "*" ]; then
+        echo -n "1" >tmp/output.tmp
+        return
+    fi
+
+    # si el primer caracter no es un numero, dar error
     if [[ ! "${cadena:0:1}" =~ [0-9] ]]; then
         #marcar como invalido
         echo -n "2" >tmp/output.tmp
