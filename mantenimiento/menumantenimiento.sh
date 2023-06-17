@@ -31,19 +31,19 @@ while true; do
     # Handle the selected option
     case $selected in
     1)
-        (source "mantenimiento  /volumenarranque.sh")#
+        (source "mantenimiento/CHA/volumenarranque.sh")#
         ;;
     2)
-        (source "mantenimiento/mantreboot.sh")#
+        (source "mantenimiento/RMT/mantreboot.sh")#
         ;;
     3)
-        (source "mantenimiento/manualreboot.sh")#
+        (source "mantenimiento/RMA/manualreboot.sh")#
         ;;
     4)
-        (source "mantenimiento/checkvol.sh")#
+        (source "mantenimiento/CHO/checkvol.sh")#
         ;;
     5)
-        (source "mantenimiento/CFMVolum.sh")#
+        (source "mantenimiento/CFM/CFMVolum.sh")#
         ;;
     esac
 

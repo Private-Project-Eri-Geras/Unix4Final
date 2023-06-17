@@ -1,4 +1,4 @@
-#!/bin/bash
+    #!/bin/bash
 
 # Define the options
 options=(
@@ -26,17 +26,16 @@ while true; do
     case $selected in
     1)
         # Desmontar todos los dispositivos
-        sudo umount -a
-
+        umount -a
         # Volver a montar todos los dispositivos con el chequeo de volúmenes desactivado
-        sudo mount -a
+        mount -a
         dialog --msgbox "Chequeo de volúmenes activado." 0 0
         ;;
     2)
         # Desmontar todos los dispositivos
-        sudo umount -a
+        umount -a
         # Volver a montar todos los dispositivos con el chequeo de volúmenes desactivado
-        sudo mount -o remount,ro /
+        mount -o remount,ro /
         dialog --msgbox "Chequeo de volúmenes desactivado." 0 0
         ;;
     esac

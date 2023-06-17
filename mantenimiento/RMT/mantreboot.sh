@@ -13,7 +13,7 @@ endTimer(){
 if [ -z "$SUDO_USER" ]; then
     dialog --colors --title "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
     clear
-    retrn 1
+    return
 fi
 
 

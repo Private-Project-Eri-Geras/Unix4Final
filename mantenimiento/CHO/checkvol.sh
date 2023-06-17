@@ -33,15 +33,13 @@ while true; do
     case $selected in
     1)
         #Activamos el chequeo de volumen al arranque
-        sudo umount "/dev/$dispositivo"
-        sudo mount "/dev/$dispositivo"
+        umount "/dev/$dispositivo"
+        mount "/dev/$dispositivo"
         dialog --msgbox "Chequeo de volúmenes activado en el dispositivo $dispositivo." 0 0
     2)
-        # Desmontar todos los dispositivos
-        sudo umount -a
-
-        # Volver a montar todos los dispositivos con el chequeo de volúmenes desactivado
-        sudo mount -o remount,ro /
+        umount "/dev/$dispositivo"
+        mount -o remount,ro "/dev/$dispositivo"
+        dialog --msgbox "Chequeo de volúmenes desactivado en el dispositivo $dispositivo." 0 0
         ;;
     esac
     clear
