@@ -70,21 +70,27 @@ while true; do
     # Manejar la opción seleccionada
     case $option in
     1)
+        #TODO: /usr/src/glam/usuarios/altas/masiva.sh
         (source "usuarios/altas/masiva.sh")
         ;;
     2)
+        #TODO: /usr/src/glam/usuarios/altas/manual.sh
         (source "usuarios/altas/manual.sh")
         ;;
     3)
+        #TODO: /usr/src/glam/usuarios/bajas/masiva.sh
         (source "usuarios/bajas/masiva.sh")
         ;;
     4)
+        #TODO: /usr/src/glam/usuarios/bajas/manual.sh
         (source "usuarios/bajas/manual.sh")
         ;;
     5)
+        #TODO: /usr/src/glam/usuarios/contraseñas/masiva.sh
         (source "usuarios/contraseñas/masiva.sh")
         ;;
     6)
+        #TODO: /usr/src/glam/usuarios/contraseñas/manual.sh
         (source "usuarios/contraseñas/manual.sh")
         ;;
     *)
