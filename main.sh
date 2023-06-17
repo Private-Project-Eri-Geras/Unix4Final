@@ -5,6 +5,9 @@ mostrar_ayuda() {
     dialog --title "Help" --msgbox "aqui esta la ayuda" 0 0
 }
 
+# Limpia la pantalla
+clear
+
 # Verificar si el script se ejecuta con sudo
 if [ -z "$SUDO_USER" ]; then
     dialog --colors --title "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
