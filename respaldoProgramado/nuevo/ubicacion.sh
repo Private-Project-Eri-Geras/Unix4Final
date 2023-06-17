@@ -1,26 +1,51 @@
 #!/usr/bin/env bash
 
-
-
-
 while true; do
-    archivo_origen=$(dialog --title "Selecciona un archivo" \
+    origen=$(dialog --title "Selecciona un archivo" \
+        --cancel-label "Cancelar" \
+        --help-button --help-label "Ayuda" \
         --stdout --cursor-off-label --fselect /home/ 14 70)
-    archivo_Destino=$?
-    # Si el usuario presiona "Cancel" se sale del script
-    if [ $archivo_Destino -eq 1 ]; then
+    opcion=$?
+
+    # Si el usuario presiona "Help" se sale del script
+    if [ $opcion -eq 2 ]; then
+        mostrar_ayuda
+
+    # Si el usuario presiona "Cancel" se muestra la ayuda
+    elif [ $opcion -eq 1 ]; then
         break
-    fi
-    if [ -f "$archivo_usuarios" ]; then
-        dialog --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $archivo_usuarios?" 0 0
-        dialog_Output=$?
-        if [ $dialog_Output -eq 0 ]; then
-            # Si el usuario presiona "Yes" se ejecuta la función addUsers
-            clear
-            echo "Archivo seleccionado: $archivo_usuarios"
-            break # Salir del ciclo while después de confirmar
+
+    # Si el usuario presiona "Slect"
+    elif [ $opcion -eq 0 ]; then
+        if [ -f "$origen" ]; then
+            dialog --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $origen?" 0 0
+            opcion=$?
+            if [ $opcion -eq 0 ]; then
+                #Se guarda la ruta en tmp/origen.txt
+                echo "$origen" > tmp/origen.txt
+                clear
+                break # Salir del ciclo while después de confirmar
+            fi
+
+        elif [ -d "$origen" ]; then
+            dialog --title "CONFIRMAR" --yesno "¿Deseas usar el directorio $origen?" 0 0
+            opcion=$?
+            if [ $opcion -eq 0 ]; then
+                #Se guarda la ruta en tmp/origen.txt
+                echo "$origen" > tmp/origen.txt
+                clear
+                break # Salir del ciclo while después de confirmar
+            fi
+        
+        else
+            if [ -z "$origen" ]; then
+                dialog --title "ERROR" --msgbox "No se seleccionó ningún archivo." 0 0
+            elif [ ! -f "$origen" ]; then
+                dialog --title "ERROR" --msgbox "El archivo seleccionado no existe." 0 0
+            elif [ ! -d "$origen" ]; then
+                dialog --title "ERROR" --msgbox "El archivo seleccionado no es un directorio." 0 0
+            fi
         fi
-    else
-        break # Salir del ciclo while si no se selecciona un archivo
     fi
+
 done
