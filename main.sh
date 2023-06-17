@@ -26,12 +26,12 @@ lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
 numeroInicio=$(grep -n "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
 numeroFin=$(grep -n "# FIN PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
 
-if [lineaInicio == 0 && lineaFin == 0]; then
+if ((lineaInicio == 0 && lineaFin == 0)); then
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab no existe, se creará una nueva" 0 0
     clear
     echo "# INICIO PROGRAMACION DE TAREAS" >> /etc/crontab
     echo "# FIN PROGRAMACION DE TAREAS" >> /etc/crontab
-elif [lineaInicio != 1 || lineaFin != 1]; then
+elif ((lineaInicio != 1 || lineaFin != 1)); then
     lineaInicio=$(grep -c "# INICIO PROGRAMACION DE TAREAS" /etc/crontab)
     lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab no es correcta, se perderá registro de todas las tareas programadas" 0 0
@@ -41,7 +41,7 @@ elif [lineaInicio != 1 || lineaFin != 1]; then
     echo "# FIN PROGRAMACION DE TAREAS" >> tmp/crontab
     rm /etc/crontab
     mv tmp/crontab /etc/crontab
-elif [numeroInicio > numeroFin]; then
+elif ((numeroInicio > numeroFin)); then
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab está invertida, se perderá registro de todas las tareas programadas" 0 0
     clear
     grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" $1 > tmp/crontab
