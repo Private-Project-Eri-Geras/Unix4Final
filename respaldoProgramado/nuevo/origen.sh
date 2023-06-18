@@ -1,7 +1,7 @@
 #!/bin/bash
 
 while true; do
-    origen=$(dialog --title "Selecciona un archivo" \
+    origen=$(dialog --title "Selecciona un archivo o directorio a respaldar" \
         --cancel-label "Cancelar" \
         --help-button --help-label "Ayuda" \
         --stdout --cursor-off-label --fselect /home/ 14 70)
@@ -21,9 +21,11 @@ while true; do
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $origen?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
-                #Se guarda la ruta en tmp/origen.txt
-                echo "$origen" >tmp/origen.txt
+                #Se guarda la ruta en tmp/origen.tmp
+                echo -n "$origen" > tmp/origen.tmp
                 clear
+                (source respaldoProgramado/nuevo/destino.sh)
+                rm tmp/origen.tmp
                 break # Salir del ciclo while después de confirmar
             fi
 
@@ -34,6 +36,8 @@ while true; do
                 #Se guarda la ruta en tmp/origen.txt
                 echo "$origen" >tmp/origen.txt
                 clear
+                (source respaldoProgramado/nuevo/destino.sh)
+                rm tmp/origen.tmp
                 break # Salir del ciclo while después de confirmar
             fi
 
