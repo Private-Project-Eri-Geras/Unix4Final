@@ -40,15 +40,22 @@ while true; do
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el directorio $destino?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
-                echo -n "tar -czf ${destino}resp$(date +%d_%m_%Y-%H_%M).tar.gz " >>tmp/cron.tmp
+                echo -n "tar -czf ${destino}resp\$(date +\%d_\%m_\%Y-\%H_\%M).tar.gz -C " >>tmp/cron.tmp
+                #    /home/gerardo/Pictures/resp$(date +\%d_\%m_\%Y-\%H_\%M).tar.gz -C /home/gerardo/Pictures/Screenshots .
                 cat tmp/origen.tmp >>tmp/cron.tmp
-                head -$((numeroFin - 1)) /etc/crontab >tmp/crontab
+                echo " ." >>tmp/cron.tmp
+                head -$((numeroFin-1)) /etc/crontab >tmp/crontab
                 cat tmp/cron.tmp >>tmp/crontab
                 tail -n +${numeroFin} /etc/crontab >>tmp/crontab
+                read -p "Presiona enter para continuar"
                 rm /etc/crontab
                 mv tmp/crontab /etc/crontab
                 dialog --title "" --msgbox "La tarea se ha creado exitosamente." 0 0
                 rm tmp/cancelar.tmp
+                rm tmp/cron.tmp
+                rm tmp/dialogOutput.tmp
+                rm tmp/Doutput.tmp
+                rm tmp/output.tmp
                 clear
                 break # Salir del ciclo while después de confirmar
             fi
