@@ -53,9 +53,7 @@ menu_case() {
         read -p "Presione enter para continuar..." -sn 1
         ;;
     4)
-        clear
-        echo "Tareas sobre usuarios"
-        read -p "Presione enter para continuar..." -sn 1
+        (source /usr/src/glam/tareasUsuarios/SessionsMenu.sh)
         ;;
     esac
 }

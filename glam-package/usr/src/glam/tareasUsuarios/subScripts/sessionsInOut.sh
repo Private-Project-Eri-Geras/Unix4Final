@@ -1,10 +1,10 @@
 #!/bin/bash
 # Ruta del archivo que guarda los inicios y terminos de sesión
-new=/tmp/newWho.txt
-old=/tmp/oldWho.txt
-diferencia=/tmp/diff.txt
+new=/var/glam/tmp/newWho.txt
+old=/var/glam/tmp/oldWho.txt
+diferencia=/var/glam/tmp/diff.txt
 nameArch="usuarios$(date +'%d%m%y').txt"
-ruta="/usr/src/glam/tareasUsuarios/subscripts/docs/usrsInOut" 
+ruta="/var/glam/logs/usrsInOut" 
 rutaUsrs="$ruta/$nameArch"
 ##### FUNCIONES ####
   mkdir -p $ruta #verifica si existe la ruta, s ino existe la crea
