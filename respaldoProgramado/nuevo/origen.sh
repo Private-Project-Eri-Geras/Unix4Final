@@ -26,7 +26,10 @@ while true; do
                 clear
                 (source respaldoProgramado/nuevo/destino.sh)
                 rm tmp/origen.tmp
-                break # Salir del ciclo while después de confirmar
+                # Si el archivo tmp/cancelar no existe, se hace un break
+                if [ ! -f tmp/cancelar.tmp ]; then
+                    break
+                fi
             fi
 
         elif [ -d "$origen" ]; then
@@ -39,7 +42,10 @@ while true; do
                 clear
                 (source respaldoProgramado/nuevo/destino.sh)
                 rm tmp/origen.tmp
-                break # Salir del ciclo while después de confirmar
+                # Si el archivo tmp/cancelar no existe, se hace un break
+                if [ ! -f tmp/cancelar.tmp ]; then
+                    break
+                fi
             fi
 
         else

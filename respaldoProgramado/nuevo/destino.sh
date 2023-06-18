@@ -36,10 +36,10 @@ while true; do
                 head -$((numeroFin-1)) /etc/crontab > tmp/crontab
                 cat tmp/cron.tmp >> tmp/crontab
                 tail -n +${numeroFin} /etc/crontab >> tmp/crontab
-                dialog --title "ERROR" --msgbox "La tarea se ha creado exitosamente." 0 0   
                 rm /etc/crontab
                 mv tmp/crontab /etc/crontab
-                rm tmp/crontab
+                dialog --title "" --msgbox "La tarea se ha creado exitosamente." 0 0   
+                rm tmp/cancelar.tmp
                 clear
                 break # Salir del ciclo while después de confirmar
             fi
