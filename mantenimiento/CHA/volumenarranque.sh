@@ -1,9 +1,10 @@
-    #!/bin/bash
+#!/bin/bash
 
 # Define the options
 options=(
     1 "Deshabilitar chequeos de volumen al arranque"
     2 "Habilitar chequeos de volumen al arranque"
+)
 
 selected=0
 
