@@ -7,11 +7,11 @@ options=(
 
 selected=0
 
-backup_file="lsblk_backup.txt"
+backup_file="fstab_backup.txt"
 
 if [ ! -s "$backup_file" ]; then
 # Realizar la copia de seguridad
-lsblk > "$backup_file"
+cat /etc/fstab > "$backup_file"
 fi
 
 clear
@@ -29,18 +29,47 @@ while true; do
 
     case $selected in
     1)
-        # Desmontar todos los dispositivos
-        umount -a
-        # Volver a montar todos los dispositivos con el chequeo de volúmenes desactivado
-        mount -a
-        dialog --msgbox "Chequeo de volúmenes activado." 0 0
+        # Montar todos los dispositivos
+        while IFS= read -r line
+            do
+            # Omitir líneas que comienzan con #
+            if [[ $line =~ ^[^#] ]]; then
+                # Buscar las líneas que comienzan con UUID o LABEL
+                if [[ $line =~ ^(UUID|LABEL)= ]]; then
+                # Extraer el dispositivo
+                device=$(echo "$line" | awk '{print $1}')
+                umount "$device"  # Desmontar el sistema de archivos
+                
+                # Modificar la línea para activar el chequeo al arranque (cambiar '0' a '1')
+                modified_line=$(echo "$line" | awk '{$NF="1"; print}')
+                
+                # Reemplazar la línea original con la línea modificada en el archivo /etc/fstab
+                sed -i "s|$line|$modified_line|" /etc/fstab      
+                mount "$device"  # Volver a montar el sistema de archivos
+                fi
+            fi
+        done < /etc/fstab
         ;;
     2)
-        # Desmontar todos los dispositivos
-        umount -a
-        # Volver a montar todos los dispositivos con el chequeo de volúmenes desactivado
-        mount -o remount,ro /
-        dialog --msgbox "Chequeo de volúmenes desactivado." 0 0
+        while IFS= read -r line
+            do
+            # Omitir líneas que comienzan con #
+            if [[ $line =~ ^[^#] ]]; then
+                # Buscar las líneas que comienzan con UUID o LABEL
+                if [[ $line =~ ^(UUID|LABEL)= ]]; then
+                # Extraer el dispositivo
+                device=$(echo "$line" | awk '{print $1}')
+                umount "$device"  # Desmontar el sistema de archivos
+                
+                # Modificar la línea para activar el chequeo al arranque (cambiar '1' a '0')
+                modified_line=$(echo "$line" | awk '{$NF="0"; print}')
+                
+                # Reemplazar la línea original con la línea modificada en el archivo /etc/fstab
+                sed -i "s|$line|$modified_line|" /etc/fstab      
+                mount "$device"  # Volver a montar el sistema de archivos
+                fi
+            fi
+        done < /etc/fstab
         ;;
     esac
     clear
