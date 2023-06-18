@@ -17,6 +17,10 @@ while true; do
 
     # Si el usuario presiona "Slect"
     elif [ $opcion -eq 0 ]; then
+        if [ "${destino: -1}" != "/" ]; then
+            # Agregar "/" al final de la variable destino
+            destino="${destino}/"
+        fi
         if [ -d "$destino" ]; then
             echo -n "$destino" > tmp/destino.tmp
             if grep -qFf tmp/origen.tmp tmp/destino.tmp; then
@@ -27,6 +31,15 @@ while true; do
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el directorio $destino?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
+                echo -n "tar -czf ${destino}resp$(date +%d_%m_%Y-%H_%M).tar.gz " >> tmp/cron.tmp
+                cat tmp/origen.tmp >> tmp/cron.tmp
+                head -$((numeroFin-1)) /etc/crontab > tmp/crontab
+                cat tmp/cron.tmp >> tmp/crontab
+                tail -n +${numeroFin} /etc/crontab >> tmp/crontab
+                dialog --title "ERROR" --msgbox "La tarea se ha creado exitosamente." 0 0   
+                rm /etc/crontab
+                mv tmp/crontab /etc/crontab
+                rm tmp/crontab
                 clear
                 break # Salir del ciclo while después de confirmar
             fi
