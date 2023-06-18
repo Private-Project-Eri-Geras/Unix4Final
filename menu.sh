@@ -37,4 +37,8 @@ while true; do
 done
 
 clear
+
+#se remueve el archivo temporal fsck_output.tmp
+rm mantenimiento/CHO/fsck_output.tmp
+
 exit
