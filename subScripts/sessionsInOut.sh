@@ -4,7 +4,7 @@ new=/tmp/newWho.txt
 old=/tmp/oldWho.txt
 diferencia=/tmp/diff.txt
 nameArch="usuarios$(date +'%d%m%y').txt"
-ruta="/GLAM/logs/usrsInOut" #GNU Logical Administrator Menus
+ruta="/usr/src/glam/tareasUsuarios/subscripts/docs/usrsInOut" 
 rutaUsrs="$ruta/$nameArch"
 ##### FUNCIONES ####
   mkdir -p $ruta #verifica si existe la ruta, s ino existe la crea
