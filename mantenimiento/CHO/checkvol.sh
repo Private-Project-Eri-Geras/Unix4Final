@@ -15,7 +15,7 @@ dispositivo=$(dialog --stdout --inputbox "Ingrese el nombre del dispositivo:" 0 
 #Verificar si el dispositivo existe
 if ! lsblk -o NAME | grep -wq "$dispositivo"; then
     dialog --msgbox "El dispositivo $dispositivo no existe." 0 0
-    exit 1
+    return 1
 fi
 
 while true; do
