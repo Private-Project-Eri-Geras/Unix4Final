@@ -1,0 +1,37 @@
+#!/bin/bash
+set -e
+
+# guardar la pantalla
+tput smcup
+
+# Verificar que dialog este instalado
+if [ ! -x /usr/bin/dialog ]; then
+    echo "El paquete dialog no esta instalado."
+    echo ""
+    while true; do
+        echo "Deseas instalarlo ahora? (Y/n)"
+        read yn
+        case $yn in
+        [Yy]*)
+            apt-get install dialog
+            # verificar que la instalacion haya sido exitosa
+            if [ ! -x /usr/bin/dialog ]; then
+                tput rmcup
+                echo "No se puede continuar sin dialog."
+                exit 1
+            fi
+            tput rmcup
+            echo "dialog instalado exitosamente."
+            exit 0
+            ;;
+        [Nn]*)
+            # dar un mensaje de error y salir
+            tput rmcup
+            echo "No se puede continuar sin dialog."
+            exit 1
+            ;;
+        *) echo "Por favor respode Y N." ;;
+        esac
+    done
+    exit 1
+fi

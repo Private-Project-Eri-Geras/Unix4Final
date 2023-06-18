@@ -1,0 +1,47 @@
+#!/bin/bash
+set -e
+
+# Preguntar al usuario si quiere guardar los logs
+dialog --title "Desinstalacion de glam" --yesno "Desea guardar los archivos creados por glam?" 30 40
+response=$?
+echo $response
+if [[ $response -eq 0 ]]; then
+    mkdir -p /var/log/glam
+    ruta=$(dialog --stdout --title "Desinstalacion de glam" --dselect "/var/log/glam" 0 60)
+    response=$?
+    # si la ruta no es /var/log/glam eliminar esta carpeta
+    if [[ $ruta != "/var/log/glam" ]]; then
+        rm -rf /var/log/glam
+    fi
+    if [[ $response -eq 1 ]]; then
+        clear
+        echo "No se guardaran los archivos de glam."
+        rm -rf /var/glam
+        rm -r /var/log/glam
+        exit 0
+    fi
+    # verificar que la ruta sea valida, si no lo es, intentar crear todas las carpetas a la ruta
+    if [[ ! -d $ruta ]]; then
+        mkdir -p $ruta
+    fi
+    # verificar que la ruta sea valida, si no lo es, salir
+    if [[ ! -d $ruta ]]; then
+        dialog --title --yesno "Hubo un error al crear la ruta, desea continuar con la desinstalación? Si continuas se perderan los registros de glam" 10 60
+        response=$?
+        if [[ $response -eq 0 ]]; then
+            rm -rf /var/glam
+            exit 0
+        else
+            # error al crear la ruta, salir
+            exit 1
+        fi
+    fi
+else
+    # no guardar los logs, borrar la carpeta de logs
+    rm -rf /var/glam
+    # borrar los archivos fuente y comandos
+    rm -f /usr/bin/glam
+    rm -f /usr/local/bin/glam
+    rf -rf /usr/src/glam
+    exit 0
+fi
