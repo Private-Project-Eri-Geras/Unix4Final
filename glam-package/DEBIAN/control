@@ -3,5 +3,4 @@ Version: 0.1
 Architecture: all
 Maintainer: Eriarer <eriarer_melgoza@hotmail.com>
 Depends: dialog
-Provides: ${shlibs:Depends}, ${misc:Depends}, ubuntu
 Description: Paquete de manejo de un sistema operativo multiusuario

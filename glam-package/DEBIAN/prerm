@@ -1,47 +1,42 @@
 #!/bin/bash
 set -e
 
-# Preguntar al usuario si quiere guardar los logs
-dialog --title "Desinstalacion de glam" --yesno "Desea guardar los archivos creados por glam?" 30 40
-response=$?
-echo $response
-if [[ $response -eq 0 ]]; then
-    mkdir -p /var/log/glam
-    ruta=$(dialog --stdout --title "Desinstalacion de glam" --dselect "/var/log/glam" 0 60)
-    response=$?
-    # si la ruta no es /var/log/glam eliminar esta carpeta
-    if [[ $ruta != "/var/log/glam" ]]; then
-        rm -rf /var/log/glam
-    fi
-    if [[ $response -eq 1 ]]; then
-        clear
-        echo "No se guardaran los archivos de glam."
-        rm -rf /var/glam
-        rm -r /var/log/glam
-        exit 0
-    fi
-    # verificar que la ruta sea valida, si no lo es, intentar crear todas las carpetas a la ruta
-    if [[ ! -d $ruta ]]; then
-        mkdir -p $ruta
-    fi
-    # verificar que la ruta sea valida, si no lo es, salir
-    if [[ ! -d $ruta ]]; then
-        dialog --title --yesno "Hubo un error al crear la ruta, desea continuar con la desinstalación? Si continuas se perderan los registros de glam" 10 60
-        response=$?
-        if [[ $response -eq 0 ]]; then
-            rm -rf /var/glam
-            exit 0
-        else
-            # error al crear la ruta, salir
-            exit 1
+tput smcup
+clear
+# crear una caja con echos y ascci drawing boxes
+# el borde de color azul y el texto de color blanco
+# es un selector de opciones
+# la opciocion seleccionada es de color verde
+# la opcion no seleccionada es de color blanco
+# la opcion de salir es de color rojo
+# la opcion seleccionada por defecto es la primera
+# agregar un feedback que muestre que con las flechas se puede mover
+# y con enter seleccionar
+echo -e "\e[1;34m┌───────────────────── GLAM ─────────────────────┐"
+echo -e "\e[1;34m│                                                │"
+echo -e "\e[1;34m│\e[1;37mDeseas guardar los archivos de registro         \e[1;34m│"
+echo -e "\e[1;34m│\e[1;37m       antes de desinstalar?                    \e[1;34m│"
+echo -e "\e[1;34m│                                                │"
+echo -e "\e[1;34m│\e[1;32m  1) Si                                         \e[1;34m│"
+echo -e "\e[1;34m│\e[1;37m  2) No                                         \e[1;34m│"
+echo -e "\e[1;34m│\e[1;31m  3) Salir                                      \e[1;34m│"
+echo -e "\e[1;34m│                                                │"
+echo -e "\e[1;34m│ \e[1;37m↑ ↓: Moverse \e[1;32mEnter: Seleccionar \e[1;31mEsc: Salir \e[1;34m    │"
+echo -e "\e[1;34m└────────────────────────────────────────────────┘\e[0m"
+
+# hacer el movimiento con las flechas
+while true; do
+    read -s -n 1 key
+    if [[ $key == '\e' ]]; then
+        read -s -n 2 key
+        if [[ $key == '[A' ]]; then
+            # mover hacia arriba
+            tput cup 8 2
+            echo -e "\e[1;32m  1) Si                                         \e[0m"
+            tput cup 9 2
+            echo -e "\e[1;37m  2) No                                         \e[0m"
+        elif [[ $key == '[B' ]]; then
+            # mover hacia abajo
         fi
     fi
-else
-    # no guardar los logs, borrar la carpeta de logs
-    rm -rf /var/glam
-    # borrar los archivos fuente y comandos
-    rm -f /usr/bin/glam
-    rm -f /usr/local/bin/glam
-    rf -rf /usr/src/glam
-    exit 0
-fi
+done
