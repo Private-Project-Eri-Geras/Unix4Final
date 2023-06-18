@@ -2,7 +2,16 @@
 
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
-    dialog --title "Help" --msgbox "aqui esta la ayuda" 0 0
+    dialog --title "Help" --textbox \
+    "\n\
+    1.-Programación de tareas manual:\n\
+    Permite programar tareas en un momento específico.\n\n\
+    2.-Respaldo programado:\n\
+    Permite programar un respaldo de un archivo o directorio de forma periódica.\n\n\
+    3.-Borrado de temporales programado:\n\
+    Permite programar el borrado de archivos temporales de forma periódica.\n\n\
+    4.-Inhabilitación de usuarios (por periodo de tiempo):\n\
+    Permite inhabilitar usuarios por un periodo de tiempo específico." 0 0 --scrollbar
 }
 
 # Limpia la pantalla
@@ -20,7 +29,7 @@ options=(
     1 "Programación de tareas manual"
     2 "Respaldo programado"
     3 "Borrado de temporales programado"
-    4 "Inhabilitación de usuarios (por periodo de tiempo)"
+    4 "Inhabilitación de usuarios"
 )
 
 # Verificar la estructura de crontab y crearla si no existe
@@ -61,7 +70,7 @@ while true; do
     # --cancel-label = 1
     # --help-button --help-label = 2
     # --extra-button --extra-label = 3
-    option=$(dialog --cursor-off-label --colors --clear --title "PROGRAMACION DE TAREAS" \
+    option=$(dialog --cursor-off-label --colors --clear --title "PROGRAMACIÓN DE TAREAS" \
         --cancel-label "Cancelar" --ok-label "Seleccionar" \
         --help-button --help-label "Ayuda" \
         --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \

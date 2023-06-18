@@ -2,7 +2,14 @@
 
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
-    dialog --title "Help" --msgbox "aqui esta la ayuda" 0 0
+    dialog --title "Help" --msgbox \
+    "\n\
+    1.-Nuevo respaldo:\n\
+    Permite programar un respaldo de un archivo o directorio de forma periódica.\n\n\
+    2.-Borrar respaldo:\n\
+    Permite borrar los respaldos programados.\n\n\
+    3.-Editar respaldo:\n\
+    Permite editar los respaldos programados." 0 0
 }
 
 # Define las opciones del menú

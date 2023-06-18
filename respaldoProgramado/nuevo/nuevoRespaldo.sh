@@ -4,9 +4,31 @@ mkdir -p tmp
 
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
-    dialog --title "Help" --msgbox "aqui esta la ayuda" 0 0
+    dialog --title "Help" --msgbox \
+    "\n\
+    Minuto (0-59)\n\
+    Se especifica el minuto en el que se ejecutará el respaldo.\n\n\
+    Hora (0-23)\n\
+    Se especifica la hora en la que se ejecutará el respaldo.\n\n\
+    Día del mes (1-31)\n\
+    Se especifica el día del mes en el que se ejecutará el respaldo.\n\n\
+    Mes (1-12)\n\
+    Se especifica el mes en el que se ejecutará el respaldo.\n\n\
+    Día de la semana (0-7)\n\
+    Se especifica el día de la semana en el que se ejecutará el respaldo.\n
+    0 y 7 corresponden al Domingo.\n\n\
+
+    Es posible utilizar , para especificar múltiples valores.\n\
+    Ejemplo: 1,3,5,7\n\n\
+
+    Es posible utilizar - para especificar un rango de valores.\n\
+    Ejemplo: 1-5\n\n\
+
+    Es posible utilizar * para especificar todos los valores.\n\
+    Ejemplo: *" 0 0
 }
 
+# Valida que el input del usuario sea valido
 validarCampo() {
     local cadena=$1
     if [ -z "$cadena" ]; then
@@ -74,6 +96,7 @@ validarCampo() {
     echo -n "0" >tmp/output.tmp
 }
 
+# Función para mostrar la ventana de frecuencia
 tiempo() {
     # Parametros:
     # $1 = minuto
@@ -94,6 +117,7 @@ tiempo() {
         "Dia de la Semana (0-7)" 5 1 "$5" 5 25 15 0 \
         2>tmp/Doutput.tmp
     output=$?
+    
     # Si se presiono el boton de cancelar
     if [ $output -eq 1 ]; then
         echo -n "1" >tmp/dialogOutput.tmp
@@ -102,16 +126,19 @@ tiempo() {
     elif [ $output -eq 2 ]; then
         echo -n "2" >tmp/dialogOutput.tmp
         return
+    # Si se presiono el boton de seleccionar
     else
         echo -n "0" >tmp/dialogOutput.tmp
     fi
 
+    # Leer los valores de los campos
     minutos=$(head -1 tmp/Doutput.tmp)
     hora=$(head -2 tmp/Doutput.tmp | tail -1)
     dia=$(head -3 tmp/Doutput.tmp | tail -1)
     mes=$(head -4 tmp/Doutput.tmp | tail -1)
     semana=$(head -5 tmp/Doutput.tmp | tail -1)
 
+    # Validar que los campos sean validos
     validarCampo "$minutos"
     if [[ $(cat tmp/output.tmp) == "1" ]]; then
         echo -n '* ' >tmp/cron.tmp
@@ -168,15 +195,16 @@ clear
 
 # Imprime el menú usando dialog
 while true; do
-    # Muestra el menú de frecuencia y cambia la variable $tarea
+    # Mostrar el menu de frecuencia
     tiempo
     while true; do
-        # si la cadena esta vacia, retornar al script que llamo a este
+        # si la cadena esta vacia, retornar al script que llamó a este
         if [[ $(cat tmp/dialogOutput.tmp) -eq 1 ]]; then
             rm -f tmp/cron.tmp
             rm -f tmp/Doutput.tmp
             rm -f tmp/output.tmp
             rm -f tmp/dialogOutput.tmp
+            rm -f tmp/cancelar.tmp
             #return
             # TODO: regresar al menu anterior ==========================
             exit
@@ -224,9 +252,3 @@ while true; do
     clear
 done
 
-# Sale del script
-rm -f tmp/cron.tmp
-rm -f tmp/Doutput.tmp
-rm -f tmp/output.tmp
-rm -f tmp/dialogOutput.tmp
-clear

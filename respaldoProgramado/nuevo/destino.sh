@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Función para mostrar la ventana de ayuda
+mostrar_ayuda() {
+    dialog --title "Help" --msgbox \
+    "\n\
+    Para navegar se pude usar tab o las flechas.\n\n\
+    Es necesario usar la ruta absoluta del archivo o directorio a respaldar.\n\n\
+    Al seleccionar un directorio o archivo y presionar ctrl + shift + flecha izquierda se auto completa la ruta." 0 0     
+}
+
 while true; do
     destino=$(dialog --title "Selecciona un directorio para guardar el respaldo" \
         --cancel-label "Cancelar" \
@@ -24,7 +33,7 @@ while true; do
         if [ -d "$destino" ]; then
             echo -n "$destino" >tmp/destino.tmp
             if grep -qFf tmp/origen.tmp tmp/destino.tmp; then
-                dialog --title "ERROR" --msgbox "El directorio seleccionado se encuentra dentro del directorio a respaldar." 0 0
+                dialog --title "ERROR" --msgbox "No es posible respaldar. El directorio seleccionado se encuentra dentro del directorio a respaldar." 0 0
                 rm tmp/destino.tmp
                 continue
             fi

@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Función para mostrar la ventana de ayuda
+mostrar_ayuda() {
+    dialog --title "Help" --msgbox \
+    "\n\
+    Para navegar se pude usar tab o las flechas.\n\n\
+    Es necesario usar la ruta absoluta del archivo o directorio a respaldar.\n\n\
+    Al seleccionar un directorio o archivo y presionar ctrl + shift + flecha izquierda se auto completa la ruta." 0 0     
+}
+
 while true; do
     origen=$(dialog --title "Selecciona un archivo o directorio a respaldar" \
         --cancel-label "Cancelar" \
