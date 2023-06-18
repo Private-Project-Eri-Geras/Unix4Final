@@ -70,28 +70,22 @@ while true; do
     # Manejar la opción seleccionada
     case $option in
     1)
-        #TODO: /usr/src/glam/manejoUsuarios/usuarios/altas/masiva.sh
-        (source "manejoUsuarios/usuarios/altas/masiva.sh")
+        (source "/usr/src/glam/manejoUsuarios/usuarios/altas/masiva.sh")
         ;;
     2)
-        #TODO: /usr/src/glam/usuarios/altas/manual.sh
-        (source "manejoUsuarios/usuarios/altas/manual.sh")
+        (source "/usr/src/glam/manejoUsuarios/usuarios/altas/manual.sh")
         ;;
     3)
-        #TODO: /usr/src/glam/usuarios/bajas/masiva.sh
-        (source "manejoUsuarios/usuarios/bajas/masiva.sh")
+        (source "/usr/src/glam/manejoUsuarios/usuarios/bajas/masiva.sh")
         ;;
     4)
-        #TODO: /usr/src/glam/usuarios/bajas/manual.sh
-        (source "manejoUsuarios/usuarios/bajas/manual.sh")
+        (source "/usr/src/glam/manejoUsuarios/usuarios/bajas/manual.sh")
         ;;
     5)
-        #TODO: /usr/src/glam/usuarios/contraseñas/masiva.sh
-        (source "manejoUsuarios/usuarios/contraseñas/masiva.sh")
+        (source "/usr/src/glam/manejoUsuarios/usuarios/contraseñas/masiva.sh")
         ;;
     6)
-        #TODO: /usr/src/glam/usuarios/contraseñas/manual.sh
-        (source "manejoUsuarios/usuarios/contraseñas/manual.sh")
+        (source "/usr/src/glam/manejoUsuarios/usuarios/contraseñas/manual.sh")
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0

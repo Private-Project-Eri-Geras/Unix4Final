@@ -25,11 +25,11 @@ mostrar_ayuda() {
         YYYY-MM-DD y valida.
     -WarningDate debe ser una fecha en formato
         YYYY-MM-DD mayor a ExpireDate, también
-        valida." >/var/glam/tmp/ayuda.txt
+        valida." >/var/var/glam/tmp/ayuda.txt
     dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
-    rm /var/glam/tmp/ayuda.txt
+        --textbox /var/var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    rm /var/var/glam/tmp/ayuda.txt
 }
 
 createDefaulHome() {
@@ -73,17 +73,17 @@ addUsers() {
     usuario_actual="$USER"
 
     # Asignar la ruta del archivo de registro
-    log_file="/GLAM/logs/altas/altaMasiva_${current_date}.log"
+    log_file="/var/glam/logs/altas/altaMasiva_${current_date}.log"
     # Crear el directorio de logs si no existe
-    mkdir -p /GLAM/logs
-    mkdir -p /GLAM/logs/altas
+    mkdir -p /var/glam/logs
+    mkdir -p /var/glam/logs/altas
     counter=1
 
     # Verificar que el archivo de registro no exista
     # si existe, agregar un contador al nombre del archivo
     # ejemplo altaMasiva_12_30(1).log
     while [ -f "$log_file" ]; do
-        log_file="logs/altaMasiva_${current_date}_($counter).log"
+        log_file="/var/glam/logs/altas/altaMasiva_${current_date}($counter).log"
         ((counter++))
     done
 

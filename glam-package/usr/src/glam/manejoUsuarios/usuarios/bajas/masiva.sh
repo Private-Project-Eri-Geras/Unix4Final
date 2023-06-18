@@ -32,17 +32,17 @@ removeUsers() {
     usuario_actual="$USER"
 
     # Asignar la ruta del archivo de registro
-    log_file="/GLAM/logs/bajas/bajaMasiva_${current_date}.log"
+    log_file="/var/glam/logs/altas/bajasMasiva_${current_date}.log"
     # Crear el directorio de logs si no existe
-    mkdir -p /GLAM/logs
-    mkdir -p /GLAM/logs/bajas
+    mkdir -p /var/glam/logs
+    mkdir -p /var/glam/logs/altas
     counter=1
 
     # Verificar que el archivo de registro no exista
     # si existe, agregar un contador al nombre del archivo
     # ejemplo altaMasiva_12_30(1).log
     while [ -f "$log_file" ]; do
-        log_file="logs/bajaMasiva_${current_date}_($counter).log"
+        log_file="/var/glam/logs/altas/bajasMasiva_${current_date}($counter).log"
         ((counter++))
     done
 
