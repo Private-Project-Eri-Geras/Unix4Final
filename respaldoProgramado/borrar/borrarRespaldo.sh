@@ -25,7 +25,7 @@ if ((numeroRespaldos == 0)); then
 fi
 
 # Agregar los respaldos al script custom
-head -$((scriptInicio-1)) respaldoProgramado/borrar/borrarRespaldoPlantilla.sh >respaldoProgramado/borrar/borrarRespaldoCustom.sh
+head -$((scriptInicio-1)) respaldoProgramado/borrar/borrarRespaldoPlantilla.sh >tmp/borrarRespaldoCustom.sh
 tail -n +$((numeroInicio+1)) /etc/crontab | head -$numeroRespaldos >>tmp/list.tmp
 #crear un archivo nuevo con el formato figuiente:
 # 1 "tmp/list.tmp linea 1" off \
@@ -37,7 +37,8 @@ for ((i=1; i<=$numeroRespaldos; i++)); do
     echo -n " off \\" >>tmp/lista.tmp
     echo "" >>tmp/lista.tmp
 done
-cat tmp/lista.tmp >>respaldoProgramado/borrar/borrarRespaldoCustom.sh
+cat tmp/lista.tmp >>tmp/borrarRespaldoCustom.sh
 rm -f tmp/lista.tmp
-tail -n +$((scriptFin+1)) respaldoProgramado/borrar/borrarRespaldoPlantilla.sh >>respaldoProgramado/borrar/borrarRespaldoCustom.sh
-(source respaldoProgramado/borrar/borrarRespaldoCustom.sh)
+tail -n +$((scriptFin+1)) respaldoProgramado/borrar/borrarRespaldoPlantilla.sh >>tmp/borrarRespaldoCustom.sh
+(source tmp/borrarRespaldoCustom.sh)
+rm -f tmp/borrarRespaldoCustom.sh
