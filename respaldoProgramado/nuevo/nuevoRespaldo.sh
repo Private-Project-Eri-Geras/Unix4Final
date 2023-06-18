@@ -214,12 +214,12 @@ while true; do
         tiempo "$campo1" "$campo2" "$campo3" "$campo4" "$campo5"
     done
     echo -n "root " >>tmp/cron.tmp
-    echo -n "" > tmp/cancelar.tmp
+    echo -n "" >tmp/cancelar.tmp
     # Si el archivo tmp/cancelar no existe, se hace un break
     (source "respaldoProgramado/nuevo/origen.sh")
     if [[ ! -f tmp/cancelar.tmp ]]; then
         break
-    fi  
+    fi
     # Limpia la pantalla
     clear
 done

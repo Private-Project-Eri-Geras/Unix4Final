@@ -22,7 +22,7 @@ while true; do
             opcion=$?
             if [ $opcion -eq 0 ]; then
                 #Se guarda la ruta en tmp/origen.tmp
-                echo -n "$origen" > tmp/origen.tmp
+                echo -n "$origen" >tmp/origen.tmp
                 clear
                 (source respaldoProgramado/nuevo/destino.sh)
                 rm tmp/origen.tmp

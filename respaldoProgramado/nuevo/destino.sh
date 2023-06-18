@@ -22,7 +22,7 @@ while true; do
             destino="${destino}/"
         fi
         if [ -d "$destino" ]; then
-            echo -n "$destino" > tmp/destino.tmp
+            echo -n "$destino" >tmp/destino.tmp
             if grep -qFf tmp/origen.tmp tmp/destino.tmp; then
                 dialog --title "ERROR" --msgbox "El directorio seleccionado se encuentra dentro del directorio a respaldar." 0 0
                 rm tmp/destino.tmp
@@ -31,14 +31,14 @@ while true; do
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el directorio $destino?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
-                echo -n "tar -czf ${destino}resp$(date +%d_%m_%Y-%H_%M).tar.gz " >> tmp/cron.tmp
-                cat tmp/origen.tmp >> tmp/cron.tmp
-                head -$((numeroFin-1)) /etc/crontab > tmp/crontab
-                cat tmp/cron.tmp >> tmp/crontab
-                tail -n +${numeroFin} /etc/crontab >> tmp/crontab
+                echo -n "tar -czf ${destino}resp$(date +%d_%m_%Y-%H_%M).tar.gz " >>tmp/cron.tmp
+                cat tmp/origen.tmp >>tmp/cron.tmp
+                head -$((numeroFin - 1)) /etc/crontab >tmp/crontab
+                cat tmp/cron.tmp >>tmp/crontab
+                tail -n +${numeroFin} /etc/crontab >>tmp/crontab
                 rm /etc/crontab
                 mv tmp/crontab /etc/crontab
-                dialog --title "" --msgbox "La tarea se ha creado exitosamente." 0 0   
+                dialog --title "" --msgbox "La tarea se ha creado exitosamente." 0 0
                 rm tmp/cancelar.tmp
                 clear
                 break # Salir del ciclo while después de confirmar
