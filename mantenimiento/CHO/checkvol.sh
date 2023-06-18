@@ -7,7 +7,19 @@ options=(
 selected=0
 
 # Conseguir los dispositivos de almacenamiento
-lsblk -nr > /tmp/lsblk.txt
+lsblk --all -nr > /tmp/lsblk.txt
+
+# buscar el dispositivo de almacenamiento que
+# este montado en /
+while read -r line; do
+    if [[ $(echo "$line" | awk '{print $7}') == "/" ]]; then
+        # guardar el nombre del dispositivo en la variable dispositivo
+        raiz=$(echo "$line" | awk '{print $1}')
+    fi
+done < /tmp/lsblk.txt
+# si raiz es una particion, indicar el dispositivo sin
+raiz=$(echo "$raiz" | sed 's/[0-9]*$//g')
+
 # leer linea por linea (cada linea es un dispositivo)
 # cada linea se guardara en un vector llamado devices
 # el formato que se guardara sera el campo 1 4 y 6
@@ -17,6 +29,10 @@ lsblk -nr > /tmp/lsblk.txt
 i=0
 contador=1
 while read -r line; do
+    # si el nombre del dispositivo contiene el nombre de la raiz
+    if [[ $(echo "$line" | awk '{print $1}') == *"$raiz"* ]]; then
+        continue
+    fi
     devices[i]=$(echo "$line" | awk '{print $1}')
     devices[i+1]=$(echo "$line" | awk '{print $4,$6}')
     #tabular 
