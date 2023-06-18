@@ -7,16 +7,13 @@ mostrar_ayuda() {
     1.-Nuevo respaldo:\n\
     Permite programar un respaldo de un archivo o directorio de forma periódica.\n\n\
     2.-Borrar respaldo:\n\
-    Permite borrar los respaldos programados.\n\n\
-    3.-Editar respaldo:\n\
-    Permite editar los respaldos programados." 0 0
+    Permite borrar los respaldos programados.\n\n" 0 0
 }
 
 # Define las opciones del menú
 options=(
     1 "Nuevo respaldo"
     2 "Borrar respaldo"
-    3 "Editar respaldo"
 )
 
 # Limpia la pantalla
@@ -55,9 +52,6 @@ while true; do
         ;;
     2)
         (source "respaldoProgramado/borrar/borrarRespaldo.sh")
-        ;;
-    3)
-        (source "respaldoProgramado/editar/editarRespaldo.sh")
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
