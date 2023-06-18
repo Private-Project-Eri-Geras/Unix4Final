@@ -3,8 +3,8 @@
 # Define the options
 options=(
     1 "Habilitar/inhabilitar chequeos de volumen al arranque"
-    2 "Arranque en modo mantenimiento"
-    3 "Arranque en modo manual"
+    2 "Arranque mantenimiento"
+    3 "Arranque manual"
     4 "Chuequeo de volumenes"
     5 "Creacion, formato y montaje de volumenes"
 )

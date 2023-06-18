@@ -15,13 +15,13 @@ dispositivo=$(dialog --stdout --inputbox "Ingrese el nombre del dispositivo:" 0 
 #Verificar si el dispositivo existe
 if ! lsblk -o NAME | grep -wq "$dispositivo"; then
     dialog --msgbox "El dispositivo $dispositivo no existe." 0 0
-    return 1
+    return
 fi
 
 while true; do
     # Mostrar el menu y cambiar el valor de la variable $selected
     selected=$(dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
-        --cancel-label "Retunr" --ok-label "Select" \
+        --cancel-label "Return" --ok-label "Select" \
         --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \
         --output-fd 1)
     if [[ $? -ne 0 ]]; then

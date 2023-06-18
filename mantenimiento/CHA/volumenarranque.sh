@@ -13,7 +13,7 @@ clear
 while true; do
     # Mostrar el menu y cambiar el valor de la variable $selected
     selected=$(dialog --clear --title "Chequeo de volumenes al arranque(GENERAL)" \
-        --cancel-label "Retunr" --ok-label "Select" \
+        --cancel-label "Return" --ok-label "Select" \
         --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \
         --output-fd 1)
 
