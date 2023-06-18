@@ -1,3 +1,5 @@
+> para explorar todo lo que esta dentro de el glam-package  
+> find glam-package -type f -exec ls -l {} +  
 # Estructura del código:
 archivos fuentes:  
 ╚`/usr/src/glam`  
