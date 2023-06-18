@@ -215,6 +215,7 @@ while true; do
     done
     echo -n "root " >>tmp/cron.tmp
     (source "respaldoProgramado/nuevo/origen.sh")
+    break
     # Limpia la pantalla
     clear
 done
