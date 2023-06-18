@@ -115,7 +115,7 @@ tiempo() {
         "Dia del mes (1-31)" 3 1 "$3" 3 25 15 0 \
         "Mes (1-12)" 4 1 "$4" 4 25 15 0 \
         "Dia de la Semana (0-7)" 5 1 "$5" 5 25 15 0 \
-        2>tmp/Doutput.tmp
+    
     output=$?
     
     # Si se presiono el boton de cancelar
