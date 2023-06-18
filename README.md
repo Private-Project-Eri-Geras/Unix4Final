@@ -1,5 +1,8 @@
 > para explorar todo lo que esta dentro de el glam-package  
 > find glam-package -type f -exec ls -l {} +  
+  
+> para explorar convertir todo con dos2unix  
+> find glam-package -type f -exec dos2unix {} \\;
 # Estructura del código:
 archivos fuentes:  
 ╚`/usr/src/glam`  
