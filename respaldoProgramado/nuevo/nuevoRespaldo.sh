@@ -5,7 +5,7 @@ mkdir -p tmp
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
     dialog --title "Help" --msgbox \
-    "\n\
+        "\n\
     Minuto (0-59)\n\
     Se especifica el minuto en el que se ejecutará el respaldo.\n\n\
     Hora (0-23)\n\
@@ -115,9 +115,9 @@ tiempo() {
         "Dia del mes (1-31)" 3 1 "$3" 3 25 15 0 \
         "Mes (1-12)" 4 1 "$4" 4 25 15 0 \
         "Dia de la Semana (0-7)" 5 1 "$5" 5 25 15 0 \
-    
+        2>tmp/Doutput.tmp
     output=$?
-    
+
     # Si se presiono el boton de cancelar
     if [ $output -eq 1 ]; then
         echo -n "1" >tmp/dialogOutput.tmp
@@ -251,4 +251,3 @@ while true; do
     # Limpia la pantalla
     clear
 done
-
