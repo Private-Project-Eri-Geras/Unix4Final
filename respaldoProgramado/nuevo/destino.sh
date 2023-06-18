@@ -27,12 +27,6 @@ while true; do
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el directorio $destino?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
-<<<<<<< HEAD
-                #Se guarda la ruta en tmp/destino.txt
-                echo "$destino" >tmp/destino.txt
-=======
-
->>>>>>> ce449d6 (Cambio de título.)
                 clear
                 break # Salir del ciclo while después de confirmar
             fi
@@ -49,8 +43,4 @@ while true; do
     fi
 done
 
-<<<<<<< HEAD
-done
-=======
 rm tmp/destino.tmp
->>>>>>> ce449d6 (Cambio de título.)
