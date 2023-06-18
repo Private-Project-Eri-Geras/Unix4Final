@@ -31,44 +31,58 @@ while true; do
     1)
         # Montar todos los dispositivos
         while IFS= read -r line
-            do
-            # Omitir líneas que comienzan con #
-            if [[ $line =~ ^[^#] ]]; then
-                # Buscar las líneas que comienzan con UUID o LABEL
-                if [[ $line =~ ^(UUID|LABEL)= ]]; then
-                # Extraer el dispositivo
-                device=$(echo "$line" | awk '{print $1}')
-                umount "$device"  # Desmontar el sistema de archivos
-                
-                # Modificar la línea para activar el chequeo al arranque (cambiar '0' a '1')
-                modified_line=$(echo "$line" | awk '{$NF="1"; print}')
-                
-                # Reemplazar la línea original con la línea modificada en el archivo /etc/fstab
-                sed -i "s|$line|$modified_line|" /etc/fstab      
-                mount "$device"  # Volver a montar el sistema de archivos
+        do
+        # Omitir líneas que comienzan con #
+        if [[ $line =~ ^[^#] ]]; then
+            # Buscar las líneas que comienzan con UUID o LABEL
+            if [[ $line =~ ^(UUID|LABEL)= ]]; then
+            # Extraer el dispositivo
+            device=$(echo "$line" | awk '{print $1}')
+            # Verificar si el dispositivo es el disco principal
+                if [[ $device == $(df / | awk 'NR==2 {print $1}') ]]; then
+                    echo "El dispositivo $device es el disco principal. No se realizarán cambios."
+                else
+                    echo "Desmontando $device"
+                    umount "$device"  # Desmontar el sistema de archivos
+                    # Modificar la línea para activar el chequeo al arranque (cambiar '0' a '1')
+                    modified_line=$(echo "$line" | awk '{$NF="1"; print}')
+                    echo "Modificando línea: $line"
+                    echo "$modified_line"
+                    # Reemplazar la línea original con la línea modificada en el archivo /etc/fstab
+                    sed -i "s|$line|$modified_line|" /etc/fstab
+                    echo "Montando $device"
+                    mount "$device"  # Volver a montar el sistema de archivos
                 fi
             fi
+        fi
         done < /etc/fstab
         ;;
     2)
         while IFS= read -r line
-            do
-            # Omitir líneas que comienzan con #
-            if [[ $line =~ ^[^#] ]]; then
-                # Buscar las líneas que comienzan con UUID o LABEL
-                if [[ $line =~ ^(UUID|LABEL)= ]]; then
-                # Extraer el dispositivo
-                device=$(echo "$line" | awk '{print $1}')
-                umount "$device"  # Desmontar el sistema de archivos
-                
-                # Modificar la línea para activar el chequeo al arranque (cambiar '1' a '0')
-                modified_line=$(echo "$line" | awk '{$NF="0"; print}')
-                
-                # Reemplazar la línea original con la línea modificada en el archivo /etc/fstab
-                sed -i "s|$line|$modified_line|" /etc/fstab      
-                mount "$device"  # Volver a montar el sistema de archivos
+        do
+        # Omitir líneas que comienzan con #
+        if [[ $line =~ ^[^#] ]]; then
+            # Buscar las líneas que comienzan con UUID o LABEL
+            if [[ $line =~ ^(UUID|LABEL)= ]]; then
+            # Extraer el dispositivo
+            device=$(echo "$line" | awk '{print $1}')
+            # Verificar si el dispositivo es el disco principal
+                if [[ $device == $(df / | awk 'NR==2 {print $1}') ]]; then
+                    echo "El dispositivo $device es el disco principal. No se realizarán cambios."
+                else
+                    echo "Desmontando $device"
+                    umount "$device"  # Desmontar el sistema de archivos
+                    # Modificar la línea para activar el chequeo al arranque (cambiar '0' a '1')
+                    modified_line=$(echo "$line" | awk '{$NF="0"; print}')
+                    echo "Modificando línea: $line"
+                    echo "$modified_line"
+                    # Reemplazar la línea original con la línea modificada en el archivo /etc/fstab
+                    sed -i "s|$line|$modified_line|" /etc/fstab
+                    echo "Montando $device"
+                    mount "$device"  # Volver a montar el sistema de archivos
                 fi
             fi
+        fi
         done < /etc/fstab
         ;;
     esac
