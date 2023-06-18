@@ -4,6 +4,7 @@
 options=(
     1 "Deshabilitar chequeo de volumen al arranque"
     2 "Habilitar chequeo de volumen al arranque"
+)
 selected=0
 
 clear
@@ -36,6 +37,7 @@ while true; do
         umount "/dev/$dispositivo"
         mount "/dev/$dispositivo"
         dialog --msgbox "Chequeo de volúmenes activado en el dispositivo $dispositivo." 0 0
+        ;;
     2)
         umount "/dev/$dispositivo"
         mount -o remount,ro "/dev/$dispositivo"
