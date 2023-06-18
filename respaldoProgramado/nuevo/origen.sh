@@ -47,7 +47,7 @@ while true; do
             if [ $opcion -eq 0 ]; then
                 #Se guarda la ruta en tmp/origen.tmp
                 origen=${origen%/}
-                echo "$origen" >tmp/origen.tmp
+                echo -n "$origen" >tmp/origen.tmp
                 clear
                 (source respaldoProgramado/nuevo/destino.sh)
                 rm tmp/origen.tmp
