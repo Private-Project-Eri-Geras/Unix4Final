@@ -47,7 +47,6 @@ while true; do
                 head -$((numeroFin-1)) /etc/crontab >tmp/crontab
                 cat tmp/cron.tmp >>tmp/crontab
                 tail -n +${numeroFin} /etc/crontab >>tmp/crontab
-                read -p "Presiona enter para continuar"
                 rm /etc/crontab
                 mv tmp/crontab /etc/crontab
                 dialog --title "" --msgbox "La tarea se ha creado exitosamente." 0 0
