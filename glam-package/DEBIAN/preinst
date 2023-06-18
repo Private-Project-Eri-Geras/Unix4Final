@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # guardar la pantalla
 tput smcup
@@ -12,6 +13,7 @@ if [ ! -x /usr/bin/dialog ] && [ ! -x /usr/bin/at ]; then
         read yn
         case $yn in
         [Yy]*)
+            apt-get update
             apt-get install dialog
             apt-get install at
             # verificar que la instalacion haya sido exitosa
@@ -46,6 +48,7 @@ elif [ ! -x /usr/bin/dialog ]; then
         read yn
         case $yn in
         [Yy]*)
+            apt-get update
             apt-get install dialog
             # verificar que la instalacion haya sido exitosa
             if [ ! -x /usr/bin/dialog ]; then
@@ -79,6 +82,7 @@ elif [ ! -x /usr/bin/at ]; then
         read yn
         case $yn in
         [Yy]*)
+            apt-get update
             apt-get install at
             # verificar que la instalacion haya sido exitosa
             if [ ! -x /usr/bin/at ]; then

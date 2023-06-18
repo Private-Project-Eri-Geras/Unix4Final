@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 moveSelect() {
     if [[ $1 -eq 0 ]]; then
@@ -118,6 +119,10 @@ while true; do
         elif [[ $selec -eq 1 ]]; then
             # no guardar los archivos de registro
             # y salir
+            rm -r /var/glam
+            rm -r /usr/src/glam
+            rm -f /usr/bin/glam
+            rm -f /usr/bin/glam
             tput rmcup
             # regrsar el cursor
             echo -en "\033[?25h"
