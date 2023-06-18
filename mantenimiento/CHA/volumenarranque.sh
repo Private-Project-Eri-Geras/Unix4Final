@@ -8,6 +8,8 @@ options=(
 
 selected=0
 
+backup_file="lsblk_backup.txt"
+
 clear
 
 while true; do
@@ -20,10 +22,12 @@ while true; do
     if [[ $? -ne 0 ]]; then
         break
     fi
-    
-    #se hace un respaldo********************************************************
 
-    
+    if [ ! -s "$backup_file" ]; then
+    # Realizar la copia de seguridad
+    lsblk > "$backup_file"
+    fi
+
     case $selected in
     1)
         # Desmontar todos los dispositivos

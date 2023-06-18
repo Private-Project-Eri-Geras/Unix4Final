@@ -7,6 +7,8 @@ options=(
 )
 selected=0
 
+backup_file="lsblk_backup.txt"
+
 clear
 
 #obtenemos el nombre del dispositivo
@@ -28,7 +30,10 @@ while true; do
         break
     fi
     
-    #se hace un respaldo********************************************************
+    if [ ! -s "$backup_file" ]; then
+    # Realizar la copia de seguridad
+    lsblk > "$backup_file"
+    fi
 
     
     case $selected in
