@@ -40,7 +40,6 @@ menu_case() {
     option=$1
     case $option in
     1)
-        #TODO: /usr/src/glam/manejoUsuarios/menuUsuarios.sh
         (source /usr/src/glam/manejoUsuarios/menuUsuarios.sh)
         ;;
     2)
