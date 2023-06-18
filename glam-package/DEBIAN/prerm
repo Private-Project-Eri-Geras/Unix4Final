@@ -5,17 +5,17 @@ moveSelect() {
         echo -e "\033[6:0H"
         echo -e "            \e[1;34m│\e[0;32m  1) Si                                         \e[1;34m│"
         echo -e "            \e[1;34m│\e[0;37m  2) No                                         \e[1;34m│"
-        echo -e "            \e[1;34m│\e[0;37m  3) Salir  (no deisnstakar)                    \e[1;34m│"
+        echo -e "            \e[1;34m│\e[0;37m  3) Salir  (no deisnstalar)                    \e[1;34m│"
     elif [[ $1 -eq 1 ]]; then
         echo -e "\033[6:0H"
         echo -e "            \e[0;34m│\e[0;37m  1) Si                                         \e[1;34m│"
         echo -e "            \e[1;34m│\e[0;32m  2) No                                         \e[1;34m│"
-        echo -e "            \e[1;34m│\e[0;37m  3) Salir  (no deisnstakar)                    \e[1;34m│"
+        echo -e "            \e[1;34m│\e[0;37m  3) Salir  (no deisnstalar)                    \e[1;34m│"
     elif [[ $1 -eq 2 ]]; then
         echo -e "\033[6:0H"
         echo -e "            \e[0;34m│\e[0;37m  1) Si                                         \e[1;34m│"
         echo -e "            \e[1;34m│\e[0;37m  2) No                                         \e[1;34m│"
-        echo -e "            \e[1;34m│\e[0;31m  3) Salir  (no deisnstakar)                    \e[1;34m│"
+        echo -e "            \e[1;34m│\e[0;31m  3) Salir  (no deisnstalar)                    \e[1;34m│"
     fi
     # mover el cursor a 0 0
     echo -en "\033[0;0H"
@@ -42,7 +42,7 @@ echo -e "            \e[1;34m│      \e[0;37m       antes de desinstalar?      
 echo -e "            \e[1;34m│                                                │"
 echo -e "            \e[1;34m│\e[0;32m  1) Si                                         \e[1;34m│"
 echo -e "            \e[1;34m│\e[0;37m  2) No                                         \e[1;34m│"
-echo -e "            \e[1;34m│\e[0;37m  3) Salir  (no deisnstakar)                    \e[1;34m│"
+echo -e "            \e[1;34m│\e[0;37m  3) Salir  (no deisnstalar)                    \e[1;34m│"
 echo -e "            \e[1;34m│                                                │"
 echo -e "            \e[1;34m│ \e[0;37m↑ ↓: Moverse        \e[1;32mEnter: Seleccionar         \e[1;34m│"
 echo -e "            \e[1;34m└────────────────────────────────────────────────┘\e[0m"
@@ -72,25 +72,48 @@ while true; do
         if [[ $selec -eq 0 ]]; then
             # guardar los archivos de registro
             if [ -d /var/glam ]; then
+                mkdir -p /var/logs/glam
                 mv /var/glam /var/logs/glam
+                clear
+                #mostrar una caja ascii con el mensaje de que se guardaron los archivos
+                echo -en "\033[0;0H"
+                echo ""
+                echo -e "            \e[1;34m┌───────────────────── GLAM ─────────────────────┐"
+                echo -e "            \e[1;34m│                \e[1;37mDESISNTALACION                  \e[1;34m│"
+                echo -e "            \e[1;34m│      \e[0;37mLos archivos de registro han sido         \e[1;34m│"
+                echo -e "            \e[1;34m│      \e[0;37m       guardados en /var/logs/glam        \e[1;34m│"
+                echo -e "            \e[1;34m│                                                │"
+                echo -e "            \e[1;34m│         \e[0;37mPresiona enter para continuar          \e[1;34m│"
+                echo -e "            \e[1;34m│                                                │"
+                echo -e "            \e[1;34m└────────────────────────────────────────────────┘\e[0m"
+                read -s
+                # y salir
+                tput rmcup
+                # regrsar el cursor
+                echo -en "\033[?25h"
+                exit 0
+            else
+                clear
+                #mostrar una caja ascii con el mensaje de que no se guardaron los archivos
+                echo -en "\033[0;0H"
+                echo ""
+                echo -e "            \e[1;34m┌───────────────────── GLAM ─────────────────────┐"
+                echo -e "            \e[1;34m│                \e[1;37mDESISNTALACION                  \e[1;34m│"
+                echo -e "            \e[1;34m│      \e[0;37mNo se encontraron archivos de registro    \e[1;34m│"
+                echo -e "            \e[1;34m│      \e[0;37m       para guardar                       \e[1;34m│"
+                echo -e "            \e[1;34m│      \e[0;37mSe cancelara la desinsalación             \e[1;34m│"
+                echo -e "            \e[1;34m│                                                │"
+                echo -e "            \e[1;34m│         \e[0;37mPresiona enter para continuar          \e[1;34m│"
+                echo -e "            \e[1;34m│                                                │"
+                echo -e "            \e[1;34m└────────────────────────────────────────────────┘\e[0m"
+                read -s
+                # y salir
+                tput rmcup
+                # regrsar el cursor
+                echo -en "\033[?25h"
+                exit 1
             fi
-            #mostrar una caja ascii con el mensaje de que se guardaron los archivos
-            clear
-            echo -en "\033[0;0H"
-            echo ""
-            echo -e "            \e[1;34m┌───────────────────── GLAM ─────────────────────┐"
-            echo -e "            \e[1;34m│                \e[1;37mDESISNTALACION                  \e[1;34m│"
-            echo -e "            \e[1;34m│      \e[0;37mLos archivos de registro han sido         \e[1;34m│"
-            echo -e "            \e[1;34m│      \e[0;37m       guardados en /var/logs/glam        \e[1;34m│"
-            echo -e "            \e[1;34m│                                                │"
-            echo -e "            \e[1;34m│         \e[0;37mPresiona para continuar                \e[1;34m│"
-            echo -e "            \e[1;34m│                                                │"
-            echo -e "            \e[1;34m└────────────────────────────────────────────────┘\e[0m"
-            # y salir
-            tput rmcup
-            # regrsar el cursor
-            echo -en "\033[?25h"
-            exit 0
+
         # si se selecciona la opcion 2
         elif [[ $selec -eq 1 ]]; then
             # no guardar los archivos de registro
@@ -101,6 +124,18 @@ while true; do
             exit 0
         # si se selecciona la opcion 3
         elif [[ $selec -eq 2 ]]; then
+            # mostrar una caja ascii con el mensaje de que se cancelo la desinstalacion
+            clear
+            echo -en "\033[0;0H"
+            echo ""
+            echo -e "            \e[1;34m┌───────────────────── GLAM ─────────────────────┐"
+            echo -e "            \e[1;34m│                \e[1;37mDESISNTALACION                  \e[1;34m│"
+            echo -e "            \e[1;34m│      \e[0;37mSe cancelo la desinstalación              \e[1;34m│"
+            echo -e "            \e[1;34m│                                                │"
+            echo -e "            \e[1;34m│         \e[0;37mPresiona enter para continuar          \e[1;34m│"
+            echo -e "            \e[1;34m│                                                │"
+            echo -e "            \e[1;34m└────────────────────────────────────────────────┘\e[0m"
+            read -s
             # salir
             tput rmcup
             # regrsar el cursor

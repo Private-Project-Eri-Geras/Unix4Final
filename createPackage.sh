@@ -17,7 +17,14 @@ dpkg-deb --build glam-package
 # regresar los permisos de los archivos
 chmod -R 777 glam-package
 
+# instalar el paquete
 dpkg -i glam-package.deb
+
+# ejecutar el comando glam
 glam
+
+# eliminar el paquete
 rm -rf glam-package.deb
+
+# desinstalar el paquete
 dpkg -r glam
