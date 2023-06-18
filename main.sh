@@ -101,7 +101,7 @@ while true; do
         # (source "")
         ;;
     4)
-        # (source "")
+        (source "inhabilitacionUsuarios/menuInhabilitar.sh")
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
