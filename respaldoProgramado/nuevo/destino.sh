@@ -1,7 +1,7 @@
 #!/bin/bash
 
 while true; do
-    destino=$(dialog --title "Selecciona un directorio" \
+    destino=$(dialog --title "Selecciona un directorio para guardar el respaldo" \
         --cancel-label "Cancelar" \
         --help-button --help-label "Ayuda" \
         --stdout --cursor-off-label --fselect /home/ 14 70)
@@ -18,11 +18,21 @@ while true; do
     # Si el usuario presiona "Slect"
     elif [ $opcion -eq 0 ]; then
         if [ -d "$destino" ]; then
+            echo -n "$destino" > tmp/destino.tmp
+            if grep -qFf tmp/origen.tmp tmp/destino.tmp; then
+                dialog --title "ERROR" --msgbox "El directorio seleccionado se encuentra dentro del directorio a respaldar." 0 0
+                rm tmp/destino.tmp
+                continue
+            fi
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el directorio $destino?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
+<<<<<<< HEAD
                 #Se guarda la ruta en tmp/destino.txt
                 echo "$destino" >tmp/destino.txt
+=======
+
+>>>>>>> ce449d6 (Cambio de título.)
                 clear
                 break # Salir del ciclo while después de confirmar
             fi
@@ -37,5 +47,10 @@ while true; do
             fi
         fi
     fi
-
 done
+
+<<<<<<< HEAD
+done
+=======
+rm tmp/destino.tmp
+>>>>>>> ce449d6 (Cambio de título.)
