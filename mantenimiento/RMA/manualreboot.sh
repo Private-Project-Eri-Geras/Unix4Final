@@ -32,7 +32,7 @@ selected=$(dialog --clear --title "MENU PRINCIPAL" \
         --output-fd 1)
 
     if [[ $? -ne 0 ]]; then
-        break
+        return
     fi
 
     case $selected in
