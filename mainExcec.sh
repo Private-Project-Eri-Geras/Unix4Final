@@ -39,7 +39,7 @@ rm /usr/bin/glam
 rm /usr/local/bin/glam
 
 # mover los temporales de /var/glam a glam-package/usr/var/glam
-mv /var/glam glam-package/usr/var
+mv /var/glam glam-package/var/glam
 
 # regresar los permisos de los archivos
 chmod -R 777 glam-package
