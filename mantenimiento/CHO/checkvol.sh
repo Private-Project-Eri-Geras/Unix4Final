@@ -6,23 +6,30 @@ options=(
 )
 selected=0
 
-backup_file="lsblk_backup.txt"
-
-if [ ! -s "$backup_file" ]; then
-    # Realizar la copia de seguridad
-    lsblk > "$backup_file"
-fi
-
-clear
+# Conseguir los dispositivos de almacenamiento
+lsblk -nr > /tmp/lsblk.txt
+# leer linea por linea (cada linea es un dispositivo)
+# cada linea se guardara en un vector llamado devices
+# el formato que se guardara sera el campo 1 4 y 6
+# cada vez que se lee una linea se tiene que agregar dos elementos al vector
+# el primer elemento es un contador empezado en 1
+# el segundo elemento es el nombre del dispositivo
+i=0
+contador=1
+while read -r line; do
+    devices[i]=$(echo "$line" | awk '{print $1}')
+    devices[i+1]=$(echo "$line" | awk '{print $4,$6}')
+    #tabular 
+    devices[i+1]="$(printf '%-7s%-7s' ${devices[i+1]})"
+    i=$((i+2))
+    contador=$((contador+1))
+done < /tmp/lsblk.txt
 
 #obtenemos el nombre del dispositivo
-dispositivo=$(dialog --stdout --inputbox "Ingrese el nombre del dispositivo:" 0 0)
-
-#Verificar si el dispositivo existe
-if ! lsblk -o NAME | grep -wq "$dispositivo"; then
-    dialog --msgbox "El dispositivo $dispositivo no existe." 0 0
-    return
-fi
+dispositivo=$(dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
+        --cancel-label "Cancelar" --ok-label "Select" \
+        --menu "Seleccione una opción:" 0 0 0 "${devices[@]}" \
+        --output-fd 1)
 
 while true; do
     # Mostrar el menu y cambiar el valor de la variable $selected
