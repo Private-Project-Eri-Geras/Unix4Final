@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Define the options
 options=(
     1 "Habilitar chequeos de volumen al arranque"
     2 "Deshabilitar chequeos de volumen al arranque"
@@ -9,6 +8,11 @@ options=(
 selected=0
 
 backup_file="lsblk_backup.txt"
+
+if [ ! -s "$backup_file" ]; then
+# Realizar la copia de seguridad
+lsblk > "$backup_file"
+fi
 
 clear
 
@@ -21,11 +25,6 @@ while true; do
 
     if [[ $? -ne 0 ]]; then
         break
-    fi
-
-    if [ ! -s "$backup_file" ]; then
-    # Realizar la copia de seguridad
-    lsblk > "$backup_file"
     fi
 
     case $selected in
