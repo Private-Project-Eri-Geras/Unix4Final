@@ -1,5 +1,27 @@
 #!/bin/bash
-set -e
+
+moveSelect() {
+    if [[ $1 -eq 0 ]]; then
+        echo -e "\033[6:0H"
+        echo -e "            \e[1;34m│\e[0;32m  1) Si                                         \e[1;34m│"
+        echo -e "            \e[1;34m│\e[0;37m  2) No                                         \e[1;34m│"
+        echo -e "            \e[1;34m│\e[0;37m  3) Salir  (no deisnstakar)                    \e[1;34m│"
+    elif [[ $1 -eq 1 ]]; then
+        echo -e "\033[6:0H"
+        echo -e "            \e[0;34m│\e[0;37m  1) Si                                         \e[1;34m│"
+        echo -e "            \e[1;34m│\e[0;32m  2) No                                         \e[1;34m│"
+        echo -e "            \e[1;34m│\e[0;37m  3) Salir  (no deisnstakar)                    \e[1;34m│"
+    elif [[ $1 -eq 2 ]]; then
+        echo -e "\033[6:0H"
+        echo -e "            \e[0;34m│\e[0;37m  1) Si                                         \e[1;34m│"
+        echo -e "            \e[1;34m│\e[0;37m  2) No                                         \e[1;34m│"
+        echo -e "            \e[1;34m│\e[0;31m  3) Salir  (no deisnstakar)                    \e[1;34m│"
+    fi
+    # mover el cursor a 0 0
+    echo -en "\033[0;0H"
+    # ocultar el cursor
+    echo -en "\033[?25l"
+}
 
 tput smcup
 clear
@@ -8,35 +30,82 @@ clear
 # es un selector de opciones
 # la opciocion seleccionada es de color verde
 # la opcion no seleccionada es de color blanco
-# la opcion de salir es de color rojo
 # la opcion seleccionada por defecto es la primera
 # agregar un feedback que muestre que con las flechas se puede mover
 # y con enter seleccionar
-echo -e "\e[1;34m┌───────────────────── GLAM ─────────────────────┐"
-echo -e "\e[1;34m│                                                │"
-echo -e "\e[1;34m│\e[1;37mDeseas guardar los archivos de registro         \e[1;34m│"
-echo -e "\e[1;34m│\e[1;37m       antes de desinstalar?                    \e[1;34m│"
-echo -e "\e[1;34m│                                                │"
-echo -e "\e[1;34m│\e[1;32m  1) Si                                         \e[1;34m│"
-echo -e "\e[1;34m│\e[1;37m  2) No                                         \e[1;34m│"
-echo -e "\e[1;34m│\e[1;31m  3) Salir                                      \e[1;34m│"
-echo -e "\e[1;34m│                                                │"
-echo -e "\e[1;34m│ \e[1;37m↑ ↓: Moverse \e[1;32mEnter: Seleccionar \e[1;31mEsc: Salir \e[1;34m    │"
-echo -e "\e[1;34m└────────────────────────────────────────────────┘\e[0m"
-
+#echo de bold echo -e "\e[1;34m"
+echo ""
+echo -e "            \e[1;34m┌───────────────────── GLAM ─────────────────────┐"
+echo -e "            \e[1;34m│                \e[1;37mDESISNTALACION                  \e[1;34m│"
+echo -e "            \e[1;34m│      \e[0;37mDeseas guardar los archivos de registro   \e[1;34m│"
+echo -e "            \e[1;34m│      \e[0;37m       antes de desinstalar?              \e[1;34m│"
+echo -e "            \e[1;34m│                                                │"
+echo -e "            \e[1;34m│\e[0;32m  1) Si                                         \e[1;34m│"
+echo -e "            \e[1;34m│\e[0;37m  2) No                                         \e[1;34m│"
+echo -e "            \e[1;34m│\e[0;37m  3) Salir  (no deisnstakar)                    \e[1;34m│"
+echo -e "            \e[1;34m│                                                │"
+echo -e "            \e[1;34m│ \e[0;37m↑ ↓: Moverse        \e[1;32mEnter: Seleccionar         \e[1;34m│"
+echo -e "            \e[1;34m└────────────────────────────────────────────────┘\e[0m"
+echo -en "\033[?25l"
+selec=0
 # hacer el movimiento con las flechas
 while true; do
-    read -s -n 1 key
-    if [[ $key == '\e' ]]; then
-        read -s -n 2 key
+    IFS= read -sn 1 key
+    #arrow keys
+    if [[ $key == $'\e' ]]; then
+        read -sn 2 key
         if [[ $key == '[A' ]]; then
             # mover hacia arriba
-            tput cup 8 2
-            echo -e "\e[1;32m  1) Si                                         \e[0m"
-            tput cup 9 2
-            echo -e "\e[1;37m  2) No                                         \e[0m"
+            if [[ $selec -gt 0 ]]; then
+                selec=$((selec - 1))
+                moveSelect $selec
+            fi
         elif [[ $key == '[B' ]]; then
             # mover hacia abajo
+            if [[ $selec -lt 2 ]]; then
+                selec=$((selec + 1))
+                moveSelect $selec
+            fi
+        fi
+    # enter
+    elif [[ $key == "" ]]; then
+        if [[ $selec -eq 0 ]]; then
+            # guardar los archivos de registro
+            if [ -d /var/glam ]; then
+                mv /var/glam /var/logs/glam
+            fi
+            #mostrar una caja ascii con el mensaje de que se guardaron los archivos
+            clear
+            echo -en "\033[0;0H"
+            echo ""
+            echo -e "            \e[1;34m┌───────────────────── GLAM ─────────────────────┐"
+            echo -e "            \e[1;34m│                \e[1;37mDESISNTALACION                  \e[1;34m│"
+            echo -e "            \e[1;34m│      \e[0;37mLos archivos de registro han sido         \e[1;34m│"
+            echo -e "            \e[1;34m│      \e[0;37m       guardados en /var/logs/glam        \e[1;34m│"
+            echo -e "            \e[1;34m│                                                │"
+            echo -e "            \e[1;34m│         \e[0;37mPresiona para continuar                \e[1;34m│"
+            echo -e "            \e[1;34m│                                                │"
+            echo -e "            \e[1;34m└────────────────────────────────────────────────┘\e[0m"
+            # y salir
+            tput rmcup
+            # regrsar el cursor
+            echo -en "\033[?25h"
+            exit 0
+        # si se selecciona la opcion 2
+        elif [[ $selec -eq 1 ]]; then
+            # no guardar los archivos de registro
+            # y salir
+            tput rmcup
+            # regrsar el cursor
+            echo -en "\033[?25h"
+            exit 0
+        # si se selecciona la opcion 3
+        elif [[ $selec -eq 2 ]]; then
+            # salir
+            tput rmcup
+            # regrsar el cursor
+            echo -en "\033[?25h"
+            exit 1
         fi
     fi
 done
