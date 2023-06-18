@@ -213,14 +213,10 @@ while true; do
         #separado por espacios
         tiempo "$campo1" "$campo2" "$campo3" "$campo4" "$campo5"
     done
-    # Se pasa el valor de la variable $tarea a la función ubicacion.sh
-    #(source "respaldoProgramado/nuevo/ubicacion.sh" $tarea)
-    option=$(dialog --title "agregar" --yesno "¿Desea agregar otra tarea?" 5 30 2>&1 >/dev/tty)
-    #si es no, sale del while
-    if [[ $? -eq 1 ]]; then
-        break
-    fi
+    echo -n "root " >>tmp/cron.tmp
+    (source "respaldoProgramado/nuevo/origen.sh")
     # Limpia la pantalla
+    clear
 done
 
 # Sale del script
