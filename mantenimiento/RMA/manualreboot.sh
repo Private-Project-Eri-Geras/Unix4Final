@@ -1,12 +1,10 @@
 #!/bin/bash
 
 options=(
-    1 "Shutdown Halt"
-    2 "Reboot Single-User"
-    3 "Reboot Multi-user(no red/graphic)"
-    4 "Reboot Multi-user(no graphic)"
-    5 "Reboot multi-user(graphic)"
-    6 "Reboot"
+    1 "Apagado Halt"
+    2 "Reinicio Mantenimiento(Single-User)"
+    3 "Reinicio Multi-Usuario(graphic)"
+    4 "Reinicio"
 )
 
 # Verificar si el script se ejecuta con sudo
@@ -92,48 +90,10 @@ selected=$(dialog --clear --title "MENU PRINCIPAL" \
                 dialog --colors --title "REINICIO CANCELADO" --msgbox "El reinicio ha sido cancelado" 0 0
                 return 1
         else
-        init 2
-        fi
-        ;;
-    4)
-        wall "El sistema se reiniciara en 1 minuto. Se perdera todo el trabajo no guardado."
-        dialog --colors --title "REINICANDO" --backtitle ""-* \
-                --infobox "Se reinicara en 1 minuto.
-                \Zb\Z1pulse cualquier tecla para cancelar" 0 0
-        #Llamar la funcion en segundo plano
-        endTimer &
-        #Hacer un read -t 60 para cancelar el reinicio
-        #si se pulsa cualquier tecla se cancela el reinicio
-        read -sn 1 -t 60
-        if [[ "$?" -eq 0 ]]; then
-                #Matar el hilo de la cuenta atras
-                kill $!
-                dialog --colors --title "REINICIO CANCELADO" --msgbox "El reinicio ha sido cancelado" 0 0
-                return 1
-        else
-        init 3
-        fi
-        ;;
-    5)
-        wall "El sistema se reiniciara en 1 minuto. Se perdera todo el trabajo no guardado."
-        dialog --colors --title "REINICANDO" --backtitle ""-* \
-                --infobox "Se reinicara en 1 minuto.
-                \Zb\Z1pulse cualquier tecla para cancelar" 0 0
-        #Llamar la funcion en segundo plano
-        endTimer &
-        #Hacer un read -t 60 para cancelar el reinicio
-        #si se pulsa cualquier tecla se cancela el reinicio
-        read -sn 1 -t 60
-        if [[ "$?" -eq 0 ]]; then
-                #Matar el hilo de la cuenta atras
-                kill $!
-                dialog --colors --title "REINICIO CANCELADO" --msgbox "El reinicio ha sido cancelado" 0 0
-                return 1
-        else
         init 5
         fi
         ;;
-    6)
+    4)
         wall "El sistema se reiniciara en 1 minuto. Se perdera todo el trabajo no guardado."
         dialog --colors --title "REINICANDO" --backtitle ""-* \
                 --infobox "Se reinicara en 1 minuto.
