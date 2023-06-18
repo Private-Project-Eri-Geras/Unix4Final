@@ -33,9 +33,9 @@ while true; do
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el directorio $origen?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
-                #Se guarda la ruta en tmp/origen.txt
+                #Se guarda la ruta en tmp/origen.tmp
                 origen=${origen%/}
-                echo "$origen" >tmp/origen.txt
+                echo "$origen" >tmp/origen.tmp
                 clear
                 (source respaldoProgramado/nuevo/destino.sh)
                 rm tmp/origen.tmp
