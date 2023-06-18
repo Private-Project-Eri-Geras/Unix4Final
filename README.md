@@ -1,4 +1,4 @@
-> regresar permisos (la cagatis wey)
+> regresar permisos (la cagatis wey)  
 > chmod -R 777 glam-package
 
 > para explorar todo lo que esta dentro de el glam-package  
