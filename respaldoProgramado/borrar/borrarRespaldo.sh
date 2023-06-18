@@ -32,7 +32,12 @@ tail -n +$((numeroInicio+1)) /etc/crontab | head -$numeroRespaldos >>tmp/list.tm
 # 2 "tmp/list.tmp linea 2" off \
 # 3 "tmp/list.tmp linea 3" off \
 for ((i=1; i<=$numeroRespaldos; i++)); do
-    echo $i \"$(head -$i tmp/list.tmp | tail -1)\" off \\ >>tmp/checklist.tmp
+    echo -n "$i " >>tmp/lista.tmp
+    awk -v i="$i" 'NR == i { printf "\"%s\"", $0 }' tmp/list.tmp >> tmp/lista.tmp
+    echo -n " off \\" >>tmp/lista.tmp
+    echo "" >>tmp/lista.tmp
 done
+cat tmp/lista.tmp >>respaldoProgramado/borrar/borrarRespaldoCustom.sh
+rm -f tmp/lista.tmp
 tail -n +$((scriptFin+1)) respaldoProgramado/borrar/borrarRespaldoPlantilla.sh >>respaldoProgramado/borrar/borrarRespaldoCustom.sh
-#(source respaldoProgramado/borrar/borrarRespaldoCustom.sh)
+(source respaldoProgramado/borrar/borrarRespaldoCustom.sh)
