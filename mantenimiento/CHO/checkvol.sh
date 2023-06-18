@@ -2,8 +2,8 @@
 
 
 options=(
-    1 "Deshabilitar chequeo de volumen al arranque"
-    2 "Habilitar chequeo de volumen al arranque"
+    1 "Habilitar chequeo de volumen al arranque"
+    2 "Deshabilitar chequeo de volumen al arranque"
 )
 selected=0
 
