@@ -1,5 +1,7 @@
 #!/bin/bash
-
+    #GLAM= GNU Logical Administrator Menus o Gerardo, Leonardo, Abraham, Mariana
+    #Ruta de código menú:       ╚/usr/src/glam/tareasUsuarios/SessionsMenu.sh
+    #Ruta de código subScripts: ╚/usr/src/glam/tareasUsuarios/subscripts/..
 #Define the options
 opt=(
     1 "Inicio/Termino de sesión"
