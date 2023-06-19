@@ -1,0 +1,1 @@
+echo "Salida de la terminal"

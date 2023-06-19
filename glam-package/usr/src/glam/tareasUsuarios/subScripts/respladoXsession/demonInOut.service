@@ -1,0 +1,9 @@
+[Unit]
+Description=Detecta inicios y terminos de sesión
+After=network.target
+
+[Service]
+ExecStart=/etc/init.d/demonScript.sh
+
+[Install]
+WantedBy=default.target

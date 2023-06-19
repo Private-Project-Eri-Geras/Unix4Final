@@ -7,7 +7,7 @@ nameArch="usuarios$(date +'%d%m%y').txt"
 ruta="/var/glam/logs/usrsInOut" 
 rutaUsrs="$ruta/$nameArch"
 ##### FUNCIONES ####
-  mkdir -p $ruta #verifica si existe la ruta, s ino existe la crea
+  mkdir -p $ruta #verifica si existe la ruta, si no existe la crea
   touch $rutaUsrs
 # Función para mostrar un cuadro de diálogo con las últimas 10 líneas del archivo
 mostrar_cuadro_dialogo() {
