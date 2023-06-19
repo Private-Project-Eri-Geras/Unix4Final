@@ -37,7 +37,7 @@ clear
 #echo de bold echo -e "\e[1;34m"
 echo ""
 echo -e "            \e[1;34m┌───────────────────── GLAM ─────────────────────┐"
-echo -e "            \e[1;34m│                \e[1;37mDESISNTALACION                  \e[1;34m│"
+echo -e "            \e[1;34m│                \e[1;37mDESINTALACION                  \e[1;34m│"
 echo -e "            \e[1;34m│      \e[0;37mDeseas guardar los archivos de registro   \e[1;34m│"
 echo -e "            \e[1;34m│      \e[0;37m       antes de desinstalar?              \e[1;34m│"
 echo -e "            \e[1;34m│                                                │"
