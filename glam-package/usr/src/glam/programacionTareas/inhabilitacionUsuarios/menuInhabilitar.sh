@@ -55,18 +55,18 @@ while true; do
         numeroUsuarios=$(grep -v "!" /etc/shadow | wc -l)
         # Se crea un archivo con los usuarios 
         for ((i = 1; i <= $numeroUsuarios; i++)); do
-            echo -n "$i " >>tmp/usuarios.tmp
-            grep -v "!" /etc/shadow | cut -d: -f1 | sort | awk -v i="$i" 'NR == i { printf "\"%s\"\n", $0 }' >>tmp/usuarios.tmp
+            echo -n "$i " >>/tmp/usuarios.tmp
+            grep -v "!" /etc/shadow | cut -d: -f1 | sort | awk -v i="$i" 'NR == i { printf "\"%s\"\n", $0 }' >>/tmp/usuarios.tmp
         done
         # Se crea el Custom
         scriptInicio=$(grep -n "# INICIO OPTIONS" inhabilitacionUsuarios/inhabilitarPlantilla.sh | cut -d ':' -f 1)
         scriptFin=$(grep -n "# FIN OPTIONS" inhabilitacionUsuarios/inhabilitarPlantilla.sh | cut -d ':' -f 1)
-        head -$((scriptInicio-1)) inhabilitacionUsuarios/inhabilitarPlantilla.sh >tmp/inhabilitarCustom.sh
-        cat tmp/usuarios.tmp >>tmp/inhabilitarCustom.sh
-        tail -n +$((scriptFin+1)) inhabilitacionUsuarios/inhabilitarPlantilla.sh >>tmp/inhabilitarCustom.sh
-        (source "tmp/inhabilitarCustom.sh")
-        rm -f tmp/usuarios.tmp
-        rm -f tmp/inhabilitarCustom.sh
+        head -$((scriptInicio-1)) inhabilitacionUsuarios/inhabilitarPlantilla.sh >/tmp/inhabilitarCustom.sh
+        cat /tmp/usuarios.tmp >>/tmp/inhabilitarCustom.sh
+        tail -n +$((scriptFin+1)) inhabilitacionUsuarios/inhabilitarPlantilla.sh >>/tmp/inhabilitarCustom.sh
+        (source "/tmp/inhabilitarCustom.sh")
+        rm -f /tmp/usuarios.tmp
+        rm -f /tmp/inhabilitarCustom.sh
         ;;
     2)
         (source "inhabilitacionUsuarios/inhabilitarNombre.sh")
@@ -76,18 +76,18 @@ while true; do
         numeroUsuarios=$(grep "!" /etc/shadow | wc -l)
         # Se crea un archivo con los usuarios
         for ((i = 1; i <= $numeroUsuarios; i++)); do
-            echo -n "$i " >>tmp/usuarios.tmp
-            grep "!" /etc/shadow | cut -d: -f1 | sort | awk -v i="$i" 'NR == i { printf "\"%s\"\n", $0 }' >>tmp/usuarios.tmp
+            echo -n "$i " >>/tmp/usuarios.tmp
+            grep "!" /etc/shadow | cut -d: -f1 | sort | awk -v i="$i" 'NR == i { printf "\"%s\"\n", $0 }' >>/tmp/usuarios.tmp
         done
         # Se crea el Custom
         scriptInicio=$(grep -n "# INICIO OPTIONS" inhabilitacionUsuarios/habilitarPlantilla.sh | cut -d ':' -f 1)
         scriptFin=$(grep -n "# FIN OPTIONS" inhabilitacionUsuarios/habilitarPlantilla.sh | cut -d ':' -f 1)
-        head -$((scriptInicio-1)) inhabilitacionUsuarios/habilitarPlantilla.sh >tmp/habilitarCustom.sh
-        cat tmp/usuarios.tmp >>tmp/habilitarCustom.sh
-        tail -n +$((scriptFin+1)) inhabilitacionUsuarios/habilitarPlantilla.sh >>tmp/habilitarCustom.sh
-        (source "tmp/habilitarCustom.sh")
-        rm -f tmp/usuarios.tmp
-        rm -f tmp/habilitarCustom.sh
+        head -$((scriptInicio-1)) inhabilitacionUsuarios/habilitarPlantilla.sh >/tmp/habilitarCustom.sh
+        cat /tmp/usuarios.tmp >>/tmp/habilitarCustom.sh
+        tail -n +$((scriptFin+1)) inhabilitacionUsuarios/habilitarPlantilla.sh >>/tmp/habilitarCustom.sh
+        (source "/tmp/habilitarCustom.sh")
+        rm -f /tmp/usuarios.tmp
+        rm -f /tmp/habilitarCustom.sh
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
