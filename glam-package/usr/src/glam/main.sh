@@ -9,6 +9,21 @@ if [[ -z $SUDO_USER ]]; then
     exit 1
 fi
 
+# Verificar si el demonio demonInOut.service existe
+if [[ ! -f /etc/systemd/system/demonInOut.service ]]; then
+    # iniciar el demonio
+    cp /usr/src/glam/tareasUsuarios/subScripts/respaldoXsession/demonInOut.service /etc/systemd/system/
+    cp /usr/src/glam/tareasUsuarios/subScripts/respaldoXsession/demonScript.sh /etc/init.d/demonScript.sh
+    chmod +x /etc/init.d/demonScript.sh
+    systemctl daemon-reload
+    systemctl enable demonInOut.service
+    systemctl start demonInOut.service
+else
+    # Verificar si el demonio está activo
+    if [[ $(systemctl is-active demonInOut.service) == "inactive" ]]; then
+        systemctl start demonInOut.service
+    fi
+fi
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
     echo "Cada opción del menú realiza lo siguiente:
