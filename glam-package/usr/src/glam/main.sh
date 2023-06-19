@@ -43,9 +43,7 @@ menu_case() {
         (source /usr/src/glam/manejoUsuarios/menuUsuarios.sh)
         ;;
     2)
-        clear
-        echo "Programación de tareas"
-        read -p "Presione enter para continuar..." -sn 1
+        (source /usr/src/glam/programacionTareas/menuTareas.sh)
         ;;
     3)
         clear
