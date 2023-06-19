@@ -51,7 +51,7 @@ while true; do
     # Manejar la opción seleccionada
     case $option in
     1)
-        # Se cuenta el numero de usuarios
+        # Se cuenta el numero de usuarios habilitados
         numeroUsuarios=$(grep -v "!" /etc/shadow | wc -l)
         # Se crea un archivo con los usuarios 
         for ((i = 1; i <= $numeroUsuarios; i++)); do
@@ -72,7 +72,22 @@ while true; do
         (source "inhabilitacionUsuarios/inhabilitarNombre.sh")
         ;;
     3)
+        # Se cuenta el numero de usuarios inhabilitados
+        numeroUsuarios=$(grep "!" /etc/shadow | wc -l)
+        # Se crea un archivo con los usuarios
+        for ((i = 1; i <= $numeroUsuarios; i++)); do
+            echo -n "$i " >>tmp/usuarios.tmp
+            grep "!" /etc/shadow | cut -d: -f1 | sort | awk -v i="$i" 'NR == i { printf "\"%s\"\n", $0 }' >>tmp/usuarios.tmp
+        done
+        # Se crea el Custom
+        scriptInicio=$(grep -n "# INICIO OPTIONS" inhabilitacionUsuarios/habilitarPlantilla.sh | cut -d ':' -f 1)
+        scriptFin=$(grep -n "# FIN OPTIONS" inhabilitacionUsuarios/habilitarPlantilla.sh | cut -d ':' -f 1)
+        head -$((scriptInicio-1)) inhabilitacionUsuarios/habilitarPlantilla.sh >tmp/habilitarCustom.sh
+        cat tmp/usuarios.tmp >>tmp/habilitarCustom.sh
+        tail -n +$((scriptFin+1)) inhabilitacionUsuarios/habilitarPlantilla.sh >>tmp/habilitarCustom.sh
         (source "tmp/habilitarCustom.sh")
+        rm -f tmp/usuarios.tmp
+        rm -f tmp/habilitarCustom.sh
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
