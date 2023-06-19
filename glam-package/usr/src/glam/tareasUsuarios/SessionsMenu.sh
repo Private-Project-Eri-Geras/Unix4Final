@@ -36,7 +36,7 @@ clear
             (source "/usr/src/glam/tareasUsuarios/subScripts/sessionsInOut.sh")
             ;;
         2)
-            (source "/usr/src/glam/tareasUsuarios/subScripts/respladoXsession/configRespaldo.sh")
+            (source "/usr/src/glam/tareasUsuarios/subScripts/respaldoXsession/configRespaldo.sh")
             ;;
         3)
             ;;
