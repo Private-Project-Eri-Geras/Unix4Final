@@ -30,13 +30,13 @@ while true; do
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el archivo $origen?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
-                #Se guarda la ruta en tmp/origen.tmp
-                echo -n "$origen" >tmp/origen.tmp
+                #Se guarda la ruta en /tmp/origen.tmp
+                echo -n "$origen" >/tmp/origen.tmp
                 clear
                 (source respaldoProgramado/nuevo/destino.sh)
-                rm tmp/origen.tmp
-                # Si el archivo tmp/cancelar no existe, se hace un break
-                if [ ! -f tmp/cancelar.tmp ]; then
+                rm /tmp/origen.tmp
+                # Si el archivo /tmp/cancelar no existe, se hace un break
+                if [ ! -f /tmp/cancelar.tmp ]; then
                     break
                 fi
             fi
@@ -45,14 +45,14 @@ while true; do
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el directorio $origen?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
-                #Se guarda la ruta en tmp/origen.tmp
+                #Se guarda la ruta en /tmp/origen.tmp
                 origen=${origen%/}
-                echo -n "$origen" >tmp/origen.tmp
+                echo -n "$origen" >/tmp/origen.tmp
                 clear
                 (source respaldoProgramado/nuevo/destino.sh)
-                rm tmp/origen.tmp
-                # Si el archivo tmp/cancelar no existe, se hace un break
-                if [ ! -f tmp/cancelar.tmp ]; then
+                rm /tmp/origen.tmp
+                # Si el archivo /tmp/cancelar no existe, se hace un break
+                if [ ! -f /tmp/cancelar.tmp ]; then
                     break
                 fi
             fi

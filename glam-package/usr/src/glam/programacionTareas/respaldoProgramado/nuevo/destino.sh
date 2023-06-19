@@ -31,30 +31,30 @@ while true; do
             destino="${destino}/"
         fi
         if [ -d "$destino" ]; then
-            echo -n "$destino" >tmp/destino.tmp
-            if grep -qFf tmp/origen.tmp tmp/destino.tmp; then
+            echo -n "$destino" >/tmp/destino.tmp
+            if grep -qFf /tmp/origen.tmp /tmp/destino.tmp; then
                 dialog --title "ERROR" --msgbox "No es posible respaldar. El directorio seleccionado se encuentra dentro del directorio a respaldar." 0 0
-                rm tmp/destino.tmp
+                rm /tmp/destino.tmp
                 continue
             fi
             dialog --title "CONFIRMAR" --yesno "¿Deseas usar el directorio $destino?" 0 0
             opcion=$?
             if [ $opcion -eq 0 ]; then
-                echo -n "tar -czf ${destino}resp\$(date +\%d_\%m_\%Y-\%H_\%M).tar.gz -C " >>tmp/cron.tmp
+                echo -n "tar -czf ${destino}resp\$(date +\%d_\%m_\%Y-\%H_\%M).tar.gz -C " >>/tmp/cron.tmp
                 #    /home/gerardo/Pictures/resp$(date +\%d_\%m_\%Y-\%H_\%M).tar.gz -C /home/gerardo/Pictures/Screenshots .
-                cat tmp/origen.tmp >>tmp/cron.tmp
-                echo " ." >>tmp/cron.tmp
-                head -$((numeroFin-1)) /etc/crontab >tmp/crontab
-                cat tmp/cron.tmp >>tmp/crontab
-                tail -n +${numeroFin} /etc/crontab >>tmp/crontab
+                cat /tmp/origen.tmp >>/tmp/cron.tmp
+                echo " ." >>/tmp/cron.tmp
+                head -$((numeroFin-1)) /etc/crontab >/tmp/crontab
+                cat /tmp/cron.tmp >>/tmp/crontab
+                tail -n +${numeroFin} /etc/crontab >>/tmp/crontab
                 rm /etc/crontab
-                mv tmp/crontab /etc/crontab
+                mv /tmp/crontab /etc/crontab
                 dialog --title "" --msgbox "La tarea se ha creado exitosamente." 0 0
-                rm tmp/cancelar.tmp
-                rm tmp/cron.tmp
-                rm tmp/dialogOutput.tmp
-                rm tmp/Doutput.tmp
-                rm tmp/output.tmp
+                rm /tmp/cancelar.tmp
+                rm /tmp/cron.tmp
+                rm /tmp/dialogOutput.tmp
+                rm /tmp/Doutput.tmp
+                rm /tmp/output.tmp
                 clear
                 break # Salir del ciclo while después de confirmar
             fi
@@ -71,4 +71,4 @@ while true; do
     fi
 done
 
-rm tmp/destino.tmp
+rm /tmp/destino.tmp
