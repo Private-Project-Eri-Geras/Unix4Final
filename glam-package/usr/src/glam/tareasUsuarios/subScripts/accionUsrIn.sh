@@ -2,8 +2,8 @@
 # Script para controlar las acciones a ejecutar al ingresar un usuario
 usr=$1  # Se guarda el usuario que inicia sesión
 
-# Verificar si el usuario tiene configurado un respaldo
-if [[ -f /usr/src/glam/tareasUsuarios/archs/respaldo.txt ]]; then
+
+touch /usr/src/glam/tareasUsuarios/archs/respaldo.txt # Crear el archivo si no existe
     # Verificar si el usuario tiene configurado un respaldo
     while IFS=":" read -r usuario origen destino; do
         if [[ "$usuario" == "$usr" ]]; then
@@ -26,8 +26,6 @@ if [[ -f /usr/src/glam/tareasUsuarios/archs/respaldo.txt ]]; then
     done < /usr/src/glam/tareasUsuarios/archs/respaldo.txt
 
     # Si se llega a este punto, significa que no se encontró la configuración del usuario
-    echo "El usuario $usr no tiene configurado un respaldo."
-else
-    echo "No se encontró el archivo de configuración /usr/src/glam/tareasUsuarios/archs/respaldo.txt."
-    exit 1
+    #echo "El usuario $usr no tiene configurado un respaldo."
+
 fi
