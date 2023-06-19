@@ -244,7 +244,7 @@ while true; do
     echo -n "root " >>/tmp/cron.tmp
     echo -n "" >/tmp/cancelar.tmp
     # Si el archivo /tmp/cancelar no existe, se hace un break
-    (source "respaldoProgramado/nuevo/origen.sh")
+    (source "/usr/src/glam/programacionTareas/respaldoProgramado/nuevo/origen.sh")
     if [[ ! -f /tmp/cancelar.tmp ]]; then
         break
     fi

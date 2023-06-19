@@ -33,7 +33,7 @@ while true; do
                 #Se guarda la ruta en /tmp/origen.tmp
                 echo -n "$origen" >/tmp/origen.tmp
                 clear
-                (source respaldoProgramado/nuevo/destino.sh)
+                (source /usr/src/glam/programacionTareas/respaldoProgramado/nuevo/destino.sh)
                 rm /tmp/origen.tmp
                 # Si el archivo /tmp/cancelar no existe, se hace un break
                 if [ ! -f /tmp/cancelar.tmp ]; then
@@ -49,7 +49,7 @@ while true; do
                 origen=${origen%/}
                 echo -n "$origen" >/tmp/origen.tmp
                 clear
-                (source respaldoProgramado/nuevo/destino.sh)
+                (source /usr/src/glam/programacionTareas/respaldoProgramado/nuevo/destino.sh)
                 rm /tmp/origen.tmp
                 # Si el archivo /tmp/cancelar no existe, se hace un break
                 if [ ! -f /tmp/cancelar.tmp ]; then
