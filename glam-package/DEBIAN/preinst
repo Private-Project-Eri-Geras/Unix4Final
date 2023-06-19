@@ -1,11 +1,9 @@
 #!/bin/bash
 set -e
 
-# guardar la pantalla
-tput smcup
-
 # verificar dialog
 if [ ! -x /usr/bin/dialog ]; then
+    echo ""
     echo "El paquete dialog no esta instalado."
     echo "Por favor instalalo, se va a cancelar la instalacion."
     echo ""
@@ -14,6 +12,7 @@ if [ ! -x /usr/bin/dialog ]; then
     exit 1
 # verificar solo at
 elif [ ! -x /usr/bin/at ]; then
+    echo ""
     echo "El paquete at no esta instalado."
     echo "Por favor instalalo, se va a cancelar la instalacion."
     echo ""
