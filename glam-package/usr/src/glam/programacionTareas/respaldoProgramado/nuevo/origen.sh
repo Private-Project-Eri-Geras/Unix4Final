@@ -6,7 +6,7 @@ mostrar_ayuda() {
     "\n\
     Para navegar se pude usar tab o las flechas.\n\n\
     Es necesario usar la ruta absoluta del archivo o directorio a respaldar.\n\n\
-    Al seleccionar un directorio o archivo y presionar ctrl + shift + flecha izquierda se auto completa la ruta." 0 0     
+    Al presionar espacio se autocopleta la ruta del archivo o directorio seleccionado." 0 0     
 }
 
 while true; do
