@@ -4,107 +4,20 @@ set -e
 # guardar la pantalla
 tput smcup
 
-# Verificar que dialog este instalado
-if [ ! -x /usr/bin/dialog ] && [ ! -x /usr/bin/at ]; then
-    echo "El paquete dialog y at no estan instalados."
-    echo ""
-    while true; do
-        echo "Deseas instalarlos ahora? (Y/n)"
-        read yn
-        case $yn in
-        [Yy]*)
-            apt-get update
-            apt-get install dialog
-            apt-get install at
-            # verificar que la instalacion haya sido exitosa
-            if [ ! -x /usr/bin/dialog ] || [ ! -x /usr/bin/at ]; then
-                tput rmcup
-                echo "No se puede continuar sin dialog ni at."
-                exit 1
-            fi
-            tput rmcup
-            echo "dialog y at se han instalado exitosamente."
-            echo ""
-            echo "continuando con glam"
-            echo ""
-            exit 0
-            ;;
-        [Nn]*)
-            # dar un mensaje de error y salir
-            tput rmcup
-            echo "No se puede continuar sin dialog ni at."
-            exit 1
-            ;;
-        *) echo "Por favor respode Y N." ;;
-        esac
-    done
-    exit 1
-# verificar solo dialog
-elif [ ! -x /usr/bin/dialog ]; then
+# verificar dialog
+if [ ! -x /usr/bin/dialog ]; then
     echo "El paquete dialog no esta instalado."
+    echo "Por favor instalalo, se va a cancelar la instalacion."
     echo ""
-    while true; do
-        echo "Deseas instalarlo ahora? (Y/n)"
-        read yn
-        case $yn in
-        [Yy]*)
-            apt-get update
-            apt-get install dialog
-            # verificar que la instalacion haya sido exitosa
-            if [ ! -x /usr/bin/dialog ]; then
-                tput rmcup
-                echo "No se puede continuar sin dialog."
-                exit 1
-            fi
-            tput rmcup
-            echo "dialog se ha instalado exitosamente."
-            echo ""
-            echo "continuando con glam"
-            echo ""
-            exit 0
-            ;;
-        [Nn]*)
-            # dar un mensaje de error y salir
-            tput rmcup
-            echo "No se puede continuar sin dialog."
-            exit 1
-            ;;
-        *) echo "Por favor respode Y N." ;;
-        esac
-    done
+    echo -n "Presiona enter para continuar"
+    read -sn 1
     exit 1
 # verificar solo at
 elif [ ! -x /usr/bin/at ]; then
     echo "El paquete at no esta instalado."
+    echo "Por favor instalalo, se va a cancelar la instalacion."
     echo ""
-    while true; do
-        echo "Deseas instalarlo ahora? (Y/n)"
-        read yn
-        case $yn in
-        [Yy]*)
-            apt-get update
-            apt-get install at
-            # verificar que la instalacion haya sido exitosa
-            if [ ! -x /usr/bin/at ]; then
-                tput rmcup
-                echo "No se puede continuar sin at."
-                exit 1
-            fi
-            tput rmcup
-            echo "at se ha instalado exitosamente."
-            echo ""
-            echo "continuando con glam"
-            echo ""
-            exit 0
-            ;;
-        [Nn]*)
-            # dar un mensaje de error y salir
-            tput rmcup
-            echo "No se puede continuar sin at."
-            exit 1
-            ;;
-        *) echo "Por favor respode Y N." ;;
-        esac
-    done
+    echo -n "Presiona enter para continuar"
+    read -sn 1
     exit 1
 fi
