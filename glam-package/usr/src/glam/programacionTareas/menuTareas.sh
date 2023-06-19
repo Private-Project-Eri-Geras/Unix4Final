@@ -39,6 +39,8 @@ lineaInicioManual=$(grep -c "# INICIO PROGRAMACION MANUAL" /etc/crontab)
 lineaFinManual=$(grep -c "# FIN PROGRAMACION MANUAL" /etc/crontab)
 numeroInicio=$(grep -n "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
 numeroFin=$(grep -n "# FIN PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
+numeroInicioManual=$(grep -n "# INICIO PROGRAMACION MANUAL" /etc/crontab | cut -d ':' -f 1)
+numeroFinManual=$(grep -n "# FIN PROGRAMACION MANUAL" /etc/crontab | cut -d ':' -f 1)
 
 if ((lineaInicio == 0 && lineaFin == 0)); then
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab no existe, se creará una nueva" 0 0
