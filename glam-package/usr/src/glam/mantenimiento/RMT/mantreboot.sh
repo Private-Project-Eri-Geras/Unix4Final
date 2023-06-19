@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -z "$SUDO_USER" ]; then
+    dialog --colors --title "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
+    clear
+    return
+fi
+
 endTimer() {
     #Hacer una cuenta atras de 60 segundos
     for ((i = 60; i >= 0; i--)); do

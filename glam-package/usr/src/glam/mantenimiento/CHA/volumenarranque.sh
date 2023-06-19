@@ -7,6 +7,12 @@ options=(
 
 selected=0
 
+if [ -z "$SUDO_USER" ]; then
+    dialog --colors --title "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
+    clear
+    return
+fi
+
 backup_file="fstab_backup.txt"
 
 if [ ! -s "$backup_file" ]; then
