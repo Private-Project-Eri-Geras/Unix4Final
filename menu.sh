@@ -28,7 +28,7 @@ while true; do
     2)
         (source "mantenimiento/menumantenimiento.sh")
         ;;
-    3)s
+    3)
         source "mantenimiento/opcion3.sh"
         ;;
     esac
@@ -37,8 +37,5 @@ while true; do
 done
 
 clear
-
-#se remueve el archivo temporal fsck_output.tmp
-rm mantenimiento/CHO/fsck_output.tmp
 
 exit

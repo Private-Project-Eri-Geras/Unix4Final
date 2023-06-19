@@ -2,6 +2,22 @@
 
 selected=0
 
+checar() {
+    local hora=$(date +'%d-%m-%H%M')
+    fsck -y /dev/"$1" >> mantenimiento/CHO/chequeoDEV"$1".tmp 2>&1
+    if [[ $? -eq 0 ]]; then
+        dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
+            --msgbox "El chequeo realizado con exito" 0 0
+        echo /dev/"$1 chequeo exitoso" >> mantenimiento/CHO/chequeoDEV"$1"_"$hora".log
+    else
+        dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
+            --msgbox "El dispositivo tiene errores" 0 0
+        echo /dev/"$1 chequeo fallido" >> mantenimiento/CHO/chequeoDEV"$1"_"$hora".log
+    fi
+    echo "" >> mantenimiento/CHO/chequeoDEV"$1"_"$hora".log
+    cat mantenimiento/CHO/chequeoDEV"$1".tmp >> mantenimiento/CHO/chequeoDEV"$1"_"$hora".log
+    rm mantenimiento/CHO/chequeoDEV"$1".tmp
+}
 # Conseguir los dispositivos de almacenamiento
 lsblk --all -nr > /tmp/lsblk.txt
 
@@ -43,40 +59,13 @@ dispositivo=$(dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
         --menu "Seleccione una opción:" 0 0 0 "${devices[@]}" \
         --output-fd 1)
 
-echo "$dispositivo"
-
 #si el dispositivo esta montado desmontarlo
 if [[ $(mount | grep "$dispositivo") ]]; then
     umount /dev/"$dispositivo"
-    fsck -y /dev/"$dispositivo"
-    if [[ $? -eq 0 ]]; then
-        dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
-            --msgbox "El chequeo realizado con exito" 0 0
-        echo "" >> mantenimiento/CHO/fsck_output.tmp
-        echo /dev/"$dispositivo chequeo exitoso" >> mantenimiento/CHO/fsck_output.tmp
-    else
-        dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
-            --msgbox "El dispositivo tiene errores" 0 0
-        echo "" >> mantenimiento/CHO/fsck_output.tmp
-        echo /dev/"$dispositivo chequeo fallido" >> mantenimiento/CHO/fsck_output.tmp
-    fi
-    fsck -y /dev/"$dispositivo" >> mantenimiento/CHO/fsck_output.tmp 2>&1
+    checar "$dispositivo"
     mount /dev/"$dispositivo"
 else
-    fsck -y /dev/"$dispositivo"
-    fsck -y /dev/"$dispositivo"
-    if [[ $? -eq 0 ]]; then
-        dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
-            --msgbox "El chequeo realizado con exito" 0 0
-        echo "" >> mantenimiento/CHO/fsck_output.tmp
-        echo /dev/"$dispositivo chequeo exitoso" >> mantenimiento/CHO/fsck_output.tmp
-    else
-        dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
-            --msgbox "El dispositivo tiene errores" 0 0
-        echo "" >> mantenimiento/CHO/fsck_output.tmp
-        echo /dev/"$dispositivo chequeo fallido" >> mantenimiento/CHO/fsck_output.tmp
-    fi
-    fsck -y /dev/"$dispositivo" >> mantenimiento/CHO/fsck_output.tmp 2>&1
+    checar "$dispositivo"
 fi
 
 
