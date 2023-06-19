@@ -9,26 +9,18 @@ chmod -R 755 glam-package
 # copiar los archivos fuentes a la carpeta root
 cp -r glam-package/usr/src/glam /usr/src/glam
 
-# crear las carpetas /var/glam
-mkdir -p /var/glam
-mkdir -p /var/glam/backup
-mkdir -p /var/glam/logs
-mkdir -p /var/glam/tmp
+# si existe /var/glam, eliminarlo
+if [ -d "/var/glam" ]; then
+    rm -rf /var/glam
+fi
 
-# eliminar todo lo que este dentro de /var/glam/backup , /var/glam/tmp y /var/glam/logs
-if [ $(ls /var/glam/backup) ]; then
-    rm -rf /var/glam/backup/*
-fi
-if [ $(ls /var/glam/logs) ]; then
-    rm -rf /var/glam/logs/*
-fi
-if [ $(ls /var/glam/tmp) ]; then
-    rm -rf /var/glam/tmp/*
-fi
+# copiar glam-package/var/glam a /var/glam
+cp -r glam-package/var/glam /var/glam
 
 # copiar el comando glam a /usr/bin y /usr/local/bin
 cp glam-package/usr/bin/glam /usr/bin/glam
 cp glam-package/usr/bin/glam /usr/local/bin/glam
+cp glam-package/var/glam /var/glam/
 
 # ejecutar el comando glam
 glam
@@ -38,8 +30,9 @@ rm -rf /usr/src/glam
 rm /usr/bin/glam
 rm /usr/local/bin/glam
 
-# mover los temporales de /var/glam a glam-package/usr/var/glam
-mv /var/glam glam-package/usr/var
+# mover los temporales de /var/glam a glam-package/var/
+rm -rf glam-package/var/*
+mv /var/glam glam-package/var/
 
 # regresar los permisos de los archivos
 chmod -R 777 glam-package
