@@ -59,17 +59,17 @@ while true; do
             grep -v "!" /etc/shadow | cut -d: -f1 | sort | awk -v i="$i" 'NR == i { printf "\"%s\"\n", $0 }' >>/tmp/usuarios.tmp
         done
         # Se crea el Custom
-        scriptInicio=$(grep -n "# INICIO OPTIONS" inhabilitacionUsuarios/inhabilitarPlantilla.sh | cut -d ':' -f 1)
-        scriptFin=$(grep -n "# FIN OPTIONS" inhabilitacionUsuarios/inhabilitarPlantilla.sh | cut -d ':' -f 1)
-        head -$((scriptInicio-1)) inhabilitacionUsuarios/inhabilitarPlantilla.sh >/tmp/inhabilitarCustom.sh
+        scriptInicio=$(grep -n "# INICIO OPTIONS" /usr/src/glam/programacionTareas/inhabilitacionUsuarios/inhabilitarPlantilla.sh | cut -d ':' -f 1)
+        scriptFin=$(grep -n "# FIN OPTIONS" /usr/src/glam/programacionTareas/inhabilitacionUsuarios/inhabilitarPlantilla.sh | cut -d ':' -f 1)
+        head -$((scriptInicio-1)) /usr/src/glam/programacionTareas/inhabilitacionUsuarios/inhabilitarPlantilla.sh >/tmp/inhabilitarCustom.sh
         cat /tmp/usuarios.tmp >>/tmp/inhabilitarCustom.sh
-        tail -n +$((scriptFin+1)) inhabilitacionUsuarios/inhabilitarPlantilla.sh >>/tmp/inhabilitarCustom.sh
-        (source "/tmp/inhabilitarCustom.sh")
+        tail -n +$((scriptFin+1)) /usr/src/glam/programacionTareas/inhabilitacionUsuarios/inhabilitarPlantilla.sh >>/tmp/inhabilitarCustom.sh
+        (source /tmp/inhabilitarCustom.sh)
         rm -f /tmp/usuarios.tmp
         rm -f /tmp/inhabilitarCustom.sh
         ;;
     2)
-        (source "inhabilitacionUsuarios/inhabilitarNombre.sh")
+        (source /usr/src/glam/programacionTareas/inhabilitacionUsuarios/inhabilitarNombre.sh)
         ;;
     3)
         # Se cuenta el numero de usuarios inhabilitados
@@ -80,12 +80,12 @@ while true; do
             grep "!" /etc/shadow | cut -d: -f1 | sort | awk -v i="$i" 'NR == i { printf "\"%s\"\n", $0 }' >>/tmp/usuarios.tmp
         done
         # Se crea el Custom
-        scriptInicio=$(grep -n "# INICIO OPTIONS" inhabilitacionUsuarios/habilitarPlantilla.sh | cut -d ':' -f 1)
-        scriptFin=$(grep -n "# FIN OPTIONS" inhabilitacionUsuarios/habilitarPlantilla.sh | cut -d ':' -f 1)
-        head -$((scriptInicio-1)) inhabilitacionUsuarios/habilitarPlantilla.sh >/tmp/habilitarCustom.sh
+        scriptInicio=$(grep -n "# INICIO OPTIONS" /usr/src/glam/programacionTareas/inhabilitacionUsuarios/habilitarPlantilla.sh | cut -d ':' -f 1)
+        scriptFin=$(grep -n "# FIN OPTIONS" /usr/src/glam/programacionTareas/inhabilitacionUsuarios/habilitarPlantilla.sh | cut -d ':' -f 1)
+        head -$((scriptInicio-1)) /usr/src/glam/programacionTareas/inhabilitacionUsuarios/habilitarPlantilla.sh >/tmp/habilitarCustom.sh
         cat /tmp/usuarios.tmp >>/tmp/habilitarCustom.sh
-        tail -n +$((scriptFin+1)) inhabilitacionUsuarios/habilitarPlantilla.sh >>/tmp/habilitarCustom.sh
-        (source "/tmp/habilitarCustom.sh")
+        tail -n +$((scriptFin+1)) /usr/src/glam/programacionTareas/inhabilitacionUsuarios/habilitarPlantilla.sh >>/tmp/habilitarCustom.sh
+        (source /tmp/habilitarCustom.sh)
         rm -f /tmp/usuarios.tmp
         rm -f /tmp/habilitarCustom.sh
         ;;

@@ -48,10 +48,10 @@ while true; do
     # Manejar la opción seleccionada
     case $option in
     1)
-        (source "respaldoProgramado/nuevo/nuevoRespaldo.sh")
+        (source /usr/src/glam/programacionTareas/respaldoProgramado/nuevo/nuevoRespaldo.sh)
         ;;
     2)
-        (source "respaldoProgramado/borrar/borrarRespaldo.sh")
+        (source /usr/src/glam/programacionTareas/respaldoProgramado/borrar/borrarRespaldo.sh)
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
