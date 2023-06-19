@@ -18,6 +18,9 @@ mostrar_ayuda() {
     Se especifica el día de la semana en el que se ejecutará el respaldo.\n
     0 y 7 corresponden al Domingo.\n\n\
 
+    ERROR:\
+    Si se muestra un ! en el campo, significa que el valor es invalido.\n\n\
+
     Es posible utilizar , para especificar múltiples valores.\n\
     Ejemplo: 1,3,5,7\n\n\
 
@@ -243,8 +246,8 @@ while true; do
     done
     echo -n "root " >>/tmp/cron.tmp
     echo -n "" >/tmp/cancelar.tmp
-    # Si el archivo /tmp/cancelar no existe, se hace un break
     (source "/usr/src/glam/programacionTareas/respaldoProgramado/nuevo/origen.sh")
+    # Si el archivo /tmp/cancelar no existe, se hace un break
     if [[ ! -f /tmp/cancelar.tmp ]]; then
         break
     fi
