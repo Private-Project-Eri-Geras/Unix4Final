@@ -56,20 +56,24 @@ while true; do
         # Se verifica que el tiempo de inhabilitación sea un número
         if [[ "$tiempoInhabilitacion" =~ ^[0-9]+$ ]]; then
             # Se obtiene el usuario seleccionado por su número de línea ordenado alfabéticamente
-            usuario=$(cut -d: -f1 /etc/passwd | sort | awk -v i="$option" 'NR == i { printf "%s", $0 }')
+            usuario=$(grep -v "!" /etc/shadow | cut -d: -f1 | sort | awk -v i="$option" 'NR == i { printf "%s", $0 }')
             # Se inhabilita el usuario
             usermod -L $usuario
             # Se usa at para programar la habilitación del usuario
             echo "usermod -U $usuario" | at now + $tiempoInhabilitacion minutes
+            # Se muestra la ventana de confirmación
+            dialog --title "INHABILITACIÓN DE USUARIOS" --msgbox \
+                "\n\
+            El usuario $usuario ha sido inhabilitado por $tiempoInhabilitacion minutos.\n\n" 0 0
             break
         else
             dialog --title "Error" --msgbox "El tiempo de inhabilitación debe ser un número." 0 0
         fi
     done
-    
-
     # Limpia la pantalla
     clear
+
+    break
 done
 
 # Sale del script
