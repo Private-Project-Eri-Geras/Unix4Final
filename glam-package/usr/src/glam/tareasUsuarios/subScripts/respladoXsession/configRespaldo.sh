@@ -1,5 +1,6 @@
 #!/bin/bash
 
+archResp="/usr/src/glam/tareasUsuarios/archs/respaldo.txt" #Archivo que guarda las configuraciones de respaldo
 opt=(
     1 "Ver carpetas respaldadas"
     2 "Configurar carpetas respaldadas" 
@@ -8,7 +9,7 @@ opt=(
 #FUNCIONES
 configResp(){
     usr=$1  #Guarda el usuario seleccionado
-
+    tempfile="/var/glam/tmp/respaldoTmp.txt"
     while true; do
         #Guarda la carpeta/archivo a respaldar al iniciar sesión el usuario
         origen=$(dialog --title "Selecciona un archivo o directorio a respaldar" \
@@ -41,11 +42,9 @@ configResp(){
             fecha=$(date +"%d-%m-%Y")
             #Obtener la hora actual
             hora=$(date +"%H-%M-%S")
-            #Crear el archivo comprimido
-            tar -czf "$destino/$nombre"_"$fecha"_"$hora".tar.gz -C "$origen" .
             
             #Desplegar dialog para confirmar los datos ingresados
-            dialog --title "Confirmación de datos" --yesno "¿Desea guardar la configuración? \n Ruta a respaldar: $origen \n Destino: $destino" 0 0
+            dialog --title "Confirmación de datos" --yesno "¿Desea guardar la configuración? \n Al ingresar: $usr \n Ruta a respaldar: $origen \n Destino: $destino" 0 0
             opcion=$?
             if [[ "opcion" -eq 1 ]]; then  #Return if the user presses NO
                 return
@@ -55,12 +54,19 @@ configResp(){
             while IFS=":" read -r usuario origen destino; do
                 if [[ "$usuario" == "$usr" ]]; then
                     #Si ya tenía una configuración, se elimina
-                    sed -i "/$usr:/d" /usr/src/glam/tareasUsuarios/archs/respaldo.txt
+                    sed "/^$nameUsr:/d" "$archResp" > "$tempfile"
+
+                    #Guardar la configuración en el archivo de configuración temporal
+                    echo "$usr:$origen:$destino" >> $tempfile
+
+                    # Reemplazar el archivo original con el archivo temporal
+                    mv "$tempfile" "$archResp"
+                    return
                 fi
-            done < /usr/src/glam/tareasUsuarios/archs/respaldo.txt
+            done < $archResp
 
             #Guardar la configuración en el archivo de configuración
-            echo "$usr:$origen:$destino" >> /usr/src/glam/tareasUsuarios/archs/respaldo.txt
+            echo "$usr:$origen:$destino" >> $archResp
             return
 
         else
@@ -80,11 +86,11 @@ configResp(){
 #subMenu verARch/configurar (Se meustra lista de usuarios)
 verArchRespaldos() {
     #Verifica si existe el archivo de configuración
-    if [[ ! -f /usr/src/glam/tareasUsuarios/archs/respaldo.txt ]]; then
+    if [[ ! -f $archResp ]]; then
         #Si no existe muestra un dialog con un mensaje de error
         dialog --title "Sin respaldos programados" --msgbox "No hay ningún respaldo programado al iniciar sesión" 0 0
     else #si existe, muestra el contenido del archivo, el contenido del textbox se despliega en 3 columnas (usuario, origen, destino)
-        dialog --title "Respaldos programados" --textbox /usr/src/glam/tareasUsuarios/archs/respaldo.txt 0 50
+        dialog --title "Respaldos programados" --textbox $archResp 0 80
         return
     fi
 }
