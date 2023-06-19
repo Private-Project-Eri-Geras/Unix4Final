@@ -51,11 +51,8 @@ while true; do
     numeroInicio=$(grep -n "# INICIO RESPALDOS" /etc/crontab | cut -d: -f1)
     numeroFin=$(grep -n "# FIN RESPALDOS" /etc/crontab | cut -d: -f1)
     head -$((numeroInicio)) /etc/crontab >/tmp/crontab
-    read -p "Presione enter para continuar"
     cat /tmp/list.tmp >>/tmp/crontab
-    read -p "Presione enter para continuar"
     tail -n +$((numeroFin)) /etc/crontab >>/tmp/crontab
-    read -p "Presione enter para continuar"
     rm -f /tmp/list.tmp
     mv /tmp/crontab /etc/crontab
     break

@@ -3,10 +3,10 @@
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
     dialog --title "Help" --msgbox \
-    "\n\
+        "\n\
     Para navegar se pude usar tab o las flechas.\n\n\
     Es necesario usar la ruta absoluta del archivo o directorio a respaldar.\n\n\
-    Al seleccionar un directorio o archivo y presionar ctrl + shift + flecha izquierda se auto completa la ruta." 0 0     
+    Al seleccionar un directorio o archivo y presionar ctrl + shift + flecha izquierda se auto completa la ruta." 0 0
 }
 
 while true; do
@@ -44,7 +44,7 @@ while true; do
                 #    /home/gerardo/Pictures/resp$(date +\%d_\%m_\%Y-\%H_\%M).tar.gz -C /home/gerardo/Pictures/Screenshots .
                 cat /tmp/origen.tmp >>/tmp/cron.tmp
                 echo " ." >>/tmp/cron.tmp
-                head -$((numeroFin-1)) /etc/crontab >/tmp/crontab
+                head -$((numeroFin - 1)) /etc/crontab >/tmp/crontab
                 cat /tmp/cron.tmp >>/tmp/crontab
                 tail -n +${numeroFin} /etc/crontab >>/tmp/crontab
                 rm /etc/crontab
