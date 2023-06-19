@@ -35,6 +35,8 @@ options=(
 # Verificar la estructura de crontab y crearla si no existe
 lineaInicio=$(grep -c "# INICIO PROGRAMACION DE TAREAS" /etc/crontab)
 lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
+lineaInicioManual=$(grep -c "# INICIO PROGRAMACION MANUAL" /etc/crontab)
+lineaFinManual=$(grep -c "# FIN PROGRAMACION MANUAL" /etc/crontab)
 numeroInicio=$(grep -n "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
 numeroFin=$(grep -n "# FIN PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
 
@@ -43,22 +45,30 @@ if ((lineaInicio == 0 && lineaFin == 0)); then
     clear
     echo "# INICIO PROGRAMACION DE TAREAS" >>/etc/crontab
     echo "# FIN PROGRAMACION DE TAREAS" >>/etc/crontab
-elif ((lineaInicio != 1 || lineaFin != 1)); then
+    echo "# INICIO PROGRAMACION MANUAL" >>/etc/crontab
+    echo "# FIN PROGRAMACION MANUAL" >>/etc/crontab
+elif ((lineaInicio != 1 || lineaFin != 1 || lineaInicioManual != 1 || lineaFinManual != 1)); then
     lineaInicio=$(grep -c "# INICIO PROGRAMACION DE TAREAS" /etc/crontab)
     lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
+    lineaInicioManual=$(grep -c "# INICIO PROGRAMACION MANUAL" /etc/crontab)
+    lineaFinManual=$(grep -c "# FIN PROGRAMACION MANUAL" /etc/crontab)
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab no es correcta, se perderá registro de todas las tareas programadas" 0 0
     clear
-    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" $1 >/tmp/crontab
+    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" | grep -v "# INICIO PROGRAMACION MANUAL" | grep -v "# FIN PROGRAMACION MANUAL" >/tmp/crontab
     echo "# INICIO PROGRAMACION DE TAREAS" >>/tmp/crontab
     echo "# FIN PROGRAMACION DE TAREAS" >>/tmp/crontab
+    echo "# INICIO PROGRAMACION MANUAL" >>/tmp/crontab
+    echo "# FIN PROGRAMACION MANUAL" >>/tmp/crontab
     rm /etc/crontab
     mv /tmp/crontab /etc/crontab
-elif ((numeroInicio > numeroFin)); then
+elif ((numeroInicio > numeroFin || numeroInicioManual > numeroFinManual)); then
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab está invertida, se perderá registro de todas las tareas programadas" 0 0
     clear
-    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" $1 >/tmp/crontab
+    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" | grep -v "# INICIO PROGRAMACION MANUAL" | grep -v "# FIN PROGRAMACION MANUAL" >/tmp/crontab
     echo "# INICIO PROGRAMACION DE TAREAS" >>/tmp/crontab
     echo "# FIN PROGRAMACION DE TAREAS" >>/tmp/crontab
+    echo "# INICIO PROGRAMACION MANUAL" >>/tmp/crontab
+    echo "# FIN PROGRAMACION MANUAL" >>/tmp/crontab
     rm /etc/crontab
     mv /tmp/crontab /etc/crontab
 fi
@@ -92,7 +102,7 @@ while true; do
     # Manejar la opción seleccionada
     case $option in
     1)
-        # (source "")
+        (source /usr/src/glam/programacionTareas/programacionManual/menuProgramacion.sh)
         ;;
     2)
         (source /usr/src/glam/programacionTareas/respaldoProgramado/menuRespaldo.sh)
