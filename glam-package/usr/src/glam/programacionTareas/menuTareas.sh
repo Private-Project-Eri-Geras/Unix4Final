@@ -48,19 +48,19 @@ elif ((lineaInicio != 1 || lineaFin != 1)); then
     lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab no es correcta, se perderá registro de todas las tareas programadas" 0 0
     clear
-    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" $1 >tmp/crontab
-    echo "# INICIO PROGRAMACION DE TAREAS" >>tmp/crontab
-    echo "# FIN PROGRAMACION DE TAREAS" >>tmp/crontab
+    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" $1 >/tmp/crontab
+    echo "# INICIO PROGRAMACION DE TAREAS" >>/tmp/crontab
+    echo "# FIN PROGRAMACION DE TAREAS" >>/tmp/crontab
     rm /etc/crontab
-    mv tmp/crontab /etc/crontab
+    mv /tmp/crontab /etc/crontab
 elif ((numeroInicio > numeroFin)); then
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab está invertida, se perderá registro de todas las tareas programadas" 0 0
     clear
-    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" $1 >tmp/crontab
-    echo "# INICIO PROGRAMACION DE TAREAS" >>tmp/crontab
-    echo "# FIN PROGRAMACION DE TAREAS" >>tmp/crontab
+    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" $1 >/tmp/crontab
+    echo "# INICIO PROGRAMACION DE TAREAS" >>/tmp/crontab
+    echo "# FIN PROGRAMACION DE TAREAS" >>/tmp/crontab
     rm /etc/crontab
-    mv tmp/crontab /etc/crontab
+    mv /tmp/crontab /etc/crontab
 fi
 
 # Imprime el menú usando dialog
@@ -95,13 +95,13 @@ while true; do
         # (source "")
         ;;
     2)
-        (source "respaldoProgramado/menuRespaldo.sh")
+        (source /usr/src/glam/programacionTareas/respaldoProgramado/menuRespaldo.sh)
         ;;
     3)
         # (source "")
         ;;
     4)
-        (source "inhabilitacionUsuarios/menuInhabilitar.sh")
+        (source /usr/src/glam/programacionTareas/inhabilitacionUsuarios/menuInhabilitar.sh)
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
