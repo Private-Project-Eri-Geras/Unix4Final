@@ -22,15 +22,15 @@ raiz=$(echo "$raiz" | sed 's/[0-9]*$//g')
 
 # extraer la raiz y los volumenes montados
 # de los volumenes disponibles
-sed -i "/$raiz/d" /var/glam/tmp/volumenes.tmp
+sed -i "/$raiz/d" /var/glam/tmp/lsblk.tmp
 
 # eliminar todos las particiones que esten montadas
 # o discos con particiones montadas
 while read -r line; do
     if [[ $(echo "$line" | awk '{print $7}') =~ '/' ]]; then
-        sed -i "/$(echo "$line" | awk '{print $1}')/d" /var/glam/tmp/volumenes.tmp
+        sed -i "/$(echo "$line" | awk '{print $1}')/d" /var/glam/tmp/lsblk.tmp
     fi
-done < /var/glam/tmp/volumenes.tmp
+done < /var/glam/tmp/lsblk.tmp
 
 # Se crea un arreglo con los nombres de los volumenes
 i=0
@@ -44,7 +44,7 @@ while read -r line; do
     part[i]=$device
     part[i + 1]=$(lsblk -d -n -o SIZE /dev/$device)
     i=$((i + 2))
-done < /var/glam/tmp/volumenes.tmp
+done < /var/glam/tmp/lsblk.tmp
 
 selected=$(dialog --clear --title "Crear volumen" \
     --cancel-label "Return" --ok-label "Select" \
@@ -56,6 +56,7 @@ if [[ $? -ne 0 ]]; then
     return
 fi
 
+
 dialog --clear --title "Crear volumen" \
     --yesno "Se va a crear una particion en el dispositivo $selected
     utilizando todo el espacio disponible.
@@ -64,7 +65,6 @@ if [[ $? -ne 0 ]]; then
     return
 fi
 
-rm /var/glam/tmp/volumenes.tmp
 rm /var/glam/tmp/lsblk.tmp
 fdisk /dev/${part[$((selected * 2 - 1))]} <<EOF
 n
@@ -77,6 +77,5 @@ EOF
 
 dialog --clear --title "Crear volumen" \
     --msgbox "Volumen creado con exito" 0 0
-
 
 return
