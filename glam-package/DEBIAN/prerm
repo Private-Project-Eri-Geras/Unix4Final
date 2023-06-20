@@ -119,10 +119,18 @@ while true; do
         elif [[ $selec -eq 1 ]]; then
             # no guardar los archivos de registro
             # y salir
-            rm -r /var/glam
-            rm -r /usr/src/glam
-            rm -f /usr/bin/glam
-            rm -f /usr/bin/glam
+            if [ -d /var/glam ]; then
+                rm -r /var/glam
+            fi
+            if [ -d /usr/src/glam ]; then
+                rm -r /usr/src/glam
+            fi
+            if [ -f /usr/bin/glam ]; then
+                rm -f /usr/bin/glam
+            fi
+            if [ -f /usr/bin/glam ]; then
+                rm -f /usr/bin/glam
+            fi
             tput rmcup
             # regrsar el cursor
             echo -en "\033[?25h"

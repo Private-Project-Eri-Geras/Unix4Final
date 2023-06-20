@@ -1,22 +1,45 @@
 #!/bin/bash
 set -e
 
-# verificar dialog
-if [ ! -x /usr/bin/dialog ]; then
-    echo ""
-    echo "El paquete dialog no esta instalado."
-    echo "Por favor instalalo, se va a cancelar la instalacion."
-    echo ""
-    echo -n "Presiona enter para continuar"
-    read -sn 1
-    exit 1
-# verificar solo at
-elif [ ! -x /usr/bin/at ]; then
-    echo ""
-    echo "El paquete at no esta instalado."
-    echo "Por favor instalalo, se va a cancelar la instalacion."
-    echo ""
-    echo -n "Presiona enter para continuar"
-    read -sn 1
+listaDependencias=(
+    '['
+    "bash"
+    "cat"
+    "clear"
+    "cut"
+    "date"
+    "dialog"
+    "echo"
+    "getent"
+    "grep"
+    "groups"
+    "head"
+    "id"
+    "kill"
+    "mkdir"
+    "openssl"
+    "passwd"
+    "rm"
+    "sh"
+    "sleep"
+    "tail"
+    "touch"
+    "tput"
+    "yes"
+    "wc"
+)
+
+dependencias=""
+# verificar dependencias
+for dependencia in "${listaDependencias[@]}"; do
+    if ! command -v "$dependencia" >/dev/null 2>&1; then
+        dependencias+="$dependencia "
+    fi
+done
+
+# mostrar dependencias
+if [ -n "$dependencias" ]; then
+    echo -e "\033[1;31mFALTAN DEPENDENCIAS\033[0m"
+    echo -e "$dependencias"
     exit 1
 fi
