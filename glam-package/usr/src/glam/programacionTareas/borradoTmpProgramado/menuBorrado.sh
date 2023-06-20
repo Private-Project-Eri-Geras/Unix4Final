@@ -16,10 +16,10 @@ mostrar_ayuda() {
 
 # Define las opciones del menú
 options=(
-    1 "Borrado total"
-    2 "Eliminar programación total"
-    3 "Borrado selectivo"
-    4 "Eliminar programación selectivo"
+    1 "\Z2\ZbProgramacion\Zn de borrado de temporales"
+    2 "\Z1\ZbEliminar\Zn programaciones de temporales"
+    3 "\Z2\ZbProgramacion\Zn selectiva de borrado de temporales"
+    4 "\Z1\ZbEliminar\Zn programaciones de temporales selectivo"
 )
 
 # Limpia la pantalla
@@ -60,7 +60,7 @@ while true; do
         (source /usr/src/glam/programacionTareas/borradoTmpProgramado/borrar/eliminarTotal.sh)
         ;;
     3)
-        (source /usr/src/glam/programacionTareas/borradoTmpProgramado/borradoSelectivo.sh)
+        (source /usr/src/glam/programacionTareas/borradoTmpProgramado/selectivo/borradoSelectivo.sh)
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
