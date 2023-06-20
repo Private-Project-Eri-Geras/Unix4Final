@@ -60,14 +60,12 @@ dibujarVentana() {
   dialogRows=$(($winRows - 4))
   dialogCols=$(($winCols - 8))
   # header lines
-  headerLines=4 # 2 desplazamiento y 1 de botones
+  headerLines=5 # 1 info y 1 de botones
   # lineas que se pueden mostrar en el cuadro de dialogo
   linesToShow=$(($dialogRows - $headerLines))
 
-  # header
-  header='\Z1\Zb(↑)\Zn'
   # footer
-  footer='\Z1\ZbPara sleccionar un boton, presione \Zb\Z0[\Z4ESPACIO\Z0]\Zn'
+  footer='\Z1\ZbSeleccionar >> \Zb\Z0[\Z4ESPACIO\Z0]\Zn'
   # botones
   btns=(
     "Salir"
@@ -80,8 +78,23 @@ dibujarVentana() {
   # el archivo a leer es uno temporal
   local usrFile="/var/glam/tmp/usersInOut.txt"
   # mostrar las ultimas lineas
-  tail -n $linesToShow /var/glam/tmp/InOutNew.txt >$usrFile
+  # si una linea no cabe en el ancho del dialog
+  # cortar la linea para que tenga 5 caracteres menos que el ancho del dialog
+  # y agregarle 3 puntos suspensivos
+  touch /var/glam/tmp/usersInOut2.txt
+  echo "" >/var/glam/tmp/usersInOut2.txt
+  while read -r line; do
+    if [[ ${#line} -gt $(($dialogCols + 2)) ]]; then
+      echo "${line:0:$(($dialogCols - 5))}\Z1\Zb...\Zn" >>/var/glam/tmp/usersInOut2.txt
+    else
+      echo "$line" >>/var/glam/tmp/usersInOut2.txt
+    fi
+  done </var/glam/tmp/InOutNew.txt
+  tail -n $linesToShow /var/glam/tmp/usersInOut2.txt >$usrFile
+
+  # agregar el footer
   echo "$footer" >>$usrFile
+
   for ((i = 0; i < ${#btns[@]}; i++)); do
     # si el indice es igual al indice del boton, resaltar el boton
     if [[ $i == $btnIndex ]]; then
