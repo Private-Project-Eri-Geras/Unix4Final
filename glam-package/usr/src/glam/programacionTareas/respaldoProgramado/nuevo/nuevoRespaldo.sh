@@ -15,7 +15,7 @@ mostrar_ayuda() {
     Mes (1-12)\n\
     Se especifica el mes en el que se ejecutará el respaldo.\n\n\
     Día de la semana (0-7)\n\
-    Se especifica el día de la semana en el que se ejecutará el respaldo.\n
+    Se especifica el día de la semana en el que se ejecutará el respaldo.\n\
     0 y 7 corresponden al Domingo.\n\n\
 
     ERROR:\

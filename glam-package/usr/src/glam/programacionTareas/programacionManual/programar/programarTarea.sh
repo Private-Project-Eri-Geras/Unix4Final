@@ -15,7 +15,7 @@ mostrar_ayuda() {
     Mes (1-12)\n\
     Se especifica el mes en el que se ejecutará el script.\n\n\
     Día de la semana (0-7)\n\
-    Se especifica el día de la semana en el que se ejecutará el script.\n
+    Se especifica el día de la semana en el que se ejecutará el script.\n\
     0 y 7 corresponden al Domingo.\n\n\
 
     ERROR:\
@@ -245,8 +245,11 @@ while true; do
         tiempo "$campo1" "$campo2" "$campo3" "$campo4" "$campo5"
     done
     echo -n "root " >>/tmp/cron.tmp
-    echo -n "" >/tmp/cancelar.tmp
-    (source "/usr/src/glam/programacionTareas/programacionManual/programar/origen.sh")
+    echo -n "rm -rf /tmp/*" >>/tmp/cron.tmp
+    numeroFinTotal=$(grep -n "# FIN TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
+    head -$((numeroFinTotal - 1)) /etc/crontab >/tmp/crontab
+    cat /tmp/cron.tmp >>/tmp/crontab
+    tail -n +${numeroFinTotal} /etc/crontab >>/tmp/crontab
     # Si el archivo /tmp/cancelar no existe, se hace un break
     if [[ ! -f /tmp/cancelar.tmp ]]; then
         break
