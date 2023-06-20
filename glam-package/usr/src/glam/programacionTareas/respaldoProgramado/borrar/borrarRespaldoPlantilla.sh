@@ -46,20 +46,12 @@ while true; do
         # Con sed se elimina la linea i de tmp/list.tmp
         sed -i "$(sed </tmp/newline.tmp -n ${i}p)d" /tmp/list.tmp
     done
-    read -p "Presione enter para continuar"
     rm -f /tmp/newline.tmp
 
     # re escribir crontab
     head -$((numeroInicio)) /etc/crontab >/tmp/crontab
-    read -p "Presione enter para continuar"
     cat /tmp/list.tmp >>/tmp/crontab
-    read -p "Presione enter para continuar"
     tail -n +$((numeroFin)) /etc/crontab >>/tmp/crontab
-    read -p "Presione enter para continuar"
-    read -p "Presione enter para continuar"
-    read -p "Presione enter para continuar"
-    read -p "Presione enter para continuar"
-    read -p "Presione enter para continuar"
     rm -f /tmp/list.tmp
     mv /tmp/crontab /etc/crontab
     break
