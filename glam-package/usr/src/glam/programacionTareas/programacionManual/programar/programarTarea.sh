@@ -246,7 +246,6 @@ while true; do
     done
 
     echo -n "root " >>/tmp/cron.tmp
-    echo -n "rm -rf /tmp/*" >>/tmp/cron.tmp
     numeroFinTotal=$(grep -n "# FIN TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
     head -$((numeroFinTotal - 1)) /etc/crontab >/tmp/crontab
     cat /tmp/cron.tmp >>/tmp/crontab
