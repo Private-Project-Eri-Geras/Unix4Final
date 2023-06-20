@@ -1,6 +1,8 @@
 #!/bin/bash
 
 mostrar_ayuda() {
+  # pausar el proceso de rescalado
+  kill -SIGSTOP $rescaladoPID
   echo "Este menú solo muestra la información
   sobre las entradas y salidas de sesion.
 -El log del archivo lo podras entontrar en:
@@ -9,6 +11,8 @@ mostrar_ayuda() {
     --exit-label "Ok" \
     --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
   rm /var/glam/tmp/ayuda.txt
+  # reanudar el proceso de rescalado
+  kill -SIGCONT $rescaladoPID
 }
 # ruta global
 ruta="/var/glam/logs/usrsInOut"
@@ -56,14 +60,14 @@ dibujarVentana() {
   dialogRows=$(($winRows - 4))
   dialogCols=$(($winCols - 8))
   # header lines
-  headerLines=5 # 2 desplazamiento y 1 de botones
+  headerLines=4 # 2 desplazamiento y 1 de botones
   # lineas que se pueden mostrar en el cuadro de dialogo
   linesToShow=$(($dialogRows - $headerLines))
 
   # header
   header='\Z1\Zb(↑)\Zn'
   # footer
-  footer='\Z2\Zb(↓)\Zn'
+  footer='\Z1\ZbPara sleccionar un boton, presione \Zb\Z0[\Z4ESPACIO\Z0]\Zn'
   # botones
   btns=(
     "Salir"
@@ -75,9 +79,8 @@ dibujarVentana() {
   # error cat: /var/glam/tmp/usuariosInOut.txt/usuarios190623.txt: Not a directory
   # el archivo a leer es uno temporal
   local usrFile="/var/glam/tmp/usersInOut.txt"
-  echo "$header" >$usrFile
   # mostrar las ultimas lineas
-  tail -n $linesToShow /var/glam/tmp/InOutNew.txt >>$usrFile
+  tail -n $linesToShow /var/glam/tmp/InOutNew.txt >$usrFile
   echo "$footer" >>$usrFile
   for ((i = 0; i < ${#btns[@]}; i++)); do
     # si el indice es igual al indice del boton, resaltar el boton
@@ -110,14 +113,16 @@ isActualizar
 dibujarVentana
 
 rescalado &
+# PID del proceso
+rescaladoPID=$!
 # Detección de inicios y terminos de sesión
 while true; do
   mostrar_cuadro_dialogo
   # Leer la tecla presionada por el usuario
-  IFS= read -rsn1 key
+  IFS= read -rsn1 -t 0.5 key
 
   # comprobar si se presionó una tecla
-  if [[ $key == "" ]]; then
+  if [[ $key == " " ]]; then
     # si el indice es 0, salir
     if [[ $btnIndex == 0 ]]; then
       # mostrar el cursor
@@ -157,6 +162,8 @@ while true; do
   fi
 done
 
+# matar el proceso de rescalado
+kill $rescaladoPID
 # remover los archivos temporales
 #Exit the script
 exit
