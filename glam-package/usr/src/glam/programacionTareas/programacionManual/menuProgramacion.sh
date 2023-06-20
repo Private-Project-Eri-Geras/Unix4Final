@@ -7,16 +7,13 @@ mostrar_ayuda() {
     1.-Programar tarea:\n\
     Permite añadir un script a la lista de tareas programadas de forma periódica.\n\n\
     2.-Borrar tarea:\n\
-    Permite borrar las tareas programadas.\n\n\
-    3.-Editor de texto nano:\n\
-    Permite crear un script con el editor de texto nano." 0 0
+    Permite borrar las tareas programadas.\n\n" 0 0
 }
 
 # Define las opciones del menú
 options=(
     1 "Programar tarea"
     2 "Borrar tarea"
-    3 "Editor de texto nano"
 )
 
 # Limpia la pantalla
@@ -55,11 +52,6 @@ while true; do
         ;;
     2)
         (source /usr/src/glam/programacionTareas/programacionManual/borrar/borrarTarea.sh)
-        ;;
-    3)
-        clear
-        nano
-        clear
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
