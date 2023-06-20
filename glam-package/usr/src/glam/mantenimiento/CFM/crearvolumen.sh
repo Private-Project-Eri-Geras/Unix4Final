@@ -20,16 +20,6 @@ done </var/glam/tmp/lsblk.tmp
 # si raiz es una particion, indicar el dispositivo sin
 raiz=$(echo "$raiz" | sed 's/[0-9]*$//g')
 
-# Se pone en un archivo temporal
-(lsblk -rn) > /var/glam/tmp/volumenes.tmp
-# obtener un vector de todos los volumenes montados
-while read -r line; do
-    if [[ $(echo "$line" | awk '{print $7}') =~ '/' ]]; then
-        #extrare el nombre del volumen sin el numero de particion
-        echo "$line" | awk '{print $1}' | sed 's/[0-9]*$//g' >> /var/glam/tmp/volumenes.tmp
-    fi
-done < /var/glam/tmp/volumenes.tmp
-
 # extraer la raiz y los volumenes montados
 # de los volumenes disponibles
 sed -i "/$raiz/d" /var/glam/tmp/volumenes.tmp
@@ -45,11 +35,16 @@ done < /var/glam/tmp/volumenes.tmp
 # Se crea un arreglo con los nombres de los volumenes
 i=0
 while read -r line; do
-    part[i]=$(echo "$line" | awk '{print $1}')
-    part[i + 1]=$(lsblk -d -n -o SIZE /dev/${part[$i]})
+    device=$(echo "$line" | awk '{print $1}')
+    # si no es un block device continuar con el siguiente ciclo
+    lsblk -d -n -o TYPE /dev/$device >/dev/null 2>&1
+    if [[ $? != 0 ]]; then
+        continue
+    fi
+    part[i]=$device
+    part[i + 1]=$(lsblk -d -n -o SIZE /dev/$device)
     i=$((i + 2))
 done < /var/glam/tmp/volumenes.tmp
-
 
 selected=$(dialog --clear --title "Crear volumen" \
     --cancel-label "Return" --ok-label "Select" \
