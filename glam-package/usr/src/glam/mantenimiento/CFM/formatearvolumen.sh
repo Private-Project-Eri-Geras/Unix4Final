@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 selected=0
 
@@ -45,7 +45,7 @@ i=0
 contador=1
 while read -r line; do
     # si el nombre del dispositivo contiene el nombre de la raiz
-    if [[ $(echo "$line" | awk '{print $1}') == *"$raiz"* ]]; then
+    if [[ $(echo "$line" | awk '{print $1}') == *"$raiz"* ||  $(echo "$line" | awk '{print $7}') == "[SWAP]" ]]; then
         continue
     fi
     devices[i]=$(echo "$line" | awk '{print $1}')
@@ -57,6 +57,7 @@ while read -r line; do
 done </var/glam/tmp/lsblk.tmp
 
 rm /var/glam/tmp/lsblk.tmp
+
 #obtenemos el nombre del dispositivo
 dispositivo=$(dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
     --cancel-label "Cancelar" --ok-label "Select" \

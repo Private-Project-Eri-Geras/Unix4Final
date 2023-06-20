@@ -38,7 +38,7 @@ while read -r line; do
     device=$(echo "$line" | awk '{print $1}')
     # si no es un block device continuar con el siguiente ciclo
     lsblk -d -n -o TYPE /dev/$device >/dev/null 2>&1
-    if [[ $? != 0 ]]; then
+    if [[ $? != 0 ||  $(echo "$line" | awk '{print $7}') == "[SWAP]" ]]; then
         continue
     fi
     part[i]=$device

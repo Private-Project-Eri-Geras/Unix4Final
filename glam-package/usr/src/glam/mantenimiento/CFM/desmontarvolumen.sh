@@ -24,10 +24,10 @@ raiz=$(echo "$raiz" | sed 's/[0-9]*$//g')
 # de los volumenes disponibles
 sed -i "/$raiz/d" /var/glam/tmp/lsblk.tmp
 
-# eliminar todos las particiones que esten montadas
+# eliminar todos las particiones que no esten montadas
 # o discos con particiones montadas
 while read -r line; do
-    if [[ $(echo "$line" | awk '{print $7}') =~ '/' ]]; then
+    if [[ $(echo "$line" | awk '{print $7}') == '' ]]; then
         sed -i "/$(echo "$line" | awk '{print $1}')/d" /var/glam/tmp/lsblk.tmp
     fi
 done < /var/glam/tmp/lsblk.tmp
@@ -56,25 +56,18 @@ if [[ $? -ne 0 ]]; then
     return
 fi
 
-# verificar que no exista en mnt una carpeta 
-# con el nombre de la particion seleccionada
-nombre="/mnt/$selected"
-i=1
-while true; do
-    if [[ -d "$nombre" ]]; then
-        nombre="/mnt/${selected}($i)"
-        i=$((i + 1))
-    else
-        break
-    fi
-done
+# conseguir el punto de montaje del volumen
+punto=$(lsblk -n -o MOUNTPOINT /dev/$selected)
 
-# crear la carpeta y montar el volumen
-mkdir "$nombre"
-# montar el volumen
-mount "/dev/$selected" "$nombre"
+# desmontar el volumen si esta montado
+umount /dev/$selected >/dev/null 2>&1
 
-dialog --clear --title "Montar volumen" \
-    --msgbox "Volumen montado con exito" 0 0
+# eliminar el punto de montaje si existe
+if [[ -d "$punto" ]]; then
+    rm -r "$punto"
+fi
+
+dialog --clear --title "Desontar volumen" \
+    --msgbox "Volumen desmontado con exito" 0 0
 
 return
