@@ -56,27 +56,14 @@ if [[ $? -ne 0 ]]; then
     return
 fi
 
-
-
-# Preguntar el tamaño del volumen
-# no puede ser superoior al tamaño del disco seleccionado
-# si se selecciono un disco con particiones
-# el tamaño del volumen no puede ser superior al tamaño libre del disco
-free=$(lsblk -d -n -o SIZE /dev/sdb)
-# si el disco tiene particiones
-if [[ $(lsblk -d -n -o TYPE /dev/sdb) == "disk" ]]; then
-    # si el disco tiene particiones
-    # se calcula el tamaño libre del disco
-    while read -r line; do
-        if [[ $(echo "$line" | awk '{print $7}') =~ '/' ]]; then
-            free=$(echo "$free - $(echo "$line" | awk '{print $4}')")
-        fi
-    done < /var/glam/tmp/volumenes.tmp
+dialog --clear --title "Crear volumen" \
+    --yesno "Se va a crear una particion en el dispositivo $selected
+    utilizando todo el espacio disponible.
+    Continuar?" 0 0
+if [[ $? -ne 0 ]]; then
+    return
 fi
 
-clear 
-echo "Tamaño del disco: $free"
-read -sn 1
 rm /var/glam/tmp/volumenes.tmp
 rm /var/glam/tmp/lsblk.tmp
 fdisk /dev/${part[$((selected * 2 - 1))]} <<EOF
@@ -88,6 +75,8 @@ p
 w
 EOF
 
+dialog --clear --title "Crear volumen" \
+    --msgbox "Volumen creado con exito" 0 0
 
 
 return
