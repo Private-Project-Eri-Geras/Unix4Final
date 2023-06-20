@@ -120,16 +120,7 @@ while true; do
         ;;
     esac
 
-    # Actualiza las variables
-    lineaInicio=$(grep -c "# INICIO PROGRAMACION DE TAREAS" /etc/crontab)
-    lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
-    lineaInicioManual=$(grep -c "# INICIO PROGRAMACION MANUAL" /etc/crontab)
-    lineaFinManual=$(grep -c "# FIN PROGRAMACION MANUAL" /etc/crontab)
-    numeroInicio=$(grep -n "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
-    numeroFin=$(grep -n "# FIN PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
-    numeroInicioManual=$(grep -n "# INICIO PROGRAMACION MANUAL" /etc/crontab | cut -d ':' -f 1)
-    numeroFinManual=$(grep -n "# FIN PROGRAMACION MANUAL" /etc/crontab | cut -d ':' -f 1)
-    # Limpia la pantalla
+     # Limpia la pantalla
     clear
 done
 
