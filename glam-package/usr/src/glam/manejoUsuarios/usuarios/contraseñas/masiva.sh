@@ -28,17 +28,17 @@ changePasswd() {
     usuario_actual="$USER"
 
     # Asignar la ruta del archivo de registro
-    log_file="/var/glam/logs/altas/contrasenaMasiva_${current_date}.log"
+    log_file="/var/glam/logs/contra/contrasenaMasiva_${current_date}.log"
     # Crear el directorio de logs si no existe
     mkdir -p /var/glam/logs
-    mkdir -p /var/glam/logs/altas
+    mkdir -p /var/glam/logs/contra
     counter=1
 
     # Verificar que el archivo de registro no exista
     # si existe, agregar un contador al nombre del archivo
     # ejemplo altaMasiva_12_30(1).log
     while [ -f "$log_file" ]; do
-        log_file="/var/glam/logs/altas/contrasenaMasiva_${current_date}($counter).log"
+        log_file="/var/glam/logs/contra/contrasenaMasiva_${current_date}($counter).log"
         ((counter++))
     done
 
@@ -56,7 +56,7 @@ changePasswd() {
     # formato del archivo:
     # nombre_usuario, delHome
     # usuario1,    si
-    while IFS=',' read -r name passwd; do
+    while IFS=',' read -r name password; do
         ((lineas_procesadas++))
         if [[ $name =~ ^# ]]; then
             # Si la línea comienza con #, se ignora
@@ -72,6 +72,8 @@ changePasswd() {
         mensaje="$lineas_procesadas .-"
         # Verificar que el usuario exista
         if id -u "$name" >/dev/null 2>&1; then
+            # eliminar el salto de linea
+            name=$(echo "$name" | tr -d '\n')
             # Si el usuario existe, se le cambiara la contraseña
             # Verificar si se especificó una contraseña
             if [ -n "$password" ]; then
@@ -82,13 +84,13 @@ changePasswd() {
                     caracteres_invalidos=$(echo "$password" | grep -o '[^a-zA-Z0-9@#_^\*%\/\.\+\:\;\=]')
                     mensaje_error="ERROR: Caracteres inválidos encontrados en la contraseña: $caracteres_invalidos"
                     echo "$mensaje_error" >>"$log_file"
-                else
-                    # Cambiar la contraseña
-                    echo "$password:$password" | passwd "$name" -q >/dev/null 2>&1
-                    mensaje="$mensaje La contraseña del usuario $name ha sido cambiada"
+                    continue
                 fi
+                # Cambiar la contraseña
+                echo -e "$password\n$password" | passwd "$name" -q >/dev/null 2>&1
+                mensaje="$mensaje La contraseña del usuario $name ha sido cambiada"
             else
-                mensaje="$mensaje La contraseña del usuario $name no ha sido cambiada"
+                mensaje="$mensaje La contraseña del usuario $name no ha sido cambiada, no hay contraseña especificada"
             fi
         else
             mensaje="$mensaje El usuario $name de la linea $lineas_procesadas no existe"
@@ -98,7 +100,7 @@ changePasswd() {
         echo "$mensaje" >>"$log_file"
         # ================================================
     done <"$archivo_usuarios" # Fin del ciclo while
-    # ================================================
+    dialog --clear --colors --title "ALTA TERMINADA" --msgbox "Puedes ver el registro en el archivo \Z1$log_file\Zn" 0 0
 }
 
 while true; do
