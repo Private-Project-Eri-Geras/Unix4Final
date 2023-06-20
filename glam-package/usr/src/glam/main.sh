@@ -47,8 +47,7 @@ menu_case() {
         ;;
     3)
         clear
-        echo "Mantenimiento y arranque"
-        read -p "Presione enter para continuar..." -sn 1
+        (source "/usr/src/glam/mantenimiento/menumantenimiento.sh") #
         ;;
     4)
         clear
