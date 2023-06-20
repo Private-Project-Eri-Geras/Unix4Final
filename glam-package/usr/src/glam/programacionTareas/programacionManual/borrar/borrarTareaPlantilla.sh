@@ -13,10 +13,10 @@ clear
 # Imprime el menú usando dialog
 while true; do
     OPTIONS=$(dialog --no-tags --separate-output --clear --title "Selección de Respaldos" \
-            --checklist "Use Espacio para seleccionar las tareas y pulse OK cuando haya terminado." 0 0 0
+            --checklist "Use Espacio para seleccionar las tareas y pulse OK cuando haya terminado." 0 0 0 \
         # INICIO TAREAS
         # FIN TAREAS
-        2>&1 >/dev/tty)
+        2>&1 >/dev/tty) \
     echo $OPTIONS >/tmp/oneline.tmp
     read -p "Presione enter para continuar"
 
@@ -46,7 +46,6 @@ while true; do
         # Con sed se elimina la linea i de tmp/list.tmp
         sed -i "$(sed </tmp/newline.tmp -n ${i}p)d" /tmp/list.tmp
     done
-    read -p "Presione enter para continuar"
     rm -f /tmp/newline.tmp
 
     # re escribir crontab
