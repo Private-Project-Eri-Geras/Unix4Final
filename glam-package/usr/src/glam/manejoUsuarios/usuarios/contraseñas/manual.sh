@@ -1,6 +1,8 @@
 #!/bin/bash
 
 mostrar_ayuda() {
+    # detener el hilo secundario
+    kill -STOP $resizePID
     echo 'Primero tienes que seleccionar un usuario
         de la lista de usuarios.
         Para seleccionarlo, puedes escribirlo.
@@ -15,6 +17,8 @@ mostrar_ayuda() {
         --exit-label "Ok" \
         --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
     rm /var/glam/tmp/ayuda.txt
+    # reanudar el hilo secundario
+    kill -CONT $resizePID
 }
 
 introText="Ingrese el nombre de usuario:"
@@ -291,12 +295,14 @@ cat /var/glam/tmp/temp_passwd >/var/glam/tmp/users_content
 
 # Mandar a llamar el segundo plano el hilo que rescalara todo
 checkResize &
+# Obtener el PID del hilo
+resizePID=$!
 
 # Llamar a la función para agregar contenido al archivo temporal
 add_content
 
 # Matar el hilo que rescalara todo
-kill $!
+kill $resizePID
 
 # Eliminar el archivo temporal al finalizar
 rm /var/glam/tmp/dialog_content
