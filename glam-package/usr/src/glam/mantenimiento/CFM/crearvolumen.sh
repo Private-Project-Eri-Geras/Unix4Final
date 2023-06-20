@@ -79,14 +79,14 @@ fi
 
 
 rm /var/glam/tmp/lsblk.tmp
-fdisk /dev/${part[$((selected * 2 - 1))]} <<EOF
-n
-p
-1
-
-
-w
-EOF
+# crear una tabla de particiones vacia
+parted -s /dev/$selected mklabel msdos
+# crear una particion primaria que ocupe todo el espacio disponible
+parted -s /dev/$selected mkpart primary 0% 100%
+# obtener el nombre de la particion creada
+selected=$(lsblk -nr -o NAME /dev/$selected | tail -n 1)
+# dar formato a la particion
+mkfs.ext4 /dev/$selected -F >/dev/null 2>&1
 
 dialog --clear --title "Crear volumen" \
     --msgbox "Volumen creado con exito" 0 0

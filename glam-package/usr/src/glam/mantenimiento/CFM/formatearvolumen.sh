@@ -96,7 +96,7 @@ if [[ $(lsblk -n -r -o MOUNTPOINT /dev/"$dispositivo") != "" ]]; then
         --msgbox "El dispositivo se ha montado con exito" 0 0
     return
 else
-    mkfs.ext4 /dev/"$dispositivo"
+    mkfs.ext4 /dev/"$dispositivo" -F >/dev/null 2>&1
     dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
         --msgbox "El dispositivo se ha formateado con exito" 0 0
     return
