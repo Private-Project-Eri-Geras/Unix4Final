@@ -44,6 +44,11 @@ p
 w
 EOF
 
-
+# Particion hecha con exito
+if [[ $? -eq 0 ]]; then
+    dialog --colors --title "\Z1ERROR" --msgbox "Particion hecha con exito" 0 0
+    clear
+    return
+fi
 
 return

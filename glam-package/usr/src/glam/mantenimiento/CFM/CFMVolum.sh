@@ -5,6 +5,8 @@ options=(
     1 "Crear volumen"
     2 "Formatear volumen"
     3 "Montar volumen"
+    4 "Desmontar volumen"
+    5 "Eliminar volumen"
 )
 
 if [ -z "$SUDO_USER" ]; then
@@ -37,6 +39,12 @@ case $selected in
     ;;
 3)
     (source "/usr/src/glam/mantenimiento/CFM/montarvolumen.sh") #
+    ;;
+4)
+    (source "/usr/src/glam/mantenimiento/CFM/desmontarvolumen.sh") #
+    ;;
+5)
+    (source "/usr/src/glam/mantenimiento/CFM/eliminarvolumen.sh") #
     ;;
 esac
 

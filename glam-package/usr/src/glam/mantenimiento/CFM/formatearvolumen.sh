@@ -8,25 +8,6 @@ if [ -z "$SUDO_USER" ]; then
     return
 fi
 
-checar() {
-    mkdir -p /var/glam/logs/chequeo
-    local hora=$(date +'%d-%m-%H%M')
-    local tmp=/var/glam/tmp/chequeoDEV"$1".tmp
-    local log=/var/glam/logs/chequeo/chequeoDEV"$1"_"$hora".log
-    fsck -y /dev/"$1" >>"$tmp" 2>&1
-    if [[ $? -eq 0 ]]; then
-        dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
-            --msgbox "El chequeo realizado con exito" 0 0
-        echo /dev/"$1 chequeo exitoso" >>"$log"
-    else
-        dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
-            --msgbox "El dispositivo tiene errores" 0 0
-        echo /dev/"$1 chequeo fallido" >>"$log"
-    fi
-    echo "" >>"$log"
-    cat "$tmp" >>"$log"
-    rm "$tmp"
-}
 # Conseguir los dispositivos de almacenamiento
 lsblk --all -nr >/var/glam/tmp/lsblk.tmp
 
