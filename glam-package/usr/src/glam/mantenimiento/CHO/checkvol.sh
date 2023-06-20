@@ -61,10 +61,16 @@ done
 i=0
 contador=1
 while read -r line; do
-    # si el nombre del dispositivo contiene el nombre de la raiz o swap
-    if [[ $(echo "$line" | awk '{print $1}') == *"$raiz"* ||  $(echo "$line" | awk '{print $1}') == *"${swap[@]}"* ]]; then
+    # si el nombre del dispositivo contiene el nombre de la raiz
+    if [[ $(echo "$line" | awk '{print $1}') == *"$raiz"* ]]; then
         continue
     fi
+    # si el nombre del dispositivo contiene el nombre de la swap
+    for j in "${swap[@]}"; do
+        if [[ $(echo "$line" | awk '{print $1}') == *"$j"* ]]; then
+            continue 
+        fi
+    done
     devices[i]=$(echo "$line" | awk '{print $1}')
     devices[i + 1]=$(echo "$line" | awk '{print $4,$6}')
     #tabular
