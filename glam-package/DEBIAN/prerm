@@ -72,8 +72,7 @@ while true; do
     elif [[ $key == "" ]]; then
         if [[ $selec -eq 0 ]]; then
             # guardar los archivos de registro
-            if [ -d /var/glam ]; then
-                mkdir -p /var/logs/glam
+            if [ -d /var/glam/ ]; then
                 mv /var/glam /var/logs/glam
                 clear
                 #mostrar una caja ascii con el mensaje de que se guardaron los archivos
@@ -119,17 +118,17 @@ while true; do
         elif [[ $selec -eq 1 ]]; then
             # no guardar los archivos de registro
             # y salir
-            if [ -d /var/glam ]; then
+            if [ -d /var/glam/ ]; then
                 rm -r /var/glam
             fi
-            if [ -d /usr/src/glam ]; then
+            if [ -d /usr/src/glam/ ]; then
                 rm -r /usr/src/glam
             fi
             if [ -f /usr/bin/glam ]; then
                 rm -f /usr/bin/glam
             fi
-            if [ -f /usr/bin/glam ]; then
-                rm -f /usr/bin/glam
+            if [ -f /usr/local/bin/glam ]; then
+                rm -f /usr/local/bin/glam
             fi
             tput rmcup
             # regrsar el cursor

@@ -3,6 +3,7 @@
 # Verificar si el script se ejecuta con sudo
 if [[ -z $SUDO_USER ]]; then
     tput smcup
+    clear
     echo -e "\e[1;31mEste script debe ejecutarse con sudo.\e[0m"
     read -p "Presione enter para continuar..." -sn 1
     tput rmcup
