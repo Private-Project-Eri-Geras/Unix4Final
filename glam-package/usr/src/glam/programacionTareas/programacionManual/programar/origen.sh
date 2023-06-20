@@ -35,8 +35,6 @@ while true; do
                 cat /tmp/cron.tmp /tmp/origen.tmp >>/tmp/crontab
                 echo "" >>/tmp/crontab
                 tail -n +${numeroFinManual} /etc/crontab >>/tmp/crontab
-                read -p "presione enter para continuar"
-                read -p "presione enter para continuar"
                 rm /etc/crontab
                 mv /tmp/crontab /etc/crontab
                 dialog --title "" --msgbox "La tarea se ha creado exitosamente." 0 0
