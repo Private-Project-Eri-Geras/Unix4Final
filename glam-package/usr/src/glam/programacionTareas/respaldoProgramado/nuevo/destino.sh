@@ -44,6 +44,7 @@ while true; do
                 #    /home/gerardo/Pictures/resp$(date +\%d_\%m_\%Y-\%H_\%M).tar.gz -C /home/gerardo/Pictures/Screenshots .
                 cat /tmp/origen.tmp >>/tmp/cron.tmp
                 echo " ." >>/tmp/cron.tmp
+                numeroFin=$(grep -n "# FIN PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
                 head -$((numeroFin - 1)) /etc/crontab >/tmp/crontab
                 cat /tmp/cron.tmp >>/tmp/crontab
                 tail -n +${numeroFin} /etc/crontab >>/tmp/crontab
