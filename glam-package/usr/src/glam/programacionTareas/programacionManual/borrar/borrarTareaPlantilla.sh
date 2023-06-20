@@ -16,7 +16,7 @@ while true; do
             --checklist "Use Espacio para seleccionar las tareas y pulse OK cuando haya terminado." 0 0 0 \
         # INICIO TAREAS
         # FIN TAREAS
-        2>&1 >/dev/tty) \
+        2>&1 >/dev/tty)
     echo $OPTIONS >/tmp/oneline.tmp
 
     # /tmp/oneline.tmp contiene los indices de las tareas a borrar separados por espacios
