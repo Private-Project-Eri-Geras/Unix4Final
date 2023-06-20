@@ -5,8 +5,6 @@ options=(
     1 "Crear volumen"
     2 "Formatear volumen"
     3 "Montar volumen"
-    4 "Desmontar volumen"
-    5 "Eliminar volumen"
 )
 
 if [ -z "$SUDO_USER" ]; then
