@@ -38,13 +38,22 @@ while read -r line; do
     device=$(echo "$line" | awk '{print $1}')
     # si no es un block device continuar con el siguiente ciclo
     lsblk -d -n -o TYPE /dev/$device >/dev/null 2>&1
-    if [[ $? != 0 ||  $(echo "$line" | awk '{print $7}') == "[SWAP]" ]]; then
+    if [[ $? != 0 ||  $(echo "$line" | awk '{print $7}') == "[SWAP]" ||  $(echo "$line" | awk '{print $6}') == "rom" ]]; then
         continue
     fi
     part[i]=$device
     part[i + 1]=$(lsblk -d -n -o SIZE /dev/$device)
     i=$((i + 2))
 done < /var/glam/tmp/lsblk.tmp
+
+rm /var/glam/tmp/lsblk.tmp
+# si el vector esta vacio, mostrar mensaje y salir
+if [[ ${#part[@]} -eq 0 ]]; then
+    dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
+        --msgbox "No se encontraron dispositivos de almacenamiento" 0 0
+    clear
+    return
+fi
 
 selected=$(dialog --clear --title "Montar volumen" \
     --cancel-label "Return" --ok-label "Select" \

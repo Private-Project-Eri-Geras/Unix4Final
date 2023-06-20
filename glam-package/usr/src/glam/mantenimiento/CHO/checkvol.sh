@@ -53,7 +53,7 @@ i=0
 contador=1
 while read -r line; do
     # si el nombre del dispositivo contiene el nombre de la raiz o swap
-    if [[ $(echo "$line" | awk '{print $1}') == *"$raiz"* ||  $(echo "$line" | awk '{print $7}') == "[SWAP]" ]]; then
+    if [[ $(echo "$line" | awk '{print $1}') == *"$raiz"* ||  $(echo "$line" | awk '{print $7}') == "[SWAP]" ||  $(echo "$line" | awk '{print $6}') == "rom" ]]; then
         continue
     fi
     devices[i]=$(echo "$line" | awk '{print $1}')
@@ -65,8 +65,17 @@ while read -r line; do
 done </var/glam/tmp/lsblk.tmp
     
 rm /var/glam/tmp/lsblk.tmp
+
+# si el vector esta vacio, mostrar mensaje y salir
+if [[ ${#devices[@]} -eq 0 ]]; then
+    dialog --clear --title "Chequeo de volumenes (UNICO)" \
+        --msgbox "No se encontraron dispositivos de almacenamiento" 0 0
+    clear
+    return
+fi
+
 #obtenemos el nombre del dispositivo
-dispositivo=$(dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
+dispositivo=$(dialog --clear --title "Chequeo de volumenes (UNICO)" \
     --cancel-label "Cancelar" --ok-label "Select" \
     --menu "Seleccione una opción:" 0 0 0 "${devices[@]}" \
     --output-fd 1)
