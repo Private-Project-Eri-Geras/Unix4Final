@@ -16,7 +16,7 @@ while true; do
             --checklist "Use Espacio para seleccionar los respaldos y pulse OK cuando haya terminado." 0 0 0 \
         # INICIO RESPALDOS
         # FIN RESPALDOS
-        2>&1 >/dev/tty) \
+        2>&1 >/dev/tty)
     echo $OPTIONS >/tmp/oneline.tmp
 
     # /tmp/oneline.tmp contiene los indices de los respaldos a borrar separados por espacios
