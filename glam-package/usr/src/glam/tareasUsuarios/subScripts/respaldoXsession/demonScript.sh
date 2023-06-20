@@ -54,7 +54,7 @@ do
     user=$(echo "$usuarios_salen" | awk '{print $3}')
 
     #Verificar que el archivo exista
-    if [ -f "/usr/src/glam/tareasUsuarios/subScripts/accionUsrIn.sh" ]; then
+    if [ -f "/usr/src/glam/tareasUsuarios/subScripts/accionUsrOut.sh" ]; then
       ./usr/src/glam/tareasUsuarios/subScripts/accionUsrOut.sh $user
     fi
 

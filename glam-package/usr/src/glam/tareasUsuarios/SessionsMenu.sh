@@ -39,6 +39,7 @@ clear
             (source "/usr/src/glam/tareasUsuarios/subScripts/respaldoXsession/configRespaldo.sh")
             ;;
         3)
+            (source "/usr/src/glam/tareasUsuarios/subScripts/tiempoSesion/tiempoSesionM.sh")
             ;;
         4)
             ;;
