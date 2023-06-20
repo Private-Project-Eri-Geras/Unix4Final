@@ -3,7 +3,7 @@
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
     dialog --title "Help" --msgbox \
-    "\n\
+        "\n\
     1.-Borrado total:\n\
     Permite borrar todo el contenido de la carpeta /tmp.\n\n\
     2.-Eliminar programación total:\n\
@@ -56,11 +56,14 @@ while true; do
     1)
         (source /usr/src/glam/programacionTareas/borradoTmpProgramado/borradoTotal.sh)
         ;;
-    2)  
+    2)
         (source /usr/src/glam/programacionTareas/borradoTmpProgramado/borrar/eliminarTotal.sh)
         ;;
     3)
         (source /usr/src/glam/programacionTareas/borradoTmpProgramado/selectivo/borradoSelectivo.sh)
+        ;;
+    4)
+        (source /usr/src/glam/programacionTareas/borradoTmpProgramado/borrarSelectivo/eliminarSelectivo.sh)
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
