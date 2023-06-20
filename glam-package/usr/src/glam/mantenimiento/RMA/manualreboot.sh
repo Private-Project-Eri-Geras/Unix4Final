@@ -7,6 +7,29 @@ options=(
     4 "Reinicio"
 )
 
+mostrar_ayuda() {
+    echo "Cada opción del menú realiza lo siguiente:
+    -Apagado Halt
+        Es el clasico shutdown, reinicia el sistema
+        Respeta la interfaz(Modo) actual
+    -Reinicio Mantenimiento(Single-User)
+        Reinicia en modo mantenimiento
+        Este esta enfocado al mantenimiento del sistema
+        Y se trabaja con interfaz de texto
+        Si estas en esta interfaz, no se reiniciara
+    -Reinicio Multi-Usuario(graphic)
+        Reiniciara en modo multiusuario
+        Sera en interfaz grafica
+        Si estas en esta interfaz, no se reiniciara
+    -Reinicio
+        Reinicia el sistema
+        Respeta la interfaz(Modo) actual" >/var/glam/tmp/ayuda.txt
+    dialog --backtitle "MENU PRINCIPAL" --title "AYUDA" \
+        --exit-label "Ok" \
+        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    rm /var/glam/tmp/ayuda.txt
+}
+
 # Verificar si el script se ejecuta con sudo
 if [ -z "$SUDO_USER" ]; then
     dialog --colors --title "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
@@ -28,10 +51,20 @@ endTimer(){
 
 selected=$(dialog --clear --title "MENU PRINCIPAL" \
         --cancel-label "Return" --ok-label "Select" \
+        --help-button --help-label "Ayuda" \
         --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \
         --output-fd 1)
 
-    if [[ $? -ne 0 ]]; then
+    opselect=$?
+
+    if [[ $opselect -eq 1 ]]; then
+        clear
+        return
+    fi
+
+    if [[ $opselect -eq 2 ]]; then
+        mostrar_ayuda
+        clear
         return
     fi
 

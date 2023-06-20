@@ -2,6 +2,20 @@
 
 selected=0
 
+mostrar_ayuda() {
+    echo "Este menu te dejara elejir el dispoditivo que quieras
+    Cuando elijas un dispositivo se le hara un cuequeo
+    Si el chuequeo fue exitoso se te avisara igualmente en el otro caso
+    Posterior al chuequeo se generara un log
+    En este se podra visualizar todos los chequeos hechos
+    Estos log tengran la hora de chuequeo de cada uno de los que se realizen
+    Y si no fueron exitosos tambien se dira el porque ahi" >/var/glam/tmp/ayuda.txt
+    dialog --backtitle "MENU PRINCIPAL" --title "AYUDA" \
+        --exit-label "Ok" \
+        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    rm /var/glam/tmp/ayuda.txt
+}
+
 if [ -z "$SUDO_USER" ]; then
     dialog --colors --title "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
     clear
@@ -77,10 +91,20 @@ fi
 #obtenemos el nombre del dispositivo
 dispositivo=$(dialog --clear --title "Chequeo de volumenes (UNICO)" \
     --cancel-label "Cancelar" --ok-label "Select" \
+    --help-button --help-label "Ayuda" \
     --menu "Seleccione una opción:" 0 0 0 "${devices[@]}" \
     --output-fd 1)
 # si se cancela el dialogo salir
-if [[ $? -eq 1 ]]; then
+
+opselect=$?
+
+if [[ $opselect -eq 1 ]]; then
+    clear
+    return
+fi
+
+if [[ $opselect -eq 2 ]]; then
+    mostrar_ayuda
     clear
     return
 fi

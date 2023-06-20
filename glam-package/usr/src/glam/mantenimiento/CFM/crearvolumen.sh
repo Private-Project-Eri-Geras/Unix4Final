@@ -69,9 +69,14 @@ dialog --clear --title "Crear volumen" \
     --yesno "Se va a crear una particion en el dispositivo $selected
     utilizando todo el espacio disponible.
     Continuar?" 0 0
-if [[ $? -ne 0 ]]; then
+
+opselected=$?
+
+if [[ $opselected == 1 ]]; then
+    clear
     return
 fi
+
 
 rm /var/glam/tmp/lsblk.tmp
 fdisk /dev/${part[$((selected * 2 - 1))]} <<EOF

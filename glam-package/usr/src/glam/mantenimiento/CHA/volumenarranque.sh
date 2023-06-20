@@ -5,7 +5,24 @@ options=(
     2 "Deshabilitar chequeos de volumen al arranque"
 )
 
-selected=0
+mostrar_ayuda() {
+    echo "Cada opción del menú realiza lo siguiente:
+    -Habilitar chequeos de volumen al arranque
+        Permite habilitar los chequeos al arranque
+            los cuales se ubican en fstab  
+            cambiando el valor de 0 a 1 de la ultima 
+            columna de cada linea correspondiente
+    -Deshabilitar chequeos de volumen al arranque
+        Permite deshabilitar los chequeos al arranque
+            los cuales se ubican en fstab  
+            cambiando el valor de 1 a 0 de la ultima 
+            columna de cada linea correspondiente
+    " >/var/glam/tmp/ayuda.txt
+    dialog --backtitle "MENU PRINCIPAL" --title "AYUDA" \
+        --exit-label "Ok" \
+        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    rm /var/glam/tmp/ayuda.txt
+}
 
 if [ -z "$SUDO_USER" ]; then
     dialog --colors --title "\Z1ERROR" --msgbox "Este script debe ser ejecutado con sudo" 0 0
@@ -13,7 +30,7 @@ if [ -z "$SUDO_USER" ]; then
     return
 fi
 
-backup_file="fstab_backup.txt"
+backup_file="/var/glam/tmp/fstab.bak"
 
 if [ ! -s "$backup_file" ]; then
 # Realizar la copia de seguridad
@@ -26,11 +43,19 @@ while true; do
     # Mostrar el menu y cambiar el valor de la variable $selected
     selected=$(dialog --clear --title "Chequeo de volumenes al arranque(GENERAL)" \
         --cancel-label "Return" --ok-label "Select" \
+        --help-button --help-label "Ayuda" \
         --menu "Seleccione una opción:" 0 0 0 "${options[@]}" \
         --output-fd 1)
 
-    if [[ $? -ne 0 ]]; then
-        break
+    opselected=$?
+
+    if [[ $opselected == 1 ]]; then
+        clear
+        return
+    fi
+
+    if [[ $opselected == 2 ]]; then
+        mostrar_ayuda
     fi
 
     case $selected in

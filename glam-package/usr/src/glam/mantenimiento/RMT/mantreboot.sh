@@ -24,6 +24,7 @@ fi
 
 dialog --colors --clear --title "Arrancar en modo manteniminto" \
     --yes-label "Reinciar" --no-label "Cancelar" \
+    --help-button --help-label "Ayuda" \
     --yesno "\Zb\Z0Deseas reiniciar el sistema?" 0 0 --output-fd 1
 
 Opselect=$?
@@ -46,6 +47,10 @@ if [[ $Opselect -eq 0 ]]; then
     else
         init 1
     fi
+fi
+
+if [[ $Opselect -eq 2 ]]; then
+    dialog --colors --title "AYUDA" --msgbox "Este script reinicia el sistema en modo mantenimiento, este modo solo es interfaz grafica" 0 0
 fi
 
 return
