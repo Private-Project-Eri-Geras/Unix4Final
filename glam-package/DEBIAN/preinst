@@ -27,6 +27,7 @@ listaDependencias=(
     "tput"
     "yes"
     "wc"
+    "at"
 )
 
 dependencias=""
