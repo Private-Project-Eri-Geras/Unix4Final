@@ -32,17 +32,17 @@ removeUsers() {
     usuario_actual="$USER"
 
     # Asignar la ruta del archivo de registro
-    log_file="/var/glam/logs/altas/bajasMasiva_${current_date}.log"
+    log_file="/var/glam/logs/bajas/bajasMasiva_${current_date}.log"
     # Crear el directorio de logs si no existe
     mkdir -p /var/glam/logs
-    mkdir -p /var/glam/logs/altas
+    mkdir -p /var/glam/logs/bajas
     counter=1
 
     # Verificar que el archivo de registro no exista
     # si existe, agregar un contador al nombre del archivo
     # ejemplo altaMasiva_12_30(1).log
     while [ -f "$log_file" ]; do
-        log_file="/var/glam/logs/altas/bajasMasiva_${current_date}($counter).log"
+        log_file="/var/glam/logs/bajas/bajasMasiva_${current_date}($counter).log"
         ((counter++))
     done
 
@@ -104,6 +104,7 @@ removeUsers() {
         # ================================================
     done <"$archivo_usuarios" # Fin del ciclo while
     # ================================================
+    dialog --clear --colors --title "ALTA TERMINADA" --msgbox "Puedes ver el registro en el archivo \Z1$log_file\Zn" 0 0
 }
 
 while true; do
