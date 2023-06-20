@@ -28,7 +28,7 @@ checar() {
     rm "$tmp"
 }
 # Conseguir los dispositivos de almacenamiento
-lsblk --all -nr >/var/glam/tmp/lsblk.tmp
+lsblk -nr >/var/glam/tmp/lsblk.tmp
 
 # buscar el dispositivo de almacenamiento que
 # este montado en /
