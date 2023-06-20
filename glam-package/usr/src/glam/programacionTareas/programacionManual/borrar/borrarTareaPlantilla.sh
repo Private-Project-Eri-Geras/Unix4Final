@@ -18,7 +18,6 @@ while true; do
         # FIN TAREAS
         2>&1 >/dev/tty) \
     echo $OPTIONS >/tmp/oneline.tmp
-    read -p "Presione enter para continuar"
 
     # /tmp/oneline.tmp contiene los indices de las tareas a borrar separados por espacios
     # Se crea un archivo llamado /tmp/newline.tmp que contiene los indices de las tareas a borrar separados por saltos de linea
@@ -50,15 +49,8 @@ while true; do
 
     # re escribir crontab
     head -$((numeroInicio)) /etc/crontab >/tmp/crontab
-    read -p "Presione enter para continuar"
     cat /tmp/list.tmp >>/tmp/crontab
-    read -p "Presione enter para continuar"
     tail -n +$((numeroFin)) /etc/crontab >>/tmp/crontab
-    read -p "Presione enter para continuar"
-    read -p "Presione enter para continuar"
-    read -p "Presione enter para continuar"
-    read -p "Presione enter para continuar"
-    read -p "Presione enter para continuar"
     rm -f /tmp/list.tmp
     mv /tmp/crontab /etc/crontab
     break
