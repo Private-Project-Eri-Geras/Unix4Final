@@ -41,12 +41,6 @@ done </var/glam/tmp/lsblk.tmp
 # si raiz es una particion, indicar el dispositivo sin
 raiz=$(echo "$raiz" | sed 's/[0-9]*$//g')
 
-# leer linea por linea (cada linea es un dispositivo)
-# cada linea se guardara en un vector llamado devices
-# el formato que se guardara sera el campo 1 4 y 6
-# cada vez que se lee una linea se tiene que agregar dos elementos al vector
-# el primer elemento es un contador empezado en 1
-# el segundo elemento es el nombre del dispositivo
 i=0
 contador=1
 while read -r line; do
@@ -71,5 +65,30 @@ dispositivo=$(dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
 # si se cancela el dialogo salir
 if [[ $? -eq 1 ]]; then
     clear
+    return
+fi
+
+# si el dispositivo esta montado preguntar si esta seguro en un dialog yes no
+if [[ $(lsblk -n -r -o MOUNTPOINT /dev/"$dispositivo") != "" ]]; then
+    dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
+        --yesno "El dispositivo esta montado, ¿esta seguro de continuar?" 0 0
+    if [[ $? -eq 1 ]]; then
+        clear
+        return
+    fi
+    # si el dispositivo esta montado desmontarlo
+    umount /dev/"$dispositivo"
+    # se formatea el dispositivo
+    mkfs.ext4 /dev/"$dispositivo"
+    # se monta el dispositivo
+    mount /dev/"$dispositivo" /mnt
+    # se informa de que se ha montado con exito
+    dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
+        --msgbox "El dispositivo se ha montado con exito" 0 0
+    return
+else
+    mkfs.ext4 /dev/"$dispositivo"
+    dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
+        --msgbox "El dispositivo se ha formateado con exito" 0 0
     return
 fi
