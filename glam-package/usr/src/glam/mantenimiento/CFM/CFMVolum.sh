@@ -40,12 +40,6 @@ case $selected in
 3)
     (source "/usr/src/glam/mantenimiento/CFM/montarvolumen.sh") #
     ;;
-4)
-    (source "/usr/src/glam/mantenimiento/CFM/desmontarvolumen.sh") #
-    ;;
-5)
-    (source "/usr/src/glam/mantenimiento/CFM/eliminarvolumen.sh") #
-    ;;
 esac
 
 clear

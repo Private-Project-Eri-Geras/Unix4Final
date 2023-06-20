@@ -5,24 +5,43 @@ if [ -z "$SUDO_USER" ]; then
     clear
     return
 fi
-echo "entro"
-seleep 5
-# Obtener los nombres de los discos disponibles
-disk_list=$(lsblk -d -n -o NAME)
 
-# Crear una matriz para almacenar los nombres de los discos
-disks=()
-while IFS= read -r disk; do
-    disks+=("$disk")
-done <<< "$disk_list"
+# Se pone en un archivo temporal
+(lsblk -d -n -o NAME) > /var/glam/tmp/volumenes.tmp
+# Se crea un arreglo con los nombres de los volumenes
+i=0
+while read -r line; do
+    part[i]=$(echo "$line" | awk '{print $1}')
+    part[i + 1]=$(lsblk -d -n -o SIZE /dev/${part[$i]})
+    i=$((i + 2))
+done < /var/glam/tmp/volumenes.tmp
 
-# Mostrar el diálogo para que el usuario seleccione el disco
-selected_disk=$(dialog --clear --title "Seleccionar disco" --menu "Seleccione el disco para crear una partición:" 0 0 0 "${disks[@]}" 2>&1 >/dev/tty)
+rm /var/glam/tmp/volumenes.tmp
 
-# Verificar si se seleccionó un disco
-if [[ -n "$selected_disk" ]]; then
-    echo "El disco seleccionado es: $selected_disk"
-    # Aquí puedes agregar el código para crear la partición en el disco seleccionado
-else
-    echo "No se seleccionó ningún disco."
+selected=$(dialog --clear --title "Crear volumen" \
+    --cancel-label "Return" --ok-label "Select" \
+    --menu "Seleccione una particion:" 0 0 0 "${part[@]}" \
+    --output-fd 1)
+
+if [[ $? -ne 0 ]]; then
+    clear
+    return
 fi
+
+# si el disco esta en uso no se puede crear un volumen
+if [[ $(lsblk -d -n -o RM /dev/${part[$((selected))]} | awk '{print $1}') == 0 ]]; then
+    dialog --colors --title "\Z1ERROR" --msgbox "El disco esta en uso" 0 0
+    clear
+    return
+fi
+
+fdisk /dev/${part[$((selected * 2 - 1))]} <<EOF
+n
+p
+1
+
+
+w
+EOF
+
+return

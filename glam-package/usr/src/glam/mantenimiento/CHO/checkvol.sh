@@ -61,13 +61,18 @@ while read -r line; do
     i=$((i + 2))
     contador=$((contador + 1))
 done </var/glam/tmp/lsblk.tmp
-
+    
 rm /var/glam/tmp/lsblk.tmp
 #obtenemos el nombre del dispositivo
 dispositivo=$(dialog --clear --title "Chequeo de volumenes al arranque(UNICO)" \
     --cancel-label "Cancelar" --ok-label "Select" \
     --menu "Seleccione una opción:" 0 0 0 "${devices[@]}" \
     --output-fd 1)
+# si se cancela el dialogo salir
+if [[ $? -eq 1 ]]; then
+    clear
+    return
+fi
 
 #si el dispositivo esta montado desmontarlo
 if [[ $(mount | grep "$dispositivo") ]]; then
