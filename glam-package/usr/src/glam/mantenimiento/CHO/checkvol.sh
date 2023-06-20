@@ -42,15 +42,6 @@ done </var/glam/tmp/lsblk.tmp
 # si raiz es una particion, indicar el dispositivo sin
 raiz=$(echo "$raiz" | sed 's/[0-9]*$//g')
 
-i=0
-# conseguir los dispositivos swap
-while read -r line; do
-    if [[ $(echo "$line" | awk '{print $7}') == "[SWAP]" ]]; then
-        # guardar el nombre del dispositivo en la variable dispositivo
-        swap[$i]=$(echo "$line" | awk '{print $1}')
-        i=$((i + 1))
-    fi
-done
 
 # leer linea por linea (cada linea es un dispositivo)
 # cada linea se guardara en un vector llamado devices
@@ -61,16 +52,10 @@ done
 i=0
 contador=1
 while read -r line; do
-    # si el nombre del dispositivo contiene el nombre de la raiz
-    if [[ $(echo "$line" | awk '{print $1}') == *"$raiz"* ]]; then
+    # si el nombre del dispositivo contiene el nombre de la raiz o swap
+    if [[ $(echo "$line" | awk '{print $1}') == *"$raiz"* ||  $(echo "$line" | awk '{print $7}') == "[SWAP]" ]]; then
         continue
     fi
-    # si el nombre del dispositivo contiene el nombre de la swap
-    for j in "${swap[@]}"; do
-        if [[ $(echo "$line" | awk '{print $1}') == *"$j"* ]]; then
-            continue 
-        fi
-    done
     devices[i]=$(echo "$line" | awk '{print $1}')
     devices[i + 1]=$(echo "$line" | awk '{print $4,$6}')
     #tabular
