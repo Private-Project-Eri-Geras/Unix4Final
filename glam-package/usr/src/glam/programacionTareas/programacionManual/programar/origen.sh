@@ -31,6 +31,7 @@ while true; do
             opcion=$?
             if [ $opcion -eq 0 ]; then
                 echo -n "$origen" >/tmp/origen.tmp
+                numeroFinManual=$(grep -n "# FIN PROGRAMACION MANUAL" /etc/crontab | cut -d ':' -f 1)
                 head -$((numeroFinManual - 1)) /etc/crontab >/tmp/crontab
                 cat /tmp/cron.tmp /tmp/origen.tmp >>/tmp/crontab
                 echo "" >>/tmp/crontab
