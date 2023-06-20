@@ -6,14 +6,20 @@ mostrar_ayuda() {
     "\n\
     1.-Borrado total:\n\
     Permite borrar todo el contenido de la carpeta /tmp.\n\n\
-    2.-Borrado selectivo:\n\
-    Permite borrar archivos o directorios específicos de la carpeta /tmp." 0 0
+    2.-Eliminar programación total:\n\
+    Permite eliminar la programación de borrado total.\n\n\
+    3.-Borrado selectivo:\n\
+    Permite borrar archivos o directorios específicos de la carpeta /tmp.\n\n\
+    4.-Eliminar programación selectivo:\n\
+    Permite eliminar la programación de borrado selectivo.\n\n" 0 0
 }
 
 # Define las opciones del menú
 options=(
     1 "Borrado total"
-    2 "Borrado selectivo"
+    2 "Eliminar programación total"
+    3 "Borrado selectivo"
+    4 "Eliminar programación selectivo"
 )
 
 # Limpia la pantalla
@@ -50,13 +56,11 @@ while true; do
     1)
         (source /usr/src/glam/programacionTareas/borradoTmpProgramado/borradoTotal.sh)
         ;;
-    2)
-        (source /usr/src/glam/programacionTareas/borradoTmpProgramado/borradoSelectivo.sh)
+    2)  
+        (source /usr/src/glam/programacionTareas/borradoTmpProgramado/borrar/eliminarTotal.sh)
         ;;
     3)
-        clear
-        nano
-        clear
+        (source /usr/src/glam/programacionTareas/borradoTmpProgramado/borradoSelectivo.sh)
         ;;
     *)
         dialog --colors --title "\Z1ERROR" --msgbox "Opción inválida" 0 0
