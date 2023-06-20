@@ -250,7 +250,6 @@ while true; do
     head -$((numeroFinTotal - 1)) /etc/crontab >/tmp/crontab
     cat /tmp/cron.tmp >>/tmp/crontab
     tail -n +${numeroFinTotal} /etc/crontab >>/tmp/crontab
-    read -p "presione enter para continuar"
     mv /tmp/crontab /etc/crontab
     rm -f /tmp/cron.tmp
     rm -f /tmp/Doutput.tmp
