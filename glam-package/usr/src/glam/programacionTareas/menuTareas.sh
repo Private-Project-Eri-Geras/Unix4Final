@@ -37,40 +37,73 @@ lineaInicio=$(grep -c "# INICIO PROGRAMACION DE TAREAS" /etc/crontab)
 lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
 lineaInicioManual=$(grep -c "# INICIO PROGRAMACION MANUAL" /etc/crontab)
 lineaFinManual=$(grep -c "# FIN PROGRAMACION MANUAL" /etc/crontab)
+lineaInicioTotal=$(grep -c "# INICIO TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
+lineaFinTotal=$(grep -c "# FIN TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
+lineaInicioSelectivo=$(grep -c "# INICIO TMP SELECTIVO" /etc/crontab | cut -d ':' -f 1)
+lineaFinSelectivo=$(grep -c "# FIN TMP SELECTIVO" /etc/crontab | cut -d ':' -f 1)
 numeroInicio=$(grep -n "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
 numeroFin=$(grep -n "# FIN PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
 numeroInicioManual=$(grep -n "# INICIO PROGRAMACION MANUAL" /etc/crontab | cut -d ':' -f 1)
 numeroFinManual=$(grep -n "# FIN PROGRAMACION MANUAL" /etc/crontab | cut -d ':' -f 1)
+numeroInicioTotal=$(grep -n "# INICIO TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
+numeroFinTotal=$(grep -n "# FIN TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
+numeroInicioSelectivo=$(grep -n "# INICIO TMP SELECTIVO" /etc/crontab | cut -d ':' -f 1)
+numeroFinSelectivo=$(grep -n "# FIN TMP SELECTIVO" /etc/crontab | cut -d ':' -f 1)
 
-if ((lineaInicio == 0 && lineaFin == 0)); then
+if ((lineaInicio == 0 && lineaFin == 0 && lineaInicioManual == 0 && lineaFinManual == 0 && lineaInicioTotal == 0 && lineaFinTotal == 0 && lineaInicioSelectivo == 0 && lineaFinSelectivo == 0)); then
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab no existe, se creará una nueva" 0 0
     clear
     echo "# INICIO PROGRAMACION DE TAREAS" >>/etc/crontab
     echo "# FIN PROGRAMACION DE TAREAS" >>/etc/crontab
     echo "# INICIO PROGRAMACION MANUAL" >>/etc/crontab
     echo "# FIN PROGRAMACION MANUAL" >>/etc/crontab
-elif ((lineaInicio != 1 || lineaFin != 1 || lineaInicioManual != 1 || lineaFinManual != 1)); then
+    echo "# INICIO TMP TOTAL" >>/etc/crontab
+    echo "# FIN TMP TOTAL" >>/etc/crontab
+    echo "# INICIO TMP SELECTIVO" >>/etc/crontab
+    echo "# FIN TMP SELECTIVO" >>/etc/crontab
+elif ((lineaInicio != 1 || lineaFin != 1 || lineaInicioManual != 1 || lineaFinManual != 1 || lineaInicioTotal != 1 || lineaFinTotal != 1 || lineaInicioSelectivo != 1 || lineaFinSelectivo != 1)); then
     lineaInicio=$(grep -c "# INICIO PROGRAMACION DE TAREAS" /etc/crontab)
     lineaFin=$(grep -c "# FIN PROGRAMACION DE TAREAS" /etc/crontab)
     lineaInicioManual=$(grep -c "# INICIO PROGRAMACION MANUAL" /etc/crontab)
     lineaFinManual=$(grep -c "# FIN PROGRAMACION MANUAL" /etc/crontab)
+    lineaInicioTotal=$(grep -n "# INICIO TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
+    lineaFinTotal=$(grep -n "# FIN TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
+    lineaInicioSelectivo=$(grep -n "# INICIO TMP SELECTIVO" /etc/crontab | cut -d ':' -f 1)
+    lineaFinSelectivo=$(grep -n "# FIN TMP SELECTIVO" /etc/crontab | cut -d ':' -f 1)
+    numeroInicio=$(grep -n "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
+    numeroFin=$(grep -n "# FIN PROGRAMACION DE TAREAS" /etc/crontab | cut -d ':' -f 1)
+    numeroInicioManual=$(grep -n "# INICIO PROGRAMACION MANUAL" /etc/crontab | cut -d ':' -f 1)
+    numeroFinManual=$(grep -n "# FIN PROGRAMACION MANUAL" /etc/crontab | cut -d ':' -f 1)
+    numeroInicioTotal=$(grep -n "# INICIO TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
+    numeroFinTotal=$(grep -n "# FIN TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
+    numeroInicioSelectivo=$(grep -n "# INICIO TMP SELECTIVO" /etc/crontab | cut -d ':' -f 1)
+    numeroFinSelectivo=$(grep -n "# FIN TMP SELECTIVO" /etc/crontab | cut -d ':' -f 1)
+    
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab no es correcta, se perderá registro de todas las tareas programadas" 0 0
     clear
-    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" | grep -v "# INICIO PROGRAMACION MANUAL" | grep -v "# FIN PROGRAMACION MANUAL" >/tmp/crontab
+    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" | grep -v "# INICIO PROGRAMACION MANUAL" | grep -v "# FIN PROGRAMACION MANUAL" | grep -v "# INICIO TMP TOTAL" | grep -v "# FIN TMP TOTAL" | grep -v "# INICIO TMP SELECTIVO" | grep -v "# FIN TMP SELECTIVO" >/tmp/crontab
     echo "# INICIO PROGRAMACION DE TAREAS" >>/tmp/crontab
     echo "# FIN PROGRAMACION DE TAREAS" >>/tmp/crontab
     echo "# INICIO PROGRAMACION MANUAL" >>/tmp/crontab
     echo "# FIN PROGRAMACION MANUAL" >>/tmp/crontab
+    echo "# INICIO TMP TOTAL" >>/tmp/crontab
+    echo "# FIN TMP TOTAL" >>/tmp/crontab
+    echo "# INICIO TMP SELECTIVO" >>/tmp/crontab
+    echo "# FIN TMP SELECTIVO" >>/tmp/crontab
     rm /etc/crontab
     mv /tmp/crontab /etc/crontab
-elif ((numeroInicio > numeroFin || numeroInicioManual > numeroFinManual)); then
+elif ((numeroInicio > numeroFin || numeroInicioManual > numeroFinManual || lineaInicioTotal > lineaFinTotal || lineaInicioSelectivo > lineaFinSelectivo)); then
     dialog --colors --title "\Z1ERROR" --msgbox "La estructura en crontab está invertida, se perderá registro de todas las tareas programadas" 0 0
     clear
-    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" | grep -v "# INICIO PROGRAMACION MANUAL" | grep -v "# FIN PROGRAMACION MANUAL" >/tmp/crontab
+    grep -v "# INICIO PROGRAMACION DE TAREAS" /etc/crontab | grep -v "# FIN PROGRAMACION DE TAREAS" | grep -v "# INICIO PROGRAMACION MANUAL" | grep -v "# FIN PROGRAMACION MANUAL" | grep -v "# INICIO TMP TOTAL" | grep -v "# FIN TMP TOTAL" | grep -v "# INICIO TMP SELECTIVO" | grep -v "# FIN TMP SELECTIVO" >/tmp/crontab
     echo "# INICIO PROGRAMACION DE TAREAS" >>/tmp/crontab
     echo "# FIN PROGRAMACION DE TAREAS" >>/tmp/crontab
     echo "# INICIO PROGRAMACION MANUAL" >>/tmp/crontab
     echo "# FIN PROGRAMACION MANUAL" >>/tmp/crontab
+    echo "# INICIO TMP TOTAL" >>/tmp/crontab
+    echo "# FIN TMP TOTAL" >>/tmp/crontab
+    echo "# INICIO TMP SELECTIVO" >>/tmp/crontab
+    echo "# FIN TMP SELECTIVO" >>/tmp/crontab
     rm /etc/crontab
     mv /tmp/crontab /etc/crontab
 fi
@@ -110,7 +143,7 @@ while true; do
         (source /usr/src/glam/programacionTareas/respaldoProgramado/menuRespaldo.sh)
         ;;
     3)
-        # (source "")
+        (source /usr/src/glam/programacionTareas/borradoTmpProgramado/menuBorrado.sh)
         ;;
     4)
         (source /usr/src/glam/programacionTareas/inhabilitacionUsuarios/menuInhabilitar.sh)
