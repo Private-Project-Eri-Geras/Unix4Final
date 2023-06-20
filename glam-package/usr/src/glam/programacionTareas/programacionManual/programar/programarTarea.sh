@@ -244,12 +244,15 @@ while true; do
         #separado por espacios
         tiempo "$campo1" "$campo2" "$campo3" "$campo4" "$campo5"
     done
+
     echo -n "root " >>/tmp/cron.tmp
     echo -n "rm -rf /tmp/*" >>/tmp/cron.tmp
     numeroFinTotal=$(grep -n "# FIN TMP TOTAL" /etc/crontab | cut -d ':' -f 1)
     head -$((numeroFinTotal - 1)) /etc/crontab >/tmp/crontab
     cat /tmp/cron.tmp >>/tmp/crontab
     tail -n +${numeroFinTotal} /etc/crontab >>/tmp/crontab
+    # llamar al origen
+    (source /usr/src/glam/programacionTareas/programacionManual/programar/origen.sh)
     # Si el archivo /tmp/cancelar no existe, se hace un break
     if [[ ! -f /tmp/cancelar.tmp ]]; then
         break
