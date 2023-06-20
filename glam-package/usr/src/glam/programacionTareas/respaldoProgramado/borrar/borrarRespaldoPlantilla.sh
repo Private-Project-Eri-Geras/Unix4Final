@@ -24,7 +24,6 @@ while true; do
     awk '{for (i=1; i<=NF; i++) print $i}' /tmp/oneline.tmp >/tmp/newline.tmp
     rm -f /tmp/oneline.tmp
     eliminaciones=$(cat /tmp/newline.tmp | wc -l)
-    read -p "Presione enter para continuar"
 
     # Verifica si se seleccionaron respaldos
     if [ $eliminaciones -eq 0 ]; then
