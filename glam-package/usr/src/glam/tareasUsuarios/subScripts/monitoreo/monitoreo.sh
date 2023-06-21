@@ -13,7 +13,7 @@ mostrar_ayuda() {
     Pulsa espacio para salir.' >/var/glam/tmp/ayuda.txt
     dialog --backtitle "BAJA MANUAL" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+        --textbox /var/glam/tmp/ayuda.txt 0 0
     rm /var/glam/tmp/ayuda.txt
     # reanudar el PID del proceso resize
     kill -s CONT $PID_RESIZE
@@ -23,7 +23,7 @@ ventana() {
     archivo="/var/glam/tmp/monitorAplicacionesOld.txt"
     cat "$archivo" >/var/glam/tmp/monitorAplicaciones.txt
     echo "\Zb<\Z4Salir \ZB(espacio)\Zb\Z0>\Zn" >>/var/glam/tmp/monitorAplicaciones.txt
-    dialog --backtitle "Monitoreo" --colors --title "APLICACIONES DE $1" \
+    dialog --backtitle "Para salir precione <espacio>" --colors --title "APLICACIONES DE $1" \
         --infobox "$(cat /var/glam/tmp/monitorAplicaciones.txt)" 0 0
     rm /var/glam/tmp/monitorAplicaciones.txt
 }

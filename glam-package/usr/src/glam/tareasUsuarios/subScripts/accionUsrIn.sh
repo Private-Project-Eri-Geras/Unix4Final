@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script para controlar las acciones a ejecutar al ingresar un usuario
 usr=$1  # Se guarda el usuario que inicia sesión
-rutaResp="/usr/src/glam/tareasUsuarios/archs/respaldo.txt" # Ruta del archivo de respaldos
+rutaResp="/var/glam/backups/respaldoInOut.txt" #Archivo que guarda las configuraciones de respaldo
 rutaTiempoPermitido="/var/glam/logs/usrsInOut/tiempoPermitido.txt" # Ruta del archivo de tiempo permitido
 
 nameArchLog="usrLog$(date +"-%d-%m-%Y").txt" # Nombre del archivo de log
@@ -40,7 +40,7 @@ while IFS=":" read -r usuario origen destino; do
             hora=$(date +"%H-%M-%S")
             # Crear el archivo comprimido
             tar -czf "$destino/$nombre"_"$fecha"_"$hora".tar.gz -C "$origen" .
-            exit 0  # Salir del bucle después de encontrar la configuración del usuario
+            sleep 1
         else
             # La ruta de origen $origen no existe.
             exit 1
@@ -60,4 +60,3 @@ while IFS=":" read -r usuario tiempoAdmin tiempoActiv ; do
         fi
     fi
 done < $rutaTiempoPermitido
-
