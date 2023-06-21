@@ -5,8 +5,8 @@ mostrar_ayuda() {
     dialog --title "Help" --msgbox \
     "\n\
     Para navegar se pude usar tab o las flechas.\n\n\
-    Es necesario usar la ruta absoluta del archivo o directorio a respaldar.\n\n\
-    Al presionar espacio se autocopleta la ruta del archivo o directorio seleccionado." 0 0      
+    Es necesario usar la ruta absoluta del directorio donde se va a respaldar.\n\n\
+    Al presionar espacio se autocopleta la ruta del directorio seleccionado." 0 0      
 }
 
 while true; do
