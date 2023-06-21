@@ -31,8 +31,7 @@ mostrar_ayuda() {
         Montar volumenes." >/var/glam/tmp/ayuda.txt
     dialog --backtitle "MENU PRINCIPAL" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
-    rm /var/glam/tmp/ayuda.txt
+        --textbox /var/glam/tmp/ayuda.txt 0 0 
 }
 
 selected=0

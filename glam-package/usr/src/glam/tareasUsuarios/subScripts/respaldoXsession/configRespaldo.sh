@@ -142,9 +142,9 @@ verArchRespaldos() {
     #Verifica si existe el archivo de configuración
     if [[ ! -f $archResp ]]; then
         #Si no existe muestra un dialog con un mensaje de error
-        dialog --title "Sin respaldos programados" --msgbox "No hay ningún respaldo programado al iniciar sesión" 20 80
+        dialog --title "Sin respaldos programados" --msgbox "No hay ningún respaldo programado al iniciar sesión" 20 100
     else #si existe, muestra el contenido del archivo, el contenido del textbox se despliega en 3 columnas (usuario, origen, destino)
-        dialog --title "Respaldos programados" --textbox $archResp 0 80
+        dialog --title "Respaldos programados" --textbox $archResp 0 100
         return
     fi
 }
@@ -197,20 +197,10 @@ menuUsrs() {
     fi
 
     #Elimina el tiempo permitido del usuario seleccionado
-        if [[ "dialogExit" -eq 3 ]]; then 
-        # Actualizar el tiempo total en el archivo
-            #Busca si el usuario ya tenía una configuración de respaldo
-            while IFS=":" read -r usuario origen destino; do
-                if [[ "$usuario" != "$usr" ]]; then
-                    echo "$usuario:$origen:$destino" >> $archRespTmp
-                fi
-            done < $archResp
-            #Reemplazar el archivo original con el temporal
-            rm $archResp
-            mv $archRespTmp $archResp
-            menuUsrs
-            sleep 15
-            exit
+        if [[ "opcion" -eq 3 ]]; then 
+            #borrar la linea del usuario seleccionado
+            sed -i "/$usuario/d" "$archResp"
+            return
         fi
 
     configResp "$usuario"

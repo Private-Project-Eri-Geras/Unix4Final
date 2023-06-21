@@ -28,7 +28,7 @@ mostrar_ayuda() {
         valida." >/var/var/glam/tmp/ayuda.txt
     dialog --backtitle "ALTA MASIVA" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /var/var/glam/tmp/ayuda.txt 0 0 --scrollbar
+        --textbox /var/var/glam/tmp/ayuda.txt 0 0 
     rm /var/var/glam/tmp/ayuda.txt
 }
 

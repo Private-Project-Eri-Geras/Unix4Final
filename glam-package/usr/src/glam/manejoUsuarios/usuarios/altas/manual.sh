@@ -29,7 +29,7 @@ mostrar_ayuda() {
         Si se deja por defecto, no se asignará." >/var/glam/tmp/ayuda.txt
     dialog --backtitle "ALTA MANUAL" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+        --textbox /var/glam/tmp/ayuda.txt 0 0 
     rm /var/glam/tmp/ayuda.txt
 }
 

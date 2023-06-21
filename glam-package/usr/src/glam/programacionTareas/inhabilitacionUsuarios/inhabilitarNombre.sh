@@ -13,7 +13,7 @@ mostrar_ayuda() {
     ' >/tmp/ayuda.tmp
     dialog --backtitle "BAJA MANUAL" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /tmp/ayuda.tmp 0 0 --scrollbar
+        --textbox /tmp/ayuda.tmp 0 0 
     rm /tmp/ayuda.tmp
 }
 

@@ -30,7 +30,7 @@ mostrar_ayuda() {
 ---------------------------------------------------------------" >/var/glam/tmp/ayuda.txt
     dialog --backtitle "MENU PRINCIPAL" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+        --textbox /var/glam/tmp/ayuda.txt 0 0 
     rm /var/glam/tmp/ayuda.txt
 }
 

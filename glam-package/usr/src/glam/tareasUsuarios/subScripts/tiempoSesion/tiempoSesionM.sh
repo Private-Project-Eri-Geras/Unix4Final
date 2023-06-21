@@ -32,7 +32,7 @@ mostrar_ayuda(){
   " > "/tmp/ayudaInOut.txt"
   dialog --backtitle "TIEMPOS DE USUARIOS" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /tmp/ayudaInOut.txt 0 0 --scrollbar
+        --textbox /tmp/ayudaInOut.txt 0 0 
     rm /tmp/ayudaInOut.txt
 }
 

@@ -9,7 +9,7 @@ mostrar_ayuda() {
 /var/glam/logs/usrsInOut/usuarios$(date +'%d%m%y').txt" >/var/glam/tmp/ayuda.txt
   dialog --colors --backtitle "INICIOS Y SALIDAS DE SESION" --title "AYUDA" \
     --exit-label "Ok" \
-    --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+    --textbox /var/glam/tmp/ayuda.txt 0 0 
   rm /var/glam/tmp/ayuda.txt
   # reanudar el proceso de rescalado
   kill -SIGCONT $rescaladoPID
@@ -41,6 +41,7 @@ isActualizar() {
   nameArch="usuarios$(date +'%d%m%y').txt"
   rutaUsrs="$ruta/$nameArch"
   # archivo de usuarios que se encuentran en el sistema (new)
+  
   cat "$rutaUsrs" >/var/glam/tmp/InOutNew.txt
 
   # si no hay diferencia entre los archivos, retornar

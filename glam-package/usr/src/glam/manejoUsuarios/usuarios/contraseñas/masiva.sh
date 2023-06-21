@@ -11,7 +11,7 @@ mostrar_ayuda() {
             básicos de Linux.' >/var/glam/tmp/ayuda.txt
     dialog --backtitle "CAMBIO CONTRASEÑAS MASIVA" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
+        --textbox /var/glam/tmp/ayuda.txt 0 0 
     rm /var/glam/tmp/ayuda.txt
 }
 

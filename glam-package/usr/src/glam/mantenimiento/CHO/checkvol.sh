@@ -12,8 +12,7 @@ mostrar_ayuda() {
     Y si no fueron exitosos tambien se dira el porque ahi" >/var/glam/tmp/ayuda.txt
     dialog --backtitle "MENU PRINCIPAL" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /var/glam/tmp/ayuda.txt 0 0 --scrollbar
-    rm /var/glam/tmp/ayuda.txt
+        --textbox /var/glam/tmp/ayuda.txt 0 0 
 }
 
 if [ -z "$SUDO_USER" ]; then

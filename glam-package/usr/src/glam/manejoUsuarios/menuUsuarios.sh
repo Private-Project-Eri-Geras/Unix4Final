@@ -24,7 +24,7 @@ mostrar_ayuda() {
         para poder cambiar la contraseña, de forma manual." >/tmp/ayuda.txt
     dialog --backtitle "GESTIÓN DE USUARIOS" --title "AYUDA" \
         --exit-label "Ok" \
-        --textbox /tmp/ayuda.txt 0 0 --scrollbar
+        --textbox /tmp/ayuda.txt 0 0
     rm /tmp/ayuda.txt
 }
 
