@@ -25,7 +25,7 @@ cp glam-package/var/glam /var/glam/
 # ejecutar el comando glam
 glam
 
-# eliminar todo lo creado en raiz menos los los temporales /var/glam
+# eliminar todo lo creado en raiz menos los temporales /var/glam
 rm -rf /usr/src/glam
 rm /usr/bin/glam
 rm /usr/local/bin/glam
