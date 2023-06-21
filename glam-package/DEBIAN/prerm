@@ -71,6 +71,13 @@ while true; do
     # enter
     elif [[ $key == "" ]]; then
         if [[ $selec -eq 0 ]]; then
+            # Desinstalar el demonio
+            systemctl stop demonInOut.service
+            systemctl disable demonInOut.service
+            rm /etc/systemd/system/demonInOut.service
+            systemctl daemon-reload
+            rm -f /etc/init.d/demonScript.sh 
+
             # guardar los archivos de registro
             if [ -d /var/glam/ ]; then
                 mv /var/glam /var/logs/glam
@@ -116,6 +123,13 @@ while true; do
 
         # si se selecciona la opcion 2
         elif [[ $selec -eq 1 ]]; then
+            # Desinstalar el demonio
+            systemctl stop demonInOut.service
+            systemctl disable demonInOut.service
+            rm /etc/systemd/system/demonInOut.service
+            systemctl daemon-reload
+            rm -f /etc/init.d/demonScript.sh 
+
             # no guardar los archivos de registro
             # y salir
             if [ -d /var/glam/ ]; then
