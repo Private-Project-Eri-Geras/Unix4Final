@@ -71,13 +71,19 @@ while true; do
     # enter
     elif [[ $key == "" ]]; then
         if [[ $selec -eq 0 ]]; then
-            # Desinstalar el demonio
-            systemctl stop demonInOut.service
-            systemctl disable demonInOut.service
-            rm /etc/systemd/system/demonInOut.service
-            systemctl daemon-reload
-            rm -f /etc/init.d/demonScript.sh 
-
+            # verificar que exista el daemon
+            if [ -f /etc/systemd/system/demonInOut.service ]; then
+                # Desinstalar el demonio
+                # verificar si el demonio esta corriendo
+                if [[ $(systemctl is-active demonInOut.service) == "active" ]]; then
+                    # detener el demonio
+                    systemctl stop demonInOut.service
+                    systemctl disable demonInOut.service
+                fi
+                rm /etc/systemd/system/demonInOut.service
+                systemctl daemon-reload
+                rm -f /etc/init.d/demonScript.sh
+            fi
             # guardar los archivos de registro
             if [ -d /var/glam/ ]; then
                 mv /var/glam /var/logs/glam
@@ -123,12 +129,19 @@ while true; do
 
         # si se selecciona la opcion 2
         elif [[ $selec -eq 1 ]]; then
-            # Desinstalar el demonio
-            systemctl stop demonInOut.service
-            systemctl disable demonInOut.service
-            rm /etc/systemd/system/demonInOut.service
-            systemctl daemon-reload
-            rm -f /etc/init.d/demonScript.sh 
+            # verificar que exista el daemon
+            if [ -f /etc/systemd/system/demonInOut.service ]; then
+                # Desinstalar el demonio
+                # verificar si el demonio esta corriendo
+                if [[ $(systemctl is-active demonInOut.service) == "active" ]]; then
+                    # detener el demonio
+                    systemctl stop demonInOut.service
+                    systemctl disable demonInOut.service
+                fi
+                rm /etc/systemd/system/demonInOut.service
+                systemctl daemon-reload
+                rm -f /etc/init.d/demonScript.sh
+            fi
 
             # no guardar los archivos de registro
             # y salir

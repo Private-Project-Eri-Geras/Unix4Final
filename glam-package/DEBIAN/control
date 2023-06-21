@@ -1,5 +1,5 @@
 Package: glam
-Version: 0.1
+Version: 1.0
 Architecture: all
 Maintainer: Eriarer <eriarer_melgoza@hotmail.com>
 Depends: dialog, at
