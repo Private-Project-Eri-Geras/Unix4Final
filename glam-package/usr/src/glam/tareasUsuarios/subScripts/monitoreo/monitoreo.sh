@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 mostrar_ayuda() {
     # pausar el PID del proceso resize
     kill -s STOP $PID_RESIZE
@@ -21,6 +19,7 @@ mostrar_ayuda() {
 
 ventana() {
     archivo="/var/glam/tmp/monitorAplicacionesOld.txt"
+    touch "$archivo"
     cat "$archivo" >/var/glam/tmp/monitorAplicaciones.txt
     echo "\Zb<\Z4Salir \ZB(espacio)\Zb\Z0>\Zn" >>/var/glam/tmp/monitorAplicaciones.txt
     dialog --backtitle "Para salir precione <espacio>" --colors --title "APLICACIONES DE $1" \
@@ -30,6 +29,7 @@ ventana() {
 
 # Función para monitorear las aplicaciones de un usuario
 monitorAplicaciones() {
+    touch /var/glam/tmp/selected.txt
     local user_name=$(cat /var/glam/tmp/selected.txt)
     # Verificar que el usuario exista
     if [[ $user_name == "" ]]; then
@@ -104,5 +104,4 @@ while true; do
 done
 
 # Eliminar el archivo temporal al finalizar
-#rm /var/glam/tmp/temp_who.txt
 rm /var/glam/tmp/selected.txt

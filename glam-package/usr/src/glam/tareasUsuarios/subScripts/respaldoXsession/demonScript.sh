@@ -6,6 +6,7 @@ diferencia=/var/glam/tmp/diff.txt
 nameArch="usuarios$(date +'%d%m%y').txt"
 ruta="/var/glam/logs/usrsInOut" 
 rutaUsrs="$ruta/$nameArch"
+touch $rutaUsrs # Crea el archivo de log si no existe
 
   mkdir -p $ruta #verifica si existe la ruta, si no existe la crea
   touch $rutaUsrs

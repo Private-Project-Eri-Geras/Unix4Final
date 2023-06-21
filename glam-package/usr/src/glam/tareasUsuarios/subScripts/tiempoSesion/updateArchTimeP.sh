@@ -5,6 +5,7 @@ rutaTmp="/var/glam/logs/usrsInOut/tiempoPermitidoTmp.txt"
 
 nameArchLog="usrLog$(date +"-%d-%m-%Y").txt" # Nombre del archivo de log
 archivo="/var/glam/logs/usrsInOut/$nameArchLog" # Ruta del archivo de log. (usr:HoraEntrada:HoraSalida)
+touch $rutaLog # Crea el archivo de log si no existe
 
 usuario=$1  # Usuario para el cual se calculará el tiempo total en segundos
 tiempo_total=0  # Variable para almacenar el tiempo total en segundos

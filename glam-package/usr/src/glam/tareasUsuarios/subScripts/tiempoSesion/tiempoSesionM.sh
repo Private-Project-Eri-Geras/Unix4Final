@@ -2,7 +2,8 @@
 rutaGen="/var/glam/logs/usrsInOut/" # Ruta del archivo . (usr:tiempoLimite:tiempoEnSesion)
 ruta="$rutaGen/tiempoPermitido.txt" # Ruta del archivo de log. (usr:tiempoLimite:tiempoEnSesion)
 rutaTmp="$rutaGen/tiempoPermitidoTmp.txt" # Ruta del archivo de temporal. (usr:tiempoLimite:tiempoEnSesion)
-
+touch $ruta 
+touch $rutaTmp
 mostrar_ayuda(){
   echo "
   Dentro de este menú se pueden establecer los tiempos 

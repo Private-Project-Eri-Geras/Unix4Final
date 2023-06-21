@@ -5,6 +5,7 @@ rutaLogIni="/var/glam/logs/usrsInOut/" # Ruta del archivo de log. (usr:HoraEntra
 nameArchLog="usrLog$(date +"-%d-%m-%Y").txt" # Nombre del archivo de log
 rutaLog="/var/glam/logs/usrsInOut/$nameArchLog" # Ruta del archivo de log. (usr:HoraEntrada:HoraSalida)
 rutaTiempoPermitido="/var/glam/logs/usrsInOut/tiempoPermitido.txt" # Ruta del archivo de tiempo permitido
+touch $rutaLog # Crea el archivo de log si no existe
 
 #Borrando archivos de log antiguos (del día anterior)
 # Obtener la lista de archivos que comienzan con "usrLog" y ordenarlos por fecha de modificación

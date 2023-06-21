@@ -8,6 +8,7 @@ rutaTmp="/var/glam/logs/usrsInOut/tiempoPermitidoTmp.txt"
 #Para almacenar el tiempo que lleva el usuario en sesión
 nameArchLog="usrLog$(date +"-%d-%m-%Y").txt" # Nombre del archivo de log
 rutaLog="/var/glam/logs/usrsInOut/$nameArchLog" # Ruta del archivo de log. (usr:HoraEntrada:HoraSalida)
+touch $rutaLog # Crea el archivo de log si no existe
 
 usuario="$1" #nombre del usuario a cerrar sesión
 pid=$(pgrep -u "$usuario") #Obtiene el proceso del usuario 
