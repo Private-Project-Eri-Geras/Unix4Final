@@ -2,7 +2,7 @@
 
 # Función para mostrar la ventana de ayuda
 mostrar_ayuda() {
-    dialog --title "Help" --textbox \
+    dialog --title "Help" --msgbox \
     "\n\
     1.-Programación de tareas manual:\n\
     Permite programar tareas en un momento específico.\n\n\
@@ -11,7 +11,7 @@ mostrar_ayuda() {
     3.-Borrado de temporales programado:\n\
     Permite programar el borrado de archivos temporales de forma periódica.\n\n\
     4.-Inhabilitación de usuarios (por periodo de tiempo):\n\
-    Permite inhabilitar usuarios por un periodo de tiempo específico." 0 0 --scrollbar
+    Permite inhabilitar usuarios por un periodo de tiempo específico." 0 0
 }
 
 # Limpia la pantalla
@@ -126,6 +126,8 @@ while true; do
     # Verificar si el usuario seleccionó el botón de ayuda
     if [[ "$dialog_exit_code" -eq 2 ]]; then
         mostrar_ayuda
+        clear
+        read -p "Presione enter para continuar"
         continue
     fi
 
